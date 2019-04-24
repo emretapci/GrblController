@@ -50,6 +50,7 @@
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.abcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tableLengthsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.serialPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tablePanel.SuspendLayout();
 			this.table2Panel.SuspendLayout();
 			this.table1Panel.SuspendLayout();
@@ -65,7 +66,7 @@
 			this.tablePanel.Controls.Add(this.table2Panel);
 			this.tablePanel.Controls.Add(this.table1Panel);
 			this.tablePanel.Location = new System.Drawing.Point(15, 49);
-			this.tablePanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tablePanel.Margin = new System.Windows.Forms.Padding(4);
 			this.tablePanel.Name = "tablePanel";
 			this.tablePanel.Size = new System.Drawing.Size(453, 610);
 			this.tablePanel.TabIndex = 0;
@@ -76,7 +77,7 @@
 			this.table2Panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.table2Panel.Controls.Add(this.table2PanelPaintedArea);
 			this.table2Panel.Location = new System.Drawing.Point(0, 337);
-			this.table2Panel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.table2Panel.Margin = new System.Windows.Forms.Padding(4);
 			this.table2Panel.Name = "table2Panel";
 			this.table2Panel.Size = new System.Drawing.Size(451, 270);
 			this.table2Panel.TabIndex = 2;
@@ -87,7 +88,7 @@
 			this.table2PanelPaintedArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.table2PanelPaintedArea.Dock = System.Windows.Forms.DockStyle.Top;
 			this.table2PanelPaintedArea.Location = new System.Drawing.Point(0, 0);
-			this.table2PanelPaintedArea.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.table2PanelPaintedArea.Margin = new System.Windows.Forms.Padding(4);
 			this.table2PanelPaintedArea.Name = "table2PanelPaintedArea";
 			this.table2PanelPaintedArea.Size = new System.Drawing.Size(449, 70);
 			this.table2PanelPaintedArea.TabIndex = 1;
@@ -98,7 +99,7 @@
 			this.table1Panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.table1Panel.Controls.Add(this.table1PanelPaintedArea);
 			this.table1Panel.Location = new System.Drawing.Point(0, 0);
-			this.table1Panel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.table1Panel.Margin = new System.Windows.Forms.Padding(4);
 			this.table1Panel.Name = "table1Panel";
 			this.table1Panel.Size = new System.Drawing.Size(451, 118);
 			this.table1Panel.TabIndex = 0;
@@ -108,7 +109,7 @@
 			this.table1PanelPaintedArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
 			this.table1PanelPaintedArea.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.table1PanelPaintedArea.Location = new System.Drawing.Point(0, 0);
-			this.table1PanelPaintedArea.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.table1PanelPaintedArea.Margin = new System.Windows.Forms.Padding(4);
 			this.table1PanelPaintedArea.Name = "table1PanelPaintedArea";
 			this.table1PanelPaintedArea.Size = new System.Drawing.Size(448, 70);
 			this.table1PanelPaintedArea.TabIndex = 0;
@@ -130,7 +131,7 @@
 			this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.panel1.Controls.Add(this.table1Slider);
 			this.panel1.Location = new System.Drawing.Point(477, 49);
-			this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panel1.Margin = new System.Windows.Forms.Padding(4);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(47, 301);
 			this.panel1.TabIndex = 2;
@@ -139,10 +140,10 @@
 			// 
 			this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.panel2.Controls.Add(this.table2Slider);
-			this.panel2.Location = new System.Drawing.Point(478, 357);
-			this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panel2.Location = new System.Drawing.Point(477, 357);
+			this.panel2.Margin = new System.Windows.Forms.Padding(4);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(46, 301);
+			this.panel2.Size = new System.Drawing.Size(47, 301);
 			this.panel2.TabIndex = 3;
 			// 
 			// table2Slider
@@ -153,7 +154,7 @@
 			this.table2Slider.Location = new System.Drawing.Point(0, 0);
 			this.table2Slider.Maximum = 4;
 			this.table2Slider.Name = "table2Slider";
-			this.table2Slider.Size = new System.Drawing.Size(44, 299);
+			this.table2Slider.Size = new System.Drawing.Size(45, 299);
 			this.table2Slider.TabIndex = 1;
 			this.table2Slider.ValueChanged += new System.EventHandler(this.table2Slider_ValueChanged);
 			// 
@@ -285,25 +286,33 @@
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(594, 27);
+			this.menuStrip1.Size = new System.Drawing.Size(594, 28);
 			this.menuStrip1.TabIndex = 14;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
 			// abcToolStripMenuItem
 			// 
 			this.abcToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tableLengthsToolStripMenuItem});
+            this.tableLengthsToolStripMenuItem,
+            this.serialPortToolStripMenuItem});
 			this.abcToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
 			this.abcToolStripMenuItem.Name = "abcToolStripMenuItem";
-			this.abcToolStripMenuItem.Size = new System.Drawing.Size(79, 23);
+			this.abcToolStripMenuItem.Size = new System.Drawing.Size(79, 24);
 			this.abcToolStripMenuItem.Text = "Settings";
 			// 
 			// tableLengthsToolStripMenuItem
 			// 
 			this.tableLengthsToolStripMenuItem.Name = "tableLengthsToolStripMenuItem";
-			this.tableLengthsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.tableLengthsToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
 			this.tableLengthsToolStripMenuItem.Text = "Table lengths";
 			this.tableLengthsToolStripMenuItem.Click += new System.EventHandler(this.tableLengthsToolStripMenuItem_Click);
+			// 
+			// serialPortToolStripMenuItem
+			// 
+			this.serialPortToolStripMenuItem.Name = "serialPortToolStripMenuItem";
+			this.serialPortToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.serialPortToolStripMenuItem.Text = "Serial port";
+			this.serialPortToolStripMenuItem.Click += new System.EventHandler(this.serialPortToolStripMenuItem_Click);
 			// 
 			// Main
 			// 
@@ -368,6 +377,7 @@
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem abcToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem tableLengthsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem serialPortToolStripMenuItem;
 	}
 }
 

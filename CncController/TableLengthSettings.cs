@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CncController
 {
-	public partial class Settings : Form
+	public partial class TableLengthSettings : Form
 	{
-		public Settings()
+		public TableLengthSettings()
 		{
 			InitializeComponent();
 		}
 
-		private void Settings_Load(object sender, EventArgs e)
+		private void TableLengthSettings_Load(object sender, EventArgs e)
 		{
 			var parameters = Parameters.ReadFromFile();
 
@@ -30,14 +23,15 @@ namespace CncController
 
 		private void buttonOK_Click(object sender, EventArgs e)
 		{
-			Parameters.WriteToFile(new Parameters()
-			{
-				StartOffset = (double)startOffset.Value,
-				Table1Length = (double)table1Length.Value,
-				MiddleGap = (double)middleGapLength.Value,
-				Table2Length = (double)table2Length.Value,
-				EndOffset = (double)endOffset.Value
-			});
+			var parameters = Parameters.ReadFromFile();
+
+			parameters.StartOffset = (double)startOffset.Value;
+			parameters.Table1Length = (double)table1Length.Value;
+			parameters.MiddleGap = (double)middleGapLength.Value;
+			parameters.Table2Length = (double)table2Length.Value;
+			parameters.EndOffset = (double)endOffset.Value;
+
+			Parameters.WriteToFile(parameters);
 
 			DialogResult = DialogResult.OK;
 			Close();

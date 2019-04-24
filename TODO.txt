@@ -1,0 +1,5 @@
+1. Make controls' size customizable (bigger or smaller).
+2. Add Serial port communication class for sending and receiving data from the board.
+3. Show and set GRBL settings of the board in a form.
+4. Send G codes for locating the sprayers to required position.
+5. Send M codes for starting and stopping the sprayers.

@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CncController
@@ -73,7 +67,15 @@ namespace CncController
 
 		private void tableLengthsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if ((new Settings()).ShowDialog() == DialogResult.OK)
+			if ((new TableLengthSettings()).ShowDialog() == DialogResult.OK)
+			{
+				Main_Load(null, null);
+			}
+		}
+
+		private void serialPortToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if ((new SerialPortSettings()).ShowDialog() == DialogResult.OK)
 			{
 				Main_Load(null, null);
 			}

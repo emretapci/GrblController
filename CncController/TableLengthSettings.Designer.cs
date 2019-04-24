@@ -1,6 +1,6 @@
 ﻿namespace CncController
 {
-	partial class Settings
+	partial class TableLengthSettings
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -211,7 +211,7 @@
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Settings";
-			this.Load += new System.EventHandler(this.Settings_Load);
+			this.Load += new System.EventHandler(this.TableLengthSettings_Load);
 			((System.ComponentModel.ISupportInitialize)(this.startOffset)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.table1Length)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.middleGapLength)).EndInit();
