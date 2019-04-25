@@ -51,6 +51,11 @@
 			this.abcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tableLengthsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.serialPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.gRBLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.startStopButton = new System.Windows.Forms.Button();
+			this.connectDisconnectButton = new System.Windows.Forms.Button();
+			this.label1 = new System.Windows.Forms.Label();
+			this.activityLog = new System.Windows.Forms.ListBox();
 			this.tablePanel.SuspendLayout();
 			this.table2Panel.SuspendLayout();
 			this.table1Panel.SuspendLayout();
@@ -166,7 +171,7 @@
 			this.table1Label0.Location = new System.Drawing.Point(532, 90);
 			this.table1Label0.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1Label0.Name = "table1Label0";
-			this.table1Label0.Size = new System.Drawing.Size(18, 19);
+			this.table1Label0.Size = new System.Drawing.Size(16, 16);
 			this.table1Label0.TabIndex = 4;
 			this.table1Label0.Text = "0";
 			// 
@@ -178,7 +183,7 @@
 			this.table1Label1d4.Location = new System.Drawing.Point(532, 140);
 			this.table1Label1d4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1Label1d4.Name = "table1Label1d4";
-			this.table1Label1d4.Size = new System.Drawing.Size(32, 19);
+			this.table1Label1d4.Size = new System.Drawing.Size(28, 16);
 			this.table1Label1d4.TabIndex = 5;
 			this.table1Label1d4.Text = "1/4";
 			// 
@@ -190,7 +195,7 @@
 			this.table1Label1d2.Location = new System.Drawing.Point(532, 190);
 			this.table1Label1d2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1Label1d2.Name = "table1Label1d2";
-			this.table1Label1d2.Size = new System.Drawing.Size(32, 19);
+			this.table1Label1d2.Size = new System.Drawing.Size(28, 16);
 			this.table1Label1d2.TabIndex = 6;
 			this.table1Label1d2.Text = "1/2";
 			// 
@@ -202,7 +207,7 @@
 			this.table1Label3d4.Location = new System.Drawing.Point(532, 240);
 			this.table1Label3d4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1Label3d4.Name = "table1Label3d4";
-			this.table1Label3d4.Size = new System.Drawing.Size(32, 19);
+			this.table1Label3d4.Size = new System.Drawing.Size(28, 16);
 			this.table1Label3d4.TabIndex = 7;
 			this.table1Label3d4.Text = "3/4";
 			// 
@@ -214,7 +219,7 @@
 			this.table1LabelFull.Location = new System.Drawing.Point(532, 290);
 			this.table1LabelFull.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1LabelFull.Name = "table1LabelFull";
-			this.table1LabelFull.Size = new System.Drawing.Size(32, 19);
+			this.table1LabelFull.Size = new System.Drawing.Size(30, 16);
 			this.table1LabelFull.TabIndex = 8;
 			this.table1LabelFull.Text = "full";
 			// 
@@ -226,7 +231,7 @@
 			this.table2LabelFull.Location = new System.Drawing.Point(532, 600);
 			this.table2LabelFull.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2LabelFull.Name = "table2LabelFull";
-			this.table2LabelFull.Size = new System.Drawing.Size(32, 19);
+			this.table2LabelFull.Size = new System.Drawing.Size(30, 16);
 			this.table2LabelFull.TabIndex = 13;
 			this.table2LabelFull.Text = "full";
 			// 
@@ -238,7 +243,7 @@
 			this.table2Label3d4.Location = new System.Drawing.Point(532, 550);
 			this.table2Label3d4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2Label3d4.Name = "table2Label3d4";
-			this.table2Label3d4.Size = new System.Drawing.Size(32, 19);
+			this.table2Label3d4.Size = new System.Drawing.Size(28, 16);
 			this.table2Label3d4.TabIndex = 12;
 			this.table2Label3d4.Text = "3/4";
 			// 
@@ -250,7 +255,7 @@
 			this.table2Label1d2.Location = new System.Drawing.Point(532, 500);
 			this.table2Label1d2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2Label1d2.Name = "table2Label1d2";
-			this.table2Label1d2.Size = new System.Drawing.Size(32, 19);
+			this.table2Label1d2.Size = new System.Drawing.Size(28, 16);
 			this.table2Label1d2.TabIndex = 11;
 			this.table2Label1d2.Text = "1/2";
 			// 
@@ -262,7 +267,7 @@
 			this.table2Label1d4.Location = new System.Drawing.Point(532, 450);
 			this.table2Label1d4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2Label1d4.Name = "table2Label1d4";
-			this.table2Label1d4.Size = new System.Drawing.Size(32, 19);
+			this.table2Label1d4.Size = new System.Drawing.Size(28, 16);
 			this.table2Label1d4.TabIndex = 10;
 			this.table2Label1d4.Text = "1/4";
 			// 
@@ -274,7 +279,7 @@
 			this.table2Label0.Location = new System.Drawing.Point(532, 400);
 			this.table2Label0.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2Label0.Name = "table2Label0";
-			this.table2Label0.Size = new System.Drawing.Size(18, 19);
+			this.table2Label0.Size = new System.Drawing.Size(16, 16);
 			this.table2Label0.TabIndex = 9;
 			this.table2Label0.Text = "0";
 			// 
@@ -286,7 +291,7 @@
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(594, 28);
+			this.menuStrip1.Size = new System.Drawing.Size(1012, 24);
 			this.menuStrip1.TabIndex = 14;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -294,31 +299,80 @@
 			// 
 			this.abcToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tableLengthsToolStripMenuItem,
-            this.serialPortToolStripMenuItem});
+            this.serialPortToolStripMenuItem,
+            this.gRBLToolStripMenuItem});
 			this.abcToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
 			this.abcToolStripMenuItem.Name = "abcToolStripMenuItem";
-			this.abcToolStripMenuItem.Size = new System.Drawing.Size(79, 24);
+			this.abcToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
 			this.abcToolStripMenuItem.Text = "Settings";
 			// 
 			// tableLengthsToolStripMenuItem
 			// 
 			this.tableLengthsToolStripMenuItem.Name = "tableLengthsToolStripMenuItem";
-			this.tableLengthsToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
+			this.tableLengthsToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.tableLengthsToolStripMenuItem.Text = "Table lengths";
 			this.tableLengthsToolStripMenuItem.Click += new System.EventHandler(this.tableLengthsToolStripMenuItem_Click);
 			// 
 			// serialPortToolStripMenuItem
 			// 
 			this.serialPortToolStripMenuItem.Name = "serialPortToolStripMenuItem";
-			this.serialPortToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.serialPortToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.serialPortToolStripMenuItem.Text = "Serial port";
 			this.serialPortToolStripMenuItem.Click += new System.EventHandler(this.serialPortToolStripMenuItem_Click);
 			// 
+			// gRBLToolStripMenuItem
+			// 
+			this.gRBLToolStripMenuItem.Name = "gRBLToolStripMenuItem";
+			this.gRBLToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+			this.gRBLToolStripMenuItem.Text = "GRBL";
+			this.gRBLToolStripMenuItem.Click += new System.EventHandler(this.gRBLToolStripMenuItem_Click);
+			// 
+			// startStopButton
+			// 
+			this.startStopButton.Location = new System.Drawing.Point(198, 685);
+			this.startStopButton.Name = "startStopButton";
+			this.startStopButton.Size = new System.Drawing.Size(110, 35);
+			this.startStopButton.TabIndex = 15;
+			this.startStopButton.Text = "Start";
+			this.startStopButton.UseVisualStyleBackColor = true;
+			// 
+			// connectDisconnectButton
+			// 
+			this.connectDisconnectButton.Location = new System.Drawing.Point(16, 685);
+			this.connectDisconnectButton.Name = "connectDisconnectButton";
+			this.connectDisconnectButton.Size = new System.Drawing.Size(157, 35);
+			this.connectDisconnectButton.TabIndex = 16;
+			this.connectDisconnectButton.Text = "Connect";
+			this.connectDisconnectButton.UseVisualStyleBackColor = true;
+			this.connectDisconnectButton.Click += new System.EventHandler(this.connectDisconnectButton_Click);
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(584, 51);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(75, 16);
+			this.label1.TabIndex = 18;
+			this.label1.Text = "Activity log";
+			// 
+			// activityLog
+			// 
+			this.activityLog.FormattingEnabled = true;
+			this.activityLog.ItemHeight = 16;
+			this.activityLog.Location = new System.Drawing.Point(587, 70);
+			this.activityLog.Name = "activityLog";
+			this.activityLog.Size = new System.Drawing.Size(401, 628);
+			this.activityLog.TabIndex = 19;
+			// 
 			// Main
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(594, 678);
+			this.ClientSize = new System.Drawing.Size(1012, 743);
+			this.Controls.Add(this.activityLog);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.connectDisconnectButton);
+			this.Controls.Add(this.startStopButton);
 			this.Controls.Add(this.table2LabelFull);
 			this.Controls.Add(this.table2Label3d4);
 			this.Controls.Add(this.table2Label1d2);
@@ -339,7 +393,7 @@
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MaximizeBox = false;
 			this.Name = "Main";
-			this.Text = "CNC Controller";
+			this.Text = "GRBL Controller";
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.tablePanel.ResumeLayout(false);
 			this.table2Panel.ResumeLayout(false);
@@ -378,6 +432,11 @@
 		private System.Windows.Forms.ToolStripMenuItem abcToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem tableLengthsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem serialPortToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem gRBLToolStripMenuItem;
+		private System.Windows.Forms.Button startStopButton;
+		private System.Windows.Forms.Button connectDisconnectButton;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ListBox activityLog;
 	}
 }
 

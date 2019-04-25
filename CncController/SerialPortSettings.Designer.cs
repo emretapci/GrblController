@@ -42,7 +42,7 @@
 			this.label1.Location = new System.Drawing.Point(71, 26);
 			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(84, 19);
+			this.label1.Size = new System.Drawing.Size(73, 16);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Serial port";
 			// 
@@ -52,7 +52,7 @@
 			this.label2.Location = new System.Drawing.Point(80, 70);
 			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(75, 19);
+			this.label2.Size = new System.Drawing.Size(66, 16);
 			this.label2.TabIndex = 2;
 			this.label2.Text = "Baudrate";
 			// 
@@ -82,7 +82,7 @@
 			this.serialPortCombobox.FormattingEnabled = true;
 			this.serialPortCombobox.Location = new System.Drawing.Point(163, 23);
 			this.serialPortCombobox.Name = "serialPortCombobox";
-			this.serialPortCombobox.Size = new System.Drawing.Size(154, 27);
+			this.serialPortCombobox.Size = new System.Drawing.Size(154, 24);
 			this.serialPortCombobox.TabIndex = 12;
 			// 
 			// baudrateCombobox
@@ -91,13 +91,13 @@
 			this.baudrateCombobox.FormattingEnabled = true;
 			this.baudrateCombobox.Location = new System.Drawing.Point(162, 67);
 			this.baudrateCombobox.Name = "baudrateCombobox";
-			this.baudrateCombobox.Size = new System.Drawing.Size(154, 27);
+			this.baudrateCombobox.Size = new System.Drawing.Size(154, 24);
 			this.baudrateCombobox.TabIndex = 13;
 			// 
 			// SerialPortSettings
 			// 
 			this.AcceptButton = this.buttonOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
 			this.ClientSize = new System.Drawing.Size(353, 190);
@@ -116,7 +116,7 @@
 			this.Name = "SerialPortSettings";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Settings";
+			this.Text = "Serial port settings";
 			this.Load += new System.EventHandler(this.Settings_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();

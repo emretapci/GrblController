@@ -27,7 +27,7 @@ namespace CncController
 			var parameters = Parameters.ReadFromFile();
 
 			parameters.SerialPortString = serialPortCombobox.SelectedItem != null ? serialPortCombobox.SelectedItem.ToString() : "";
-			parameters.Baudrate = uint.Parse(baudrateCombobox.SelectedItem.ToString());
+			parameters.Baudrate = int.Parse(baudrateCombobox.SelectedItem.ToString());
 
 			Parameters.WriteToFile(parameters);
 
