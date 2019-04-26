@@ -2,6 +2,7 @@
 
 2. Add Serial port communication class for sending and receiving data from the board.
 
+DONE
 3. Show and set GRBL settings of the board in a form.
 	All settings in here: https://github.com/gnea/grbl/wiki/Grbl-v1.1-Configuration#grbl-settings
 	must be configurable.
