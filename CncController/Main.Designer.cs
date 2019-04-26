@@ -335,6 +335,7 @@
 			this.startStopButton.TabIndex = 15;
 			this.startStopButton.Text = "Start";
 			this.startStopButton.UseVisualStyleBackColor = true;
+			this.startStopButton.Click += new System.EventHandler(this.startStopButton_Click);
 			// 
 			// connectDisconnectButton
 			// 

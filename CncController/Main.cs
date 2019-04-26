@@ -17,7 +17,7 @@ namespace CncController
 			table1Labels = new Label[] { table1Label0, table1Label1d4, table1Label1d2, table1Label3d4, table1LabelFull };
 			table2Labels = new Label[] { table2Label0, table2Label1d4, table2Label1d2, table2Label3d4, table2LabelFull };
 			parameters = Parameters.ReadFromFile();
-			connection = new Connection();
+			connection = new Connection(AddLog);
 		}
 
 		private void Main_Load(object sender, EventArgs e)
@@ -33,6 +33,15 @@ namespace CncController
 
 		private void StatusChanged(Status oldStatus, Status newStatus)
 		{
+			if(InvokeRequired)
+			{
+				Invoke(new Action(() =>
+				{
+					StatusChanged(oldStatus, newStatus);
+				}));
+				return;
+			}
+
 			switch (connection.Status)
 			{
 				case Status.DisconnectedCannotConnect:
@@ -59,23 +68,35 @@ namespace CncController
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Stop";
 					startStopButton.Enabled = true;
-					AddLog("Connected.");
-					AddLog("Started sending G codes.");
 					break;
 				case Status.ConnectedStopped:
 					connectDisconnectButton.Text = "Disconnect";
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = true;
-					AddLog("Connected.");
-					AddLog("Stopped sending G codes.");
 					break;
 			}
 
-			if((oldStatus == Status.Connecting || oldStatus == Status.ConnectedStarted || oldStatus == Status.ConnectedStopped) &&
+			if ((oldStatus == Status.Connecting || oldStatus == Status.DisconnectedCanConnect || oldStatus == Status.DisconnectedCannotConnect) &&
+				(newStatus == Status.ConnectedStarted || newStatus == Status.ConnectedStopped))
+			{
+				AddLog("Connected.");
+			}
+
+			if ((oldStatus == Status.Connecting || oldStatus == Status.ConnectedStarted || oldStatus == Status.ConnectedStopped) &&
 				(newStatus == Status.DisconnectedCanConnect || newStatus == Status.DisconnectedCannotConnect))
 			{
 				AddLog("Disconnected.");
+			}
+
+			if (oldStatus != Status.ConnectedStarted && newStatus == Status.ConnectedStarted)
+			{
+				AddLog("Started sending G codes.");
+			}
+
+			if (oldStatus == Status.ConnectedStarted && newStatus != Status.ConnectedStarted)
+			{
+				AddLog("Stopped sending G codes.");
 			}
 		}
 
@@ -157,8 +178,29 @@ namespace CncController
 			}
 		}
 
+		private void startStopButton_Click(object sender, EventArgs e)
+		{
+			if (connection.Status == Status.ConnectedStopped)
+			{
+				connection.Start();
+			}
+			else if (connection.Status == Status.ConnectedStarted)
+			{
+				connection.Stop();
+			}
+		}
+
 		private void AddLog(string s)
 		{
+			if (InvokeRequired)
+			{
+				Invoke(new Action(() =>
+				{
+					AddLog(s);
+				}));
+				return;
+			}
+
 			activityLog.Items.Add(DateTime.Now.ToString("hh:mm:ss") + " " + s);
 			int visibleItems = activityLog.ClientSize.Height / activityLog.ItemHeight;
 			activityLog.TopIndex = Math.Max(activityLog.Items.Count - visibleItems + 1, 0);
