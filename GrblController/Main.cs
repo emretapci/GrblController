@@ -143,7 +143,9 @@ namespace CncController
 		{
 			if ((new TableLengthSettings()).ShowDialog() == DialogResult.OK)
 			{
-				Main_Load(null, null);
+				table1Slider_ValueChanged(null, null);
+				table2Slider_ValueChanged(null, null);
+				parameters = Parameters.ReadFromFile();
 			}
 		}
 
@@ -151,15 +153,23 @@ namespace CncController
 		{
 			if ((new SerialPortSettings()).ShowDialog() == DialogResult.OK)
 			{
-				Main_Load(null, null);
+				table1Slider_ValueChanged(null, null);
+				table2Slider_ValueChanged(null, null);
+				parameters = Parameters.ReadFromFile();
 			}
 		}
 
 		private void gRBLToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if ((new GrblSettings()).ShowDialog() == DialogResult.OK)
+			var grblSettingsForm = new GrblSettings();
+			if (grblSettingsForm.ShowDialog() == DialogResult.OK)
 			{
-				Main_Load(null, null);
+				parameters = Parameters.ReadFromFile();
+
+				if (connection.Status == Status.ConnectedStarted || connection.Status == Status.ConnectedStopped)
+				{
+					connection.SendSettings(parameters);
+				}
 			}
 		}
 
@@ -173,6 +183,7 @@ namespace CncController
 					connection.Disconnect();
 					break;
 				case Status.DisconnectedCanConnect:
+					connection.Initialize(parameters);
 					connection.Connect();
 					break;
 			}
@@ -201,7 +212,7 @@ namespace CncController
 				return;
 			}
 
-			activityLog.Items.Add(DateTime.Now.ToString("hh:mm:ss") + " " + s);
+			activityLog.Items.Add(DateTime.Now.ToString("hh:mm:ss") + "     " + s);
 			int visibleItems = activityLog.ClientSize.Height / activityLog.ItemHeight;
 			activityLog.TopIndex = Math.Max(activityLog.Items.Count - visibleItems + 1, 0);
 		}
