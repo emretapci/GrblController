@@ -1,10 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace CncController
+namespace GrblController
 {
 	[Flags]
 	internal enum Mask
@@ -23,6 +21,14 @@ namespace CncController
 
 	internal class Parameters
 	{
+		internal double TablesTotalLength
+		{
+			get
+			{
+				return StartOffset + Table1Length + MiddleGap + Table2Length + EndOffset;
+			}
+		}
+
 		internal double StartOffset { get; set; } //mm
 		internal double Table1Length { get; set; } //mm
 		internal double MiddleGap { get; set; } //mm

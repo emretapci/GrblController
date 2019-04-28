@@ -1,4 +1,4 @@
-﻿namespace CncController
+﻿namespace GrblController
 {
 	partial class TableLengthSettings
 	{

@@ -3,10 +3,9 @@ using System.IO.Ports;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CncController
+namespace GrblController
 {
 	internal enum Status
 	{
@@ -24,7 +23,6 @@ namespace CncController
 		private SerialPort serialPort;
 		private ManualResetEvent responseReceived = new ManualResetEvent(false);
 		private string response;
-		private Action<string> logFunction;
 		private byte[] buffer = new byte[1000];
 		private int length = 0;
 
@@ -42,11 +40,6 @@ namespace CncController
 				status = value;
 				onStatusChanged?.Invoke(old, status);
 			}
-		}
-
-		internal Connection(Action<string> logFunction)
-		{
-			this.logFunction = logFunction;
 		}
 
 		internal void Initialize(Parameters parameters)
@@ -83,6 +76,11 @@ namespace CncController
 			serialPort.Write(new byte[] { 0x18 }, 0, 1);
 		}
 
+		internal void Send(string command)
+		{
+			serialPort.WriteLine(command);
+		}
+
 		private void ProcessData(object sender, SerialDataReceivedEventArgs e)
 		{
 			int readBytes = serialPort.Read(buffer, length, serialPort.BytesToRead);
@@ -109,17 +107,17 @@ namespace CncController
 					if (Status == Status.Connecting && versionRegex.IsMatch(line))
 					{
 						var version = versionRegex.Match(line).Groups["version"].Value;
-						logFunction("GRBL version received: " + version);
+						Main.Instance.AddLog("GRBL version received: " + version);
 						Status = Status.ConnectedStopped;
-						logFunction("Receiving settings.");
-						serialPort.Write("$$\n");
+						Main.Instance.AddLog("Receiving settings.");
+						Send("$$");
 					}
 					else if (Status == Status.ConnectedStopped && settingRegex.IsMatch(line))
 					{
 						var setting = settingRegex.Match(line).Groups["setting"].Value;
 						var val = settingRegex.Match(line).Groups["value"].Value;
 						RecordSetting(setting, val);
-						logFunction("$" + setting + "=" + val);
+						Main.Instance.AddLog("$" + setting + "=" + val);
 					}
 					else if (Status == Status.ConnectedStopped && okRegex.IsMatch(line))
 					{
@@ -427,21 +425,21 @@ namespace CncController
 
 		private void SendSetting(int setting, string val)
 		{
-			serialPort.WriteLine("$" + setting + "=" + val);
+			Send("$" + setting + "=" + val);
 			if (responseReceived.WaitOne(1000))
 			{
 				if (response == "ok")
 				{
-					logFunction("\"$" + setting + "=" + val + "\" command accepted.");
+					Main.Instance.AddLog("\"$" + setting + "=" + val + "\" command accepted.");
 				}
 				else
 				{
-					logFunction("ERROR: Board did not accept \"$" + setting + "=" + val + "\".");
+					Main.Instance.AddLog("ERROR: Board did not accept \"$" + setting + "=" + val + "\".");
 				}
 			}
 			else
 			{
-				logFunction("ERROR: Board did not respond to command \"$" + setting + "=" + val + "\".");
+				Main.Instance.AddLog("ERROR: Board did not respond to command \"$" + setting + "=" + val + "\".");
 			}
 		}
 
@@ -449,7 +447,7 @@ namespace CncController
 		{
 			if (Status == Status.ConnectedStarted)
 			{
-				Stop();
+				Main.Instance.GeometryController.Stop();
 			}
 
 			if ((Status == Status.ConnectedStarted || Status == Status.ConnectedStopped || Status == Status.Connecting) && serialPort != null)
@@ -468,22 +466,6 @@ namespace CncController
 			{
 				Status = Status.DisconnectedCannotConnect;
 			}
-		}
-
-		internal void Start()
-		{
-			Status = Status.ConnectedStarted;
-
-			//Send any necessary header G codes.
-			//Start sending G codes.
-		}
-
-		internal void Stop()
-		{
-			Status = Status.ConnectedStopped;
-
-			//Stop sending G codes.
-			//Send any necessary footer G codes.
 		}
 	}
 }

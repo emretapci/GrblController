@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 
-namespace CncController
+namespace GrblController
 {
 	public partial class TableLengthSettings : Form
 	{
