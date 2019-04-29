@@ -28,19 +28,14 @@ namespace GrblController
 
 		private void Main_Load(object sender, EventArgs e)
 		{
+			Connection.Initialize(Parameters);
+
 			Parameters = Parameters.ReadFromFile();
 			table1Slider_ValueChanged(null, null);
 			table2Slider_ValueChanged(null, null);
+			UpdateXPanel();
 
 			Connection.onStatusChanged += StatusChanged;
-			GeometryController.onXPositionChanged += GeometryController_onXPositionChanged;
-
-			Connection.Initialize(Parameters);
-		}
-
-		private void GeometryController_onXPositionChanged(double oldVal, double newVal)
-		{
-			machineXPositionLabel.Text = newVal.ToString("0.0 mm");
 		}
 
 		private void StatusChanged(Status oldStatus, Status newStatus)
@@ -54,34 +49,34 @@ namespace GrblController
 				return;
 			}
 
-			switch (Connection.Status)
+			switch (Connection.Status.ConnectionState)
 			{
-				case Status.DisconnectedCannotConnect:
+				case ConnectionState.DisconnectedCannotConnect:
 					connectDisconnectButton.Text = "Connect";
 					connectDisconnectButton.Enabled = false;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
 					break;
-				case Status.DisconnectedCanConnect:
+				case ConnectionState.DisconnectedCanConnect:
 					connectDisconnectButton.Text = "Connect";
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
 					break;
-				case Status.Connecting:
+				case ConnectionState.Connecting:
 					connectDisconnectButton.Text = "Connecting (stop)";
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
 					AddLog("Connecting...");
 					break;
-				case Status.ConnectedStarted:
+				case ConnectionState.ConnectedStarted:
 					connectDisconnectButton.Text = "Disconnect";
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Stop";
 					startStopButton.Enabled = true;
 					break;
-				case Status.ConnectedStopped:
+				case ConnectionState.ConnectedStopped:
 					connectDisconnectButton.Text = "Disconnect";
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Start";
@@ -89,27 +84,33 @@ namespace GrblController
 					break;
 			}
 
-			if ((oldStatus == Status.Connecting || oldStatus == Status.DisconnectedCanConnect || oldStatus == Status.DisconnectedCannotConnect) &&
-				(newStatus == Status.ConnectedStarted || newStatus == Status.ConnectedStopped))
+			if ((oldStatus.ConnectionState == ConnectionState.Connecting || oldStatus.ConnectionState == ConnectionState.DisconnectedCanConnect
+					|| oldStatus.ConnectionState == ConnectionState.DisconnectedCannotConnect) &&
+				(newStatus.ConnectionState == ConnectionState.ConnectedStarted || newStatus.ConnectionState == ConnectionState.ConnectedStopped))
 			{
 				AddLog("Connected.");
 			}
 
-			if ((oldStatus == Status.Connecting || oldStatus == Status.ConnectedStarted || oldStatus == Status.ConnectedStopped) &&
-				(newStatus == Status.DisconnectedCanConnect || newStatus == Status.DisconnectedCannotConnect))
+			if ((oldStatus.ConnectionState == ConnectionState.Connecting || oldStatus.ConnectionState == ConnectionState.ConnectedStarted
+					|| oldStatus.ConnectionState == ConnectionState.ConnectedStopped) &&
+				(newStatus.ConnectionState == ConnectionState.DisconnectedCanConnect || newStatus.ConnectionState == ConnectionState.DisconnectedCannotConnect))
 			{
 				AddLog("Disconnected.");
 			}
 
-			if (oldStatus != Status.ConnectedStarted && newStatus == Status.ConnectedStarted)
+			if (oldStatus.ConnectionState != ConnectionState.ConnectedStarted && newStatus.ConnectionState == ConnectionState.ConnectedStarted)
 			{
 				AddLog("Started sending G codes.");
 			}
 
-			if (oldStatus == Status.ConnectedStarted && newStatus != Status.ConnectedStarted)
+			if (oldStatus.ConnectionState == ConnectionState.ConnectedStarted && newStatus.ConnectionState != ConnectionState.ConnectedStarted)
 			{
 				AddLog("Stopped sending G codes.");
 			}
+
+			machineXPositionLabel.Text = newStatus.MachinePosition.X.ToString("0.0 mm");
+
+			UpdateXPanel();
 		}
 
 		private void table1Slider_ValueChanged(object sender, EventArgs e)
@@ -149,8 +150,11 @@ namespace GrblController
 
 			table2PanelPaintedArea.Location = new Point(0, 0);
 			table2PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table2Panel.Size.Height * (table2Slider.Value / 4.0)));
+		}
 
-			machineXPositionPanel.Location = new Point(0, (int)(GeometryController.XPosition / Parameters.TablesTotalLength * tablePanel.Height - machineXPositionPanel.Size.Height / 2) - 1);
+		private void UpdateXPanel()
+		{
+			machineXPositionPanel.Location = new Point(0, (int)(Connection.Status.MachinePosition.X / Parameters.TablesTotalLength * tablePanel.Height - machineXPositionPanel.Size.Height / 2) - 1);
 		}
 
 		private void tableLengthsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -181,7 +185,7 @@ namespace GrblController
 			{
 				Parameters = Parameters.ReadFromFile();
 
-				if (Connection.Status == Status.ConnectedStarted || Connection.Status == Status.ConnectedStopped)
+				if (Connection.Status.ConnectionState == ConnectionState.ConnectedStarted || Connection.Status.ConnectionState == ConnectionState.ConnectedStopped)
 				{
 					Connection.SendSettings(Parameters);
 				}
@@ -193,21 +197,21 @@ namespace GrblController
 			var setMachineXPosition = new SetMachineXPosition();
 			if (setMachineXPosition.ShowDialog() == DialogResult.OK)
 			{
-				GeometryController.XPosition = setMachineXPosition.MachineXPosition;
-				ResizeTablePanels();
+				Connection.Status.MachinePosition.X = setMachineXPosition.MachineXPosition;
+				Connection.SetStatus(Connection.Status);
 			}
 		}
 
 		private void connectDisconnectButton_Click(object sender, EventArgs e)
 		{
-			switch (Connection.Status)
+			switch (Connection.Status.ConnectionState)
 			{
-				case Status.Connecting:
-				case Status.ConnectedStarted:
-				case Status.ConnectedStopped:
+				case ConnectionState.Connecting:
+				case ConnectionState.ConnectedStarted:
+				case ConnectionState.ConnectedStopped:
 					Connection.Disconnect();
 					break;
-				case Status.DisconnectedCanConnect:
+				case ConnectionState.DisconnectedCanConnect:
 					Connection.Initialize(Parameters);
 					Connection.Connect();
 					break;
@@ -216,11 +220,11 @@ namespace GrblController
 
 		private void startStopButton_Click(object sender, EventArgs e)
 		{
-			if (Connection.Status == Status.ConnectedStopped)
+			if (Connection.Status.ConnectionState == ConnectionState.ConnectedStopped)
 			{
 				GeometryController.Start();
 			}
-			else if (Connection.Status == Status.ConnectedStarted)
+			else if (Connection.Status.ConnectionState == ConnectionState.ConnectedStarted)
 			{
 				GeometryController.Stop();
 			}

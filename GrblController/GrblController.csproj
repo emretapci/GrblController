@@ -82,6 +82,7 @@
     <Compile Include="TableLengthSettings.Designer.cs">
       <DependentUpon>TableLengthSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Vector3D.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

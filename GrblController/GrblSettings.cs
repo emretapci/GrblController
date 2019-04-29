@@ -61,50 +61,45 @@ namespace GrblController
 		{
 			var parameters = Parameters.ReadFromFile();
 
-			parameters.StepPulseTime = double.Parse(CorrectDecimalSep(stepPulseTime.Text));
-			parameters.StepIdleDelay = double.Parse(CorrectDecimalSep(stepIdleDelay.Text));
+			parameters.StepPulseTime = double.Parse(stepPulseTime.Text);
+			parameters.StepIdleDelay = double.Parse(stepIdleDelay.Text);
 			parameters.StepPortInvert = (stepPortInvertX.Checked ? Mask.X : 0) | (stepPortInvertY.Checked ? Mask.Y : 0) | (stepPortInvertZ.Checked ? Mask.Z : 0);
 			parameters.DirectionPortInvert = (directionPortInvertX.Checked ? Mask.X : 0) | (directionPortInvertY.Checked ? Mask.Y : 0) | (directionPortInvertZ.Checked ? Mask.Z : 0);
 			parameters.StepEnableInvert = stepEnableInvert.Checked;
 			parameters.LimitPinsInvert = limitPinsInvert.Checked;
 			parameters.ProbePinInvert = probePinInvert.Checked;
 			parameters.StatusReport = (StatusReport)statusReport.SelectedIndex;
-			parameters.JunctionDeviation = double.Parse(CorrectDecimalSep(junctionDeviation.Text));
-			parameters.ArcTolerance = double.Parse(CorrectDecimalSep(arcTolerance.Text));
+			parameters.JunctionDeviation = double.Parse(junctionDeviation.Text);
+			parameters.ArcTolerance = double.Parse(arcTolerance.Text);
 			parameters.ReportInches = reportInches.Checked;
 			parameters.SoftLimits = softLimits.Checked;
 			parameters.HardLimits = hardLimits.Checked;
 			parameters.HomingCycle = homingCycle.Checked;
 			parameters.HomingDirectionInvert = (homingDirectionInvertX.Checked ? Mask.X : 0) | (homingDirectionInvertY.Checked ? Mask.Y : 0) | (homingDirectionInvertZ.Checked ? Mask.Z : 0);
-			parameters.HomingFeed = double.Parse(CorrectDecimalSep(homingFeed.Text));
-			parameters.HomingSeek = double.Parse(CorrectDecimalSep(homingSeek.Text));
-			parameters.HomingDebounce = double.Parse(CorrectDecimalSep(homingDebounce.Text));
-			parameters.HomingPullOff = double.Parse(CorrectDecimalSep(homingPullOff.Text));
-			parameters.MaximumSpindleSpeed = double.Parse(CorrectDecimalSep(maximumSpindleSpeed.Text));
-			parameters.MinimumSpindleSpeed = double.Parse(CorrectDecimalSep(minimumSpindleSpeed.Text));
+			parameters.HomingFeed = double.Parse(homingFeed.Text);
+			parameters.HomingSeek = double.Parse(homingSeek.Text);
+			parameters.HomingDebounce = double.Parse(homingDebounce.Text);
+			parameters.HomingPullOff = double.Parse(homingPullOff.Text);
+			parameters.MaximumSpindleSpeed = double.Parse(maximumSpindleSpeed.Text);
+			parameters.MinimumSpindleSpeed = double.Parse(minimumSpindleSpeed.Text);
 			parameters.LaserMode = laserMode.Checked;
-			parameters.XSteps = double.Parse(CorrectDecimalSep(xSteps.Text));
-			parameters.YSteps = double.Parse(CorrectDecimalSep(ySteps.Text));
-			parameters.ZSteps = double.Parse(CorrectDecimalSep(zSteps.Text));
-			parameters.XFeedRate = double.Parse(CorrectDecimalSep(xMaximumRate.Text));
-			parameters.YFeedRate = double.Parse(CorrectDecimalSep(yMaximumRate.Text));
-			parameters.ZFeedRate = double.Parse(CorrectDecimalSep(zMaximumRate.Text));
-			parameters.XAcceleration = double.Parse(CorrectDecimalSep(xAcceleration.Text));
-			parameters.YAcceleration = double.Parse(CorrectDecimalSep(yAcceleration.Text));
-			parameters.ZAcceleration = double.Parse(CorrectDecimalSep(zAcceleration.Text));
-			parameters.XMaximumTravel = double.Parse(CorrectDecimalSep(xMaximumTravel.Text));
-			parameters.YMaximumTravel = double.Parse(CorrectDecimalSep(yMaximumTravel.Text));
-			parameters.ZMaximumTravel = double.Parse(CorrectDecimalSep(zMaximumTravel.Text));
+			parameters.XSteps = double.Parse(xSteps.Text);
+			parameters.YSteps = double.Parse(ySteps.Text);
+			parameters.ZSteps = double.Parse(zSteps.Text);
+			parameters.XFeedRate = double.Parse(xMaximumRate.Text);
+			parameters.YFeedRate = double.Parse(yMaximumRate.Text);
+			parameters.ZFeedRate = double.Parse(zMaximumRate.Text);
+			parameters.XAcceleration = double.Parse(xAcceleration.Text);
+			parameters.YAcceleration = double.Parse(yAcceleration.Text);
+			parameters.ZAcceleration = double.Parse(zAcceleration.Text);
+			parameters.XMaximumTravel = double.Parse(xMaximumTravel.Text);
+			parameters.YMaximumTravel = double.Parse(yMaximumTravel.Text);
+			parameters.ZMaximumTravel = double.Parse(zMaximumTravel.Text);
 
 			Parameters.WriteToFile(parameters);
 
 			DialogResult = DialogResult.OK;
 			Close();
-		}
-
-		private string CorrectDecimalSep(string s)
-		{
-			return s.Replace(".", Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator).Replace(",", Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
 		}
 	}
 }

@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.IO.Ports;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace GrblController
 {
-	internal enum Status
+	internal enum ConnectionState
 	{
 		DisconnectedCannotConnect,
 		DisconnectedCanConnect,
@@ -16,41 +18,73 @@ namespace GrblController
 		ConnectedStopped
 	}
 
+	internal enum MachineState
+	{
+		Unknown,
+		Idle,
+		Run,
+		Hold,
+		Jog,
+		Alarm,
+		Door,
+		Check,
+		Home,
+		Sleep
+	}
+
+	internal class Status
+	{
+		internal ConnectionState ConnectionState { get; set; }
+		internal MachineState MachineState { get; set; }
+		internal Vector3D MachinePosition { get; set; }
+	}
+
 	internal class Connection
 	{
-		private Status status;
 		private Parameters parameters;
 		private SerialPort serialPort;
 		private ManualResetEvent responseReceived = new ManualResetEvent(false);
 		private string response;
 		private byte[] buffer = new byte[1000];
 		private int length = 0;
+		private System.Timers.Timer statusTimer;
 
 		internal event Action<Status, Status> onStatusChanged;
 
-		internal Status Status
-		{
-			get
-			{
-				return status;
-			}
-			set
-			{
-				var old = status;
-				status = value;
-				onStatusChanged?.Invoke(old, status);
-			}
-		}
+		internal Status Status { get; private set; }
 
 		internal void Initialize(Parameters parameters)
 		{
 			this.parameters = parameters;
+
+			Status = new Status()
+			{
+				ConnectionState = ConnectionState.DisconnectedCannotConnect,
+				MachineState = MachineState.Unknown,
+				MachinePosition = new Vector3D(0, 0, 0)
+			};
+
 			Disconnect();
+
+			statusTimer = new System.Timers.Timer(1000);
+			statusTimer.Interval = 500;
+			statusTimer.AutoReset = true;
+			statusTimer.Elapsed += (sender, e) =>
+			{
+				Send("?");
+			};
+		}
+
+		internal void SetStatus(Status status)
+		{
+			var old = Status;
+			Status = status;
+			onStatusChanged?.Invoke(old, Status);
 		}
 
 		internal void Connect()
 		{
-			if (Status == Status.ConnectedStarted || Status == Status.ConnectedStopped || Status == Status.Connecting)
+			if (Status.ConnectionState == ConnectionState.ConnectedStarted || Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.Connecting)
 			{
 				return;
 			}
@@ -71,14 +105,18 @@ namespace GrblController
 
 			serialPort.DataReceived += ProcessData;
 
-			Status = Status.Connecting;
+			Status.ConnectionState = ConnectionState.Connecting;
+			SetStatus(Status);
 
 			serialPort.Write(new byte[] { 0x18 }, 0, 1);
 		}
 
 		internal void Send(string command)
 		{
-			serialPort.WriteLine(command);
+			if (serialPort != null && serialPort.IsOpen)
+			{
+				serialPort.WriteLine(command);
+			}
 		}
 
 		private void ProcessData(object sender, SerialDataReceivedEventArgs e)
@@ -88,8 +126,8 @@ namespace GrblController
 
 			while (true)
 			{
-				int newlineIndex = Array.IndexOf(buffer, (byte)'\n');
-				if(newlineIndex >= length)
+				int newlineIndex = Math.Min(Array.IndexOf(buffer, (byte)'\n'), Array.IndexOf(buffer, (byte)'\r'));
+				if (newlineIndex >= length)
 				{
 					break;
 				}
@@ -103,29 +141,80 @@ namespace GrblController
 					var versionRegex = new Regex(@"Grbl\s(?<version>[\d\.a-z]*)\s\[\'\$\'\sfor\shelp\]");
 					var settingRegex = new Regex(@"\$(?<setting>\d+)=(?<value>\d+(\.\d*)?)");
 					var okRegex = new Regex(@"ok");
+					bool processed = false;
 
-					if (Status == Status.Connecting && versionRegex.IsMatch(line))
+					if (Status.ConnectionState == ConnectionState.Connecting && versionRegex.IsMatch(line))
 					{
 						var version = versionRegex.Match(line).Groups["version"].Value;
 						Main.Instance.AddLog("GRBL version received: " + version);
-						Status = Status.ConnectedStopped;
+						Status.ConnectionState = ConnectionState.ConnectedStopped;
+						SetStatus(Status);
 						Main.Instance.AddLog("Receiving settings.");
 						Send("$$");
+						statusTimer.Start();
+						processed = true;
 					}
-					else if (Status == Status.ConnectedStopped && settingRegex.IsMatch(line))
+					else if (Status.ConnectionState == ConnectionState.ConnectedStopped && settingRegex.IsMatch(line))
 					{
 						var setting = settingRegex.Match(line).Groups["setting"].Value;
 						var val = settingRegex.Match(line).Groups["value"].Value;
 						RecordSetting(setting, val);
 						Main.Instance.AddLog("$" + setting + "=" + val);
+						processed = true;
 					}
-					else if (Status == Status.ConnectedStopped && okRegex.IsMatch(line))
+					else if (Status.ConnectionState == ConnectionState.ConnectedStopped && okRegex.IsMatch(line))
 					{
 						responseReceived.Set();
 						response = line.Trim();
+						processed = true;
+					}
+					else if (Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.ConnectedStarted)
+					{
+						var statusMatches = StatusMatch(line);
+						if (statusMatches.ContainsKey("MPosX") && statusMatches.ContainsKey("MPosY") && statusMatches.ContainsKey("MPosZ"))
+						{
+							Status.MachinePosition = new Vector3D(double.Parse(statusMatches["MPosX"]), double.Parse(statusMatches["MPosY"]), double.Parse(statusMatches["MPosZ"]));
+							SetStatus(Status);
+							processed = true;
+						}
+					}
+
+					if(!processed && line.Trim() != "ok")
+					{
+						Main.Instance.AddLog(line);
 					}
 				}
 			}
+		}
+
+		private Dictionary<string, string> StatusMatch(string line)
+		{
+			var regex = new Regex[] {
+				new Regex(@"(?<state>(Idle|Run|Hold|Jog|Alarm|Door|Check|Home|Sleep))"),
+				new Regex(@"(MPos:(?<MPosX>\-?\d+(\.\d*)?),(?<MPosY>\-?\d+(\.\d*)?),(?<MPosZ>\-?\d+(\.\d*)?))"),
+				new Regex(@"(Ov:(?<OvX>\-?\d+(\.\d*)?),(?<OvY>\-?\d+(\.\d*)?),(?<OvZ>\-?\d+(\.\d*)?))"),
+				new Regex(@"(WCO:(?<WCOX>\-?\d+(\.\d*)?),(?<WCOY>\-?\d+(\.\d*)?),(?<WCOZ>\-?\d+(\.\d*)?))"),
+				new Regex(@"(Bf:(?<BfAvBl>\d+),(?<BfAvByRxBuf>\d+))"),
+				new Regex(@"(Ln:(?<Line>\d+))"),
+				new Regex(@"((F:(?<FeedRate1>\d+))|(FS:(?<FeedRate2>\d+),(?<SpnSpd>\d+)))"),
+				new Regex(@"(Pn:(?<Pins>[XYZPDHRSA]*))"),
+				new Regex(@"(A:(?<AccState>[(S|C)FM]*))")
+			};
+
+			var matches = regex.Select(r => r.Matches(line)).Where(m => m.Count > 0).Select(m => m[0]);
+			var namedMatches = new string[] { "state", "MPosX", "MPosY", "MPosZ", "OvX", "OvY", "OvZ", "WCO", "Bf", "Ln", "FeedRate1", "FeedRate2", "SpnSpd", "Pins", "AccState" };
+
+			var matchesDict = new Dictionary<string, string>();
+
+			foreach (var match in matches)
+			{
+				foreach (var match2 in namedMatches.Where(nm => !string.IsNullOrWhiteSpace(match.Groups[nm].Value)))
+				{
+					matchesDict.Add(match2, match.Groups[match2].Value);
+				}
+			}
+
+			return matchesDict;
 		}
 
 		private void RecordSetting(string setting, string val)
@@ -417,7 +506,7 @@ namespace GrblController
 				settingsChanged = true;
 			}
 
-			if(settingsChanged)
+			if (settingsChanged)
 			{
 				Disconnect();
 			}
@@ -445,26 +534,30 @@ namespace GrblController
 
 		internal void Disconnect()
 		{
-			if (Status == Status.ConnectedStarted)
+			if (Status.ConnectionState == ConnectionState.ConnectedStarted)
 			{
 				Main.Instance.GeometryController.Stop();
 			}
 
-			if ((Status == Status.ConnectedStarted || Status == Status.ConnectedStopped || Status == Status.Connecting) && serialPort != null)
+			statusTimer?.Stop();
+
+			if ((Status.ConnectionState == ConnectionState.ConnectedStarted || Status.ConnectionState == ConnectionState.ConnectedStopped ||
+				Status.ConnectionState == ConnectionState.Connecting) && serialPort != null)
 			{
 				serialPort.DataReceived -= ProcessData;
-				serialPort.Close();
 				serialPort.Dispose();
 				serialPort = null;
 			}
 
 			if (Array.IndexOf(SerialPort.GetPortNames(), parameters.SerialPortString) >= 0)
 			{
-				Status = Status.DisconnectedCanConnect;
+				Status.ConnectionState = ConnectionState.DisconnectedCanConnect;
+				SetStatus(Status);
 			}
 			else
 			{
-				Status = Status.DisconnectedCannotConnect;
+				Status.ConnectionState = ConnectionState.DisconnectedCannotConnect;
+				SetStatus(Status);
 			}
 		}
 	}

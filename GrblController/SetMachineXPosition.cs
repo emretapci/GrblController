@@ -14,7 +14,7 @@ namespace GrblController
 
 		private void SetMachineXPosition_Load(object sender, EventArgs e)
 		{
-			machineXPositionTextBox.Text = Main.Instance.GeometryController.XPosition.ToString("0.0");
+			machineXPositionTextBox.Text = Main.Instance.Connection.Status.MachinePosition.X.ToString("0.0");
 		}
 
 		private void buttonOK_Click(object sender, EventArgs e)

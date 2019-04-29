@@ -211,7 +211,7 @@
 			// 
 			this.startStopButton.Location = new System.Drawing.Point(748, 571);
 			this.startStopButton.Name = "startStopButton";
-			this.startStopButton.Size = new System.Drawing.Size(110, 35);
+			this.startStopButton.Size = new System.Drawing.Size(110, 49);
 			this.startStopButton.TabIndex = 15;
 			this.startStopButton.Text = "Start";
 			this.startStopButton.UseVisualStyleBackColor = true;
@@ -221,7 +221,7 @@
 			// 
 			this.connectDisconnectButton.Location = new System.Drawing.Point(632, 571);
 			this.connectDisconnectButton.Name = "connectDisconnectButton";
-			this.connectDisconnectButton.Size = new System.Drawing.Size(110, 35);
+			this.connectDisconnectButton.Size = new System.Drawing.Size(110, 49);
 			this.connectDisconnectButton.TabIndex = 16;
 			this.connectDisconnectButton.Text = "Connect";
 			this.connectDisconnectButton.UseVisualStyleBackColor = true;
@@ -401,7 +401,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(886, 629);
+			this.ClientSize = new System.Drawing.Size(886, 653);
 			this.Controls.Add(this.machineXPositionLabel);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.table1Label0);
