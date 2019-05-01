@@ -129,6 +129,7 @@
 			this.label59 = new System.Windows.Forms.Label();
 			this.homingSeek = new System.Windows.Forms.TextBox();
 			this.homingCycle = new System.Windows.Forms.CheckBox();
+			this.defaultButton = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -1075,6 +1076,16 @@
 			this.homingCycle.TabIndex = 113;
 			this.homingCycle.UseVisualStyleBackColor = true;
 			// 
+			// defaultButton
+			// 
+			this.defaultButton.Location = new System.Drawing.Point(390, 496);
+			this.defaultButton.Name = "defaultButton";
+			this.defaultButton.Size = new System.Drawing.Size(110, 35);
+			this.defaultButton.TabIndex = 114;
+			this.defaultButton.Text = "Default";
+			this.defaultButton.UseVisualStyleBackColor = true;
+			this.defaultButton.Click += new System.EventHandler(this.defaultButton_Click);
+			// 
 			// GrblSettings
 			// 
 			this.AcceptButton = this.buttonOK;
@@ -1082,6 +1093,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
 			this.ClientSize = new System.Drawing.Size(810, 552);
+			this.Controls.Add(this.defaultButton);
 			this.Controls.Add(this.homingCycle);
 			this.Controls.Add(this.label59);
 			this.Controls.Add(this.homingSeek);
@@ -1302,5 +1314,6 @@
 		private System.Windows.Forms.Label label59;
 		private System.Windows.Forms.TextBox homingSeek;
 		private System.Windows.Forms.CheckBox homingCycle;
+		private System.Windows.Forms.Button defaultButton;
 	}
 }

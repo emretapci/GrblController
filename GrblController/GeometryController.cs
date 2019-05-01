@@ -7,9 +7,9 @@ namespace GrblController
 	{
 		private ManualResetEvent willStop = new ManualResetEvent(false);
 		private ManualResetEvent stopped = new ManualResetEvent(false);
-		private ManualResetEvent xReached = new ManualResetEvent(false);
+		private ManualResetEvent targetReached = new ManualResetEvent(false);
 
-		private double targetY;
+		private double targetCoord;
 
 		private Thread thread;
 
@@ -22,15 +22,23 @@ namespace GrblController
 			willStop.Reset();
 			thread.Start();
 
-			Main.Instance.Connection.Status.ConnectionState = ConnectionState.ConnectedStarted;
-			Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { ConnectionState = ConnectionState.ConnectedStarted });
+		}
+
+		internal void GoHome()
+		{
+			Main.Instance.AddLog("Go home.");
+			Stop();
+			Main.Instance.Connection.Send("$X");
+			Main.Instance.Connection.Send("G28 " + Main.Instance.Parameters.ControlAxis.ToString() + "0");
+			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 		}
 
 		private void Connection_onStatusChanged(Status oldStatus, Status newStatus)
 		{
-			if (Math.Abs(newStatus.MachinePosition.Y - targetY) < 0.1)
+			if (Math.Abs(newStatus.MachineCoordinate - targetCoord) < 0.1)
 			{
-				xReached.Set();
+				targetReached.Set();
 			}
 		}
 
@@ -38,19 +46,21 @@ namespace GrblController
 		{
 			Main.Instance.Connection.onStatusChanged -= Connection_onStatusChanged;
 
-			willStop.Set();
-			stopped.WaitOne();
+			if (thread != null && thread.IsAlive)
+			{
+				willStop.Set();
+				stopped.WaitOne();
+			}
 
-			Main.Instance.Connection.Status.ConnectionState = ConnectionState.ConnectedStopped;
-			Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { ConnectionState = ConnectionState.ConnectedStopped });
 		}
 
-		private void WaitXPosition(double targetX)
+		private void WaitXPosition(double targetCoord)
 		{
-			xReached.Reset();
-			this.targetY = targetX;
+			targetReached.Reset();
+			this.targetCoord = targetCoord;
 
-			if (WaitHandle.WaitAny(new WaitHandle[] { xReached, willStop }) == 1)
+			if (WaitHandle.WaitAny(new WaitHandle[] { targetReached, willStop }) == 1)
 			{
 				stopped.Set();
 			}
@@ -61,10 +71,10 @@ namespace GrblController
 			Main.Instance.Connection.Send("$X");
 
 			Main.Instance.AddLog("Go to beginning of Table 1 paint area.");
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + Main.Instance.Parameters.StartOffset.ToString("0.0"));
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + Main.Instance.Parameters.StartOffset.ToString("0.0"));
 			WaitXPosition(Main.Instance.Parameters.StartOffset);
 
-			if(Main.Instance.Connection.Status.ConnectionState != ConnectionState.ConnectedStarted)
+			if (Main.Instance.Connection.Status.ConnectionState != ConnectionState.ConnectedStarted)
 			{
 				Main.Instance.AddLog("Set status to Stopped.");
 				return;
@@ -72,12 +82,11 @@ namespace GrblController
 
 			Main.Instance.AddLog("Start sprayer.");
 			Main.Instance.Connection.Send("M3");
-			Main.Instance.Connection.Status.Painting = true;
-			Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = true });
 
 			Main.Instance.AddLog("Go to end of Table 1 paint area.");
 			var target = Main.Instance.Parameters.StartOffset + Main.Instance.Table1PaintedAreaRatio * Main.Instance.Parameters.Table1Length;
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + target.ToString("0.0"));
 			WaitXPosition(target);
 
 			if (Main.Instance.Connection.Status.ConnectionState != ConnectionState.ConnectedStarted)
@@ -85,19 +94,17 @@ namespace GrblController
 				Main.Instance.AddLog("Stop sprayer.");
 				Main.Instance.Connection.Send("M5");
 				Main.Instance.AddLog("Set status to Stopped.");
-				Main.Instance.Connection.Status.Painting = false;
-				Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 				return;
 			}
 
 			Main.Instance.AddLog("Stop sprayer.");
 			Main.Instance.Connection.Send("M5");
-			Main.Instance.Connection.Status.Painting = false;
-			Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 
 			Main.Instance.AddLog("Go to beginning of Table 2 paint area.");
 			target = Main.Instance.Parameters.StartOffset + Main.Instance.Parameters.Table1Length + Main.Instance.Parameters.MiddleGap;
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + target.ToString("0.0"));
 			WaitXPosition(target);
 
 			if (Main.Instance.Connection.Status.ConnectionState != ConnectionState.ConnectedStarted)
@@ -105,19 +112,17 @@ namespace GrblController
 				Main.Instance.AddLog("Stop sprayer.");
 				Main.Instance.Connection.Send("M5");
 				Main.Instance.AddLog("Set status to Stopped.");
-				Main.Instance.Connection.Status.Painting = false;
-				Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 				return;
 			}
 
 			Main.Instance.AddLog("Start sprayer.");
 			Main.Instance.Connection.Send("M3");
-			Main.Instance.Connection.Status.Painting = true;
-			Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = true });
 
 			Main.Instance.AddLog("Go to end of Table 2 paint area.");
 			target = Main.Instance.Parameters.StartOffset + Main.Instance.Parameters.Table1Length + Main.Instance.Parameters.MiddleGap + Main.Instance.Table2PaintedAreaRatio * Main.Instance.Parameters.Table2Length;
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + target.ToString("0.0"));
 			WaitXPosition(target);
 
 			if (Main.Instance.Connection.Status.ConnectionState != ConnectionState.ConnectedStarted)
@@ -125,8 +130,7 @@ namespace GrblController
 				Main.Instance.AddLog("Stop sprayer.");
 				Main.Instance.Connection.Send("M5");
 				Main.Instance.AddLog("Set status to Stopped.");
-				Main.Instance.Connection.Status.Painting = false;
-				Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 				return;
 			}
 
@@ -134,8 +138,7 @@ namespace GrblController
 			Main.Instance.Connection.Send("M5");
 			Main.Instance.AddLog("Set status to Stopped.");
 			Main.Instance.Connection.Status.ConnectionState = ConnectionState.ConnectedStopped;
-			Main.Instance.Connection.Status.Painting = false;
-			Main.Instance.Connection.SetStatus(Main.Instance.Connection.Status);
+			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 		}
 	}
 }

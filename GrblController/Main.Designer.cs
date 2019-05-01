@@ -59,6 +59,7 @@
 			this.table2Label0 = new System.Windows.Forms.Label();
 			this.machinePositionLabel = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
+			this.homeButton = new System.Windows.Forms.Button();
 			this.tablePanel.SuspendLayout();
 			this.table2Panel.SuspendLayout();
 			this.table1Panel.SuspendLayout();
@@ -96,7 +97,7 @@
 			this.table2Panel.Location = new System.Drawing.Point(0, 198);
 			this.table2Panel.Margin = new System.Windows.Forms.Padding(4);
 			this.table2Panel.Name = "table2Panel";
-			this.table2Panel.Size = new System.Drawing.Size(343, 253);
+			this.table2Panel.Size = new System.Drawing.Size(353, 253);
 			this.table2Panel.TabIndex = 2;
 			// 
 			// table2PanelPaintedArea
@@ -107,7 +108,7 @@
 			this.table2PanelPaintedArea.Location = new System.Drawing.Point(0, 0);
 			this.table2PanelPaintedArea.Margin = new System.Windows.Forms.Padding(4);
 			this.table2PanelPaintedArea.Name = "table2PanelPaintedArea";
-			this.table2PanelPaintedArea.Size = new System.Drawing.Size(341, 66);
+			this.table2PanelPaintedArea.Size = new System.Drawing.Size(351, 66);
 			this.table2PanelPaintedArea.TabIndex = 1;
 			// 
 			// table1Panel
@@ -118,7 +119,7 @@
 			this.table1Panel.Location = new System.Drawing.Point(0, 0);
 			this.table1Panel.Margin = new System.Windows.Forms.Padding(4);
 			this.table1Panel.Name = "table1Panel";
-			this.table1Panel.Size = new System.Drawing.Size(343, 111);
+			this.table1Panel.Size = new System.Drawing.Size(352, 111);
 			this.table1Panel.TabIndex = 0;
 			// 
 			// table1PanelPaintedArea
@@ -209,7 +210,7 @@
 			// 
 			// startStopButton
 			// 
-			this.startStopButton.Location = new System.Drawing.Point(748, 571);
+			this.startStopButton.Location = new System.Drawing.Point(632, 571);
 			this.startStopButton.Name = "startStopButton";
 			this.startStopButton.Size = new System.Drawing.Size(110, 49);
 			this.startStopButton.TabIndex = 15;
@@ -219,7 +220,7 @@
 			// 
 			// connectDisconnectButton
 			// 
-			this.connectDisconnectButton.Location = new System.Drawing.Point(632, 571);
+			this.connectDisconnectButton.Location = new System.Drawing.Point(516, 571);
 			this.connectDisconnectButton.Name = "connectDisconnectButton";
 			this.connectDisconnectButton.Size = new System.Drawing.Size(110, 49);
 			this.connectDisconnectButton.TabIndex = 16;
@@ -397,11 +398,22 @@
 			this.label2.Text = "Machine X position:";
 			this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
+			// homeButton
+			// 
+			this.homeButton.Location = new System.Drawing.Point(748, 571);
+			this.homeButton.Name = "homeButton";
+			this.homeButton.Size = new System.Drawing.Size(110, 49);
+			this.homeButton.TabIndex = 32;
+			this.homeButton.Text = "Home";
+			this.homeButton.UseVisualStyleBackColor = true;
+			this.homeButton.Click += new System.EventHandler(this.homeButton_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(886, 653);
+			this.Controls.Add(this.homeButton);
 			this.Controls.Add(this.machinePositionLabel);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.table1Label0);
@@ -428,6 +440,7 @@
 			this.MaximizeBox = false;
 			this.Name = "Main";
 			this.Text = "GRBL Controller";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.tablePanel.ResumeLayout(false);
 			this.table2Panel.ResumeLayout(false);
@@ -474,6 +487,7 @@
 		private System.Windows.Forms.Label machinePositionLabel;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Panel machinePositionPanel;
+		private System.Windows.Forms.Button homeButton;
 	}
 }
 

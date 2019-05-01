@@ -46,6 +46,7 @@ namespace GrblController
 		internal int Baudrate { get; set; }
 
 		internal ControlAxis ControlAxis { get; set; }
+		internal bool ReverseFeed { get; set; }
 
 		internal double StepPulseTime { get; set; } //usec
 		internal double StepIdleDelay { get; set; } //msec
@@ -94,6 +95,7 @@ namespace GrblController
 			Baudrate = 115200;
 
 			ControlAxis = ControlAxis.Y;
+			ReverseFeed = false;
 
 			StepPulseTime = 10;
 			StepIdleDelay = 255;
@@ -150,6 +152,7 @@ namespace GrblController
 					Baudrate = int.Parse(doc["Parameters"]["Baudrate"].InnerText),
 
 					ControlAxis = (ControlAxis)Enum.Parse(typeof(ControlAxis), doc["Parameters"]["ControlAxis"].InnerText),
+					ReverseFeed = bool.Parse(doc["Parameters"]["ReverseFeed"].InnerText),
 
 					StepPulseTime = double.Parse(doc["Parameters"]["StepPulseTime"].InnerText),
 					StepIdleDelay = double.Parse(doc["Parameters"]["StepIdleDelay"].InnerText),
@@ -210,6 +213,7 @@ namespace GrblController
 					new XElement("Baudrate", parameters.Baudrate.ToString()),
 
 					new XElement("ControlAxis", parameters.ControlAxis.ToString()),
+					new XElement("ReverseFeed", parameters.ReverseFeed.ToString()),
 
 					new XElement("StepPulseTime", parameters.StepPulseTime.ToString()),
 					new XElement("StepIdleDelay", parameters.StepIdleDelay.ToString()),

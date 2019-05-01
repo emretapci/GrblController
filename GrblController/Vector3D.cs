@@ -12,5 +12,12 @@
 			Y = y;
 			Z = z;
 		}
+
+		public Vector3D(Vector3D machinePosition)
+		{
+			X = machinePosition.X;
+			Y = machinePosition.Y;
+			Z = machinePosition.Z;
+		}
 	}
 }

@@ -38,6 +38,50 @@ namespace GrblController
 		internal MachineState MachineState { get; set; }
 		internal Vector3D MachinePosition { get; set; }
 		internal bool Painting { get; set; }
+
+		internal double MachineCoordinate
+		{
+			get
+			{
+				switch(Main.Instance.Parameters.ControlAxis)
+				{
+					case ControlAxis.X:
+						return MachinePosition.X;
+					case ControlAxis.Y:
+						return MachinePosition.Y;
+					case ControlAxis.Z:
+						return MachinePosition.Z;
+				}
+				return double.NaN;
+			}
+			set
+			{
+				switch (Main.Instance.Parameters.ControlAxis)
+				{
+					case ControlAxis.X:
+						MachinePosition.X = value;
+						break;
+					case ControlAxis.Y:
+						MachinePosition.Y = value;
+						break;
+					case ControlAxis.Z:
+						MachinePosition.Z = value;
+						break;
+				}
+			}
+		}
+
+		internal Status()
+		{
+		}
+
+		internal Status(Status status)
+		{
+			ConnectionState = status.ConnectionState;
+			MachineState = status.MachineState;
+			MachinePosition = new Vector3D(status.MachinePosition);
+			Painting = status.Painting;
+		}
 	}
 
 	internal class Connection
@@ -104,8 +148,7 @@ namespace GrblController
 
 			serialPort.DataReceived += ProcessData;
 
-			Status.ConnectionState = ConnectionState.Connecting;
-			SetStatus(Status);
+			SetStatus(new Status(Status) { ConnectionState = ConnectionState.Connecting });
 
 			serialPort.Write(new byte[] { 0x18 }, 0, 1);
 		}
@@ -146,10 +189,11 @@ namespace GrblController
 					{
 						var version = versionRegex.Match(line).Groups["version"].Value;
 						Main.Instance.AddLog("GRBL version received: " + version);
-						Status.ConnectionState = ConnectionState.ConnectedStopped;
-						SetStatus(Status);
-						Main.Instance.AddLog("Receiving settings.");
-						Send("$$");
+						SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
+
+						//not necessary anymore. will be flushed anyway.
+						//Main.Instance.AddLog("Receiving settings.");
+						//Send("$$");
 						statusTimer.Start();
 						processed = true;
 					}
@@ -157,14 +201,17 @@ namespace GrblController
 					{
 						var setting = settingRegex.Match(line).Groups["setting"].Value;
 						var val = settingRegex.Match(line).Groups["value"].Value;
-						RecordSetting(setting, val);
-						Main.Instance.AddLog("$" + setting + "=" + val);
+
+						//settings in the config file is the master. config on the board is always overridden.
+						//RecordSetting(setting, val);
+						//Main.Instance.AddLog("$" + setting + "=" + val);
+
 						processed = true;
 					}
 					else if (Status.ConnectionState == ConnectionState.ConnectedStopped && okRegex.IsMatch(line))
 					{
-						responseReceived.Set();
 						response = line.Trim();
+						responseReceived.Set();
 						processed = true;
 					}
 					else if (Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.ConnectedStarted)
@@ -172,18 +219,55 @@ namespace GrblController
 						var statusMatches = StatusMatch(line);
 						if (statusMatches.ContainsKey("MPosX") && statusMatches.ContainsKey("MPosY") && statusMatches.ContainsKey("MPosZ"))
 						{
-							Status.MachinePosition = new Vector3D(double.Parse(statusMatches["MPosX"]), double.Parse(statusMatches["MPosY"]), double.Parse(statusMatches["MPosZ"]));
-							SetStatus(Status);
+							SetStatus(new Status(Status) { MachinePosition = new Vector3D(-double.Parse(statusMatches["MPosX"]), -double.Parse(statusMatches["MPosY"]), -double.Parse(statusMatches["MPosZ"])) });
 							processed = true;
 						}
 					}
 
-					if(!processed && line.Trim() != "ok")
+					/*if (!processed && line.Trim() != "ok")
 					{
 						Main.Instance.AddLog(line);
-					}
+					}*/
 				}
 			}
+		}
+
+		internal void WriteSettingsToBoard()
+		{
+			SendSetting(0, Main.Instance.Parameters.StepPulseTime.ToString());
+			SendSetting(1, Main.Instance.Parameters.StepIdleDelay.ToString());
+			SendSetting(2, ((int)Main.Instance.Parameters.StepPortInvert).ToString());
+			SendSetting(3, ((int)Main.Instance.Parameters.DirectionPortInvert).ToString());
+			SendSetting(4, Main.Instance.Parameters.StepEnableInvert ? "1" : "0");
+			SendSetting(5, Main.Instance.Parameters.LimitPinsInvert ? "1" : "0");
+			SendSetting(6, Main.Instance.Parameters.ProbePinInvert ? "1" : "0");
+			SendSetting(10, ((int)Main.Instance.Parameters.StatusReport).ToString());
+			SendSetting(11, Main.Instance.Parameters.JunctionDeviation.ToString());
+			SendSetting(12, Main.Instance.Parameters.ArcTolerance.ToString());
+			SendSetting(13, Main.Instance.Parameters.ReportInches ? "1" : "0");
+			SendSetting(20, Main.Instance.Parameters.SoftLimits ? "1" : "0");
+			SendSetting(21, Main.Instance.Parameters.HardLimits ? "1" : "0");
+			SendSetting(22, Main.Instance.Parameters.HomingCycle ? "1" : "0");
+			SendSetting(23, ((int)Main.Instance.Parameters.HomingDirectionInvert).ToString());
+			SendSetting(24, Main.Instance.Parameters.HomingFeed.ToString());
+			SendSetting(25, Main.Instance.Parameters.HomingSeek.ToString());
+			SendSetting(26, Main.Instance.Parameters.HomingDebounce.ToString());
+			SendSetting(27, Main.Instance.Parameters.HomingPullOff.ToString());
+			SendSetting(30, Main.Instance.Parameters.MaximumSpindleSpeed.ToString());
+			SendSetting(31, Main.Instance.Parameters.MinimumSpindleSpeed.ToString());
+			SendSetting(32, Main.Instance.Parameters.LaserMode ? "1" : "0");
+			SendSetting(100, Main.Instance.Parameters.XSteps.ToString());
+			SendSetting(101, Main.Instance.Parameters.YSteps.ToString());
+			SendSetting(102, Main.Instance.Parameters.ZSteps.ToString());
+			SendSetting(110, Main.Instance.Parameters.XFeedRate.ToString());
+			SendSetting(111, Main.Instance.Parameters.YFeedRate.ToString());
+			SendSetting(112, Main.Instance.Parameters.ZFeedRate.ToString());
+			SendSetting(120, Main.Instance.Parameters.XAcceleration.ToString());
+			SendSetting(121, Main.Instance.Parameters.YAcceleration.ToString());
+			SendSetting(122, Main.Instance.Parameters.ZAcceleration.ToString());
+			SendSetting(130, Main.Instance.Parameters.XMaximumTravel.ToString());
+			SendSetting(131, Main.Instance.Parameters.YMaximumTravel.ToString());
+			SendSetting(132, Main.Instance.Parameters.ZMaximumTravel.ToString());
 		}
 
 		private Dictionary<string, string> StatusMatch(string line)
@@ -336,7 +420,7 @@ namespace GrblController
 			{
 				if (response == "ok")
 				{
-					Main.Instance.AddLog("\"$" + setting + "=" + val + "\" command accepted.");
+					//Main.Instance.AddLog("\"$" + setting + "=" + val + "\" command accepted.");
 				}
 				else
 				{
@@ -369,12 +453,11 @@ namespace GrblController
 			if (Array.IndexOf(SerialPort.GetPortNames(), Main.Instance.Parameters.SerialPortString) >= 0)
 			{
 				Status.ConnectionState = ConnectionState.DisconnectedCanConnect;
-				SetStatus(Status);
+				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
 			}
 			else
 			{
-				Status.ConnectionState = ConnectionState.DisconnectedCannotConnect;
-				SetStatus(Status);
+				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCannotConnect });
 			}
 		}
 	}

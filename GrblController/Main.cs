@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace GrblController
@@ -59,7 +60,7 @@ namespace GrblController
 
 		private void StatusChanged(Status oldStatus, Status newStatus)
 		{
-			if(InvokeRequired)
+			if (InvokeRequired)
 			{
 				Invoke(new Action(() =>
 				{
@@ -75,12 +76,14 @@ namespace GrblController
 					connectDisconnectButton.Enabled = false;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
+					homeButton.Enabled = false;
 					break;
 				case ConnectionState.DisconnectedCanConnect:
 					connectDisconnectButton.Text = "Connect";
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
+					homeButton.Enabled = false;
 					break;
 				case ConnectionState.Connecting:
 					connectDisconnectButton.Text = "Connecting (stop)";
@@ -88,26 +91,36 @@ namespace GrblController
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
 					AddLog("Connecting...");
+					homeButton.Enabled = false;
 					break;
 				case ConnectionState.ConnectedStarted:
 					connectDisconnectButton.Text = "Disconnect";
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Stop";
 					startStopButton.Enabled = true;
+					homeButton.Enabled = true;
 					break;
 				case ConnectionState.ConnectedStopped:
 					connectDisconnectButton.Text = "Disconnect";
 					connectDisconnectButton.Enabled = true;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = true;
+					homeButton.Enabled = true;
 					break;
 			}
+
+			Parameters = Parameters.ReadFromFile();
 
 			if ((oldStatus.ConnectionState == ConnectionState.Connecting || oldStatus.ConnectionState == ConnectionState.DisconnectedCanConnect
 					|| oldStatus.ConnectionState == ConnectionState.DisconnectedCannotConnect) &&
 				(newStatus.ConnectionState == ConnectionState.ConnectedStarted || newStatus.ConnectionState == ConnectionState.ConnectedStopped))
 			{
 				AddLog("Connected.");
+				AddLog("Writing settings to board.");
+				(new Thread(new ThreadStart(() => {
+					Thread.Sleep(1000);
+					Connection.WriteSettingsToBoard();
+					}))).Start();
 			}
 
 			if ((oldStatus.ConnectionState == ConnectionState.Connecting || oldStatus.ConnectionState == ConnectionState.ConnectedStarted
@@ -127,20 +140,7 @@ namespace GrblController
 				AddLog("Stopped sending G codes.");
 			}
 
-			Parameters = Parameters.ReadFromFile();
-
-			switch (Parameters.ControlAxis)
-			{
-				case ControlAxis.X:
-					machinePositionLabel.Text = newStatus.MachinePosition.X.ToString("0.0 mm");
-					break;
-				case ControlAxis.Y:
-					machinePositionLabel.Text = newStatus.MachinePosition.Y.ToString("0.0 mm");
-					break;
-				case ControlAxis.Z:
-					machinePositionLabel.Text = newStatus.MachinePosition.Z.ToString("0.0 mm");
-					break;
-			}
+			machinePositionLabel.Text = newStatus.MachineCoordinate.ToString("0.0 mm");
 
 			UpdateXPanel();
 		}
@@ -186,7 +186,7 @@ namespace GrblController
 
 		private void UpdateXPanel()
 		{
-			machinePositionPanel.Location = new Point(0, (int)(Connection.Status.MachinePosition.Y / Parameters.TablesTotalLength * tablePanel.Height - machinePositionPanel.Size.Height / 2) - 1);
+			machinePositionPanel.Location = new Point(0, (int)(Math.Abs(Connection.Status.MachineCoordinate) / Parameters.TablesTotalLength * tablePanel.Height - machinePositionPanel.Size.Height / 2) - 1);
 			machinePositionPanel.BackColor = Connection.Status.Painting ? Color.Red : Color.Blue;
 		}
 
@@ -224,19 +224,7 @@ namespace GrblController
 			{
 				Parameters = Parameters.ReadFromFile();
 
-				switch (Parameters.ControlAxis)
-				{
-					case ControlAxis.X:
-						Connection.Status.MachinePosition.X = setMachinePosition.MachinePosition;
-						break;
-					case ControlAxis.Y:
-						Connection.Status.MachinePosition.Y = setMachinePosition.MachinePosition;
-						break;
-					case ControlAxis.Z:
-						Connection.Status.MachinePosition.Z = setMachinePosition.MachinePosition;
-						break;
-				}
-
+				Connection.Status.MachineCoordinate = setMachinePosition.MachinePosition;
 				Connection.SetStatus(Connection.Status);
 
 				label2.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
@@ -271,6 +259,12 @@ namespace GrblController
 			}
 		}
 
+		private void homeButton_Click(object sender, EventArgs e)
+		{
+			GeometryController.Stop();
+			GeometryController.GoHome();
+		}
+
 		internal void AddLog(string s)
 		{
 			if (InvokeRequired)
@@ -285,6 +279,11 @@ namespace GrblController
 			activityLog.Items.Add(DateTime.Now.ToString("hh:mm:ss") + "     " + s);
 			int visibleItems = activityLog.ClientSize.Height / activityLog.ItemHeight;
 			activityLog.TopIndex = Math.Max(activityLog.Items.Count - visibleItems + 1, 0);
+		}
+
+		private void Main_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			//GeometryController.Stop();
 		}
 	}
 }

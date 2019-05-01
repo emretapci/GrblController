@@ -1,0 +1,14 @@
+﻿BUG: if the program is closed when it is running a g code, the process does not terminate.
+
+TEST: if the reverse feed function works properly.
+
+FEATURE: homing should be done as, when the user clicks home button, the machine moves towards home, until it hits the homing sensor and then stops. the board sets selected coordinate to 0.
+
+FEATURE: manual movement of the active coordinate.
+
+FEATURE: keep the default values for settings in a separate default.xml file.
+
+FEATURE: find a way to stop the executing G code then Stop button is clicked.
+
+REFACTOR: merge all settings in one form.
+

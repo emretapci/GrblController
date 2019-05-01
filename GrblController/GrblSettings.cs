@@ -103,7 +103,7 @@ namespace GrblController
 
 			if (newParameters.StepPulseTime != oldParameters.StepPulseTime)
 			{
-				Main.Instance.Connection.SendSetting(0, Main.Instance.Parameters.StepPulseTime.ToString());
+				Main.Instance.Connection.SendSetting(0, newParameters.StepPulseTime.ToString());
 				settingsChanged = true;
 			}
 			if (newParameters.StepIdleDelay != oldParameters.StepIdleDelay)
@@ -278,6 +278,12 @@ namespace GrblController
 			}
 			DialogResult = DialogResult.OK;
 			Close();
+		}
+
+		private void defaultButton_Click(object sender, EventArgs e)
+		{
+			Parameters.WriteToFile(new Parameters());
+			GrblSettings_Load(null, null);
 		}
 	}
 }
