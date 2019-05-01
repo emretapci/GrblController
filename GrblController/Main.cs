@@ -15,6 +15,22 @@ namespace GrblController
 		internal Connection Connection { get; private set; }
 		internal Parameters Parameters { get; private set; }
 
+		internal double Table1PaintedAreaRatio
+		{
+			get
+			{
+				return table1Slider.Value / 4.0;
+			}
+		}
+
+		internal double Table2PaintedAreaRatio
+		{
+			get
+			{
+				return table2Slider.Value / 4.0;
+			}
+		}
+
 		public Main()
 		{
 			InitializeComponent();
@@ -28,7 +44,7 @@ namespace GrblController
 
 		private void Main_Load(object sender, EventArgs e)
 		{
-			Connection.Initialize(Parameters);
+			Connection.Initialize();
 
 			Parameters = Parameters.ReadFromFile();
 			table1Slider_ValueChanged(null, null);
@@ -36,6 +52,9 @@ namespace GrblController
 			UpdateXPanel();
 
 			Connection.onStatusChanged += StatusChanged;
+
+			label2.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
+			StatusChanged(Connection.Status, Connection.Status);
 		}
 
 		private void StatusChanged(Status oldStatus, Status newStatus)
@@ -108,7 +127,20 @@ namespace GrblController
 				AddLog("Stopped sending G codes.");
 			}
 
-			machineXPositionLabel.Text = newStatus.MachinePosition.X.ToString("0.0 mm");
+			Parameters = Parameters.ReadFromFile();
+
+			switch (Parameters.ControlAxis)
+			{
+				case ControlAxis.X:
+					machinePositionLabel.Text = newStatus.MachinePosition.X.ToString("0.0 mm");
+					break;
+				case ControlAxis.Y:
+					machinePositionLabel.Text = newStatus.MachinePosition.Y.ToString("0.0 mm");
+					break;
+				case ControlAxis.Z:
+					machinePositionLabel.Text = newStatus.MachinePosition.Z.ToString("0.0 mm");
+					break;
+			}
 
 			UpdateXPanel();
 		}
@@ -146,15 +178,16 @@ namespace GrblController
 			table2Panel.Size = new Size(tablePanel.Width - 2, (int)(tablePanel.Height * Parameters.Table2Length / dTotalLength));
 
 			table1PanelPaintedArea.Location = new Point(0, 0);
-			table1PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table1Panel.Size.Height * (table1Slider.Value / 4.0)));
+			table1PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table1Panel.Size.Height * Table1PaintedAreaRatio));
 
 			table2PanelPaintedArea.Location = new Point(0, 0);
-			table2PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table2Panel.Size.Height * (table2Slider.Value / 4.0)));
+			table2PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table2Panel.Size.Height * Table2PaintedAreaRatio));
 		}
 
 		private void UpdateXPanel()
 		{
-			machineXPositionPanel.Location = new Point(0, (int)(Connection.Status.MachinePosition.X / Parameters.TablesTotalLength * tablePanel.Height - machineXPositionPanel.Size.Height / 2) - 1);
+			machinePositionPanel.Location = new Point(0, (int)(Connection.Status.MachinePosition.Y / Parameters.TablesTotalLength * tablePanel.Height - machinePositionPanel.Size.Height / 2) - 1);
+			machinePositionPanel.BackColor = Connection.Status.Painting ? Color.Red : Color.Blue;
 		}
 
 		private void tableLengthsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -181,24 +214,32 @@ namespace GrblController
 		private void gRBLToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var grblSettingsForm = new GrblSettings();
-			if (grblSettingsForm.ShowDialog() == DialogResult.OK)
+			grblSettingsForm.ShowDialog();
+		}
+
+		private void setMachinePositionToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var setMachinePosition = new SetMachinePosition();
+			if (setMachinePosition.ShowDialog() == DialogResult.OK)
 			{
 				Parameters = Parameters.ReadFromFile();
 
-				if (Connection.Status.ConnectionState == ConnectionState.ConnectedStarted || Connection.Status.ConnectionState == ConnectionState.ConnectedStopped)
+				switch (Parameters.ControlAxis)
 				{
-					Connection.SendSettings(Parameters);
+					case ControlAxis.X:
+						Connection.Status.MachinePosition.X = setMachinePosition.MachinePosition;
+						break;
+					case ControlAxis.Y:
+						Connection.Status.MachinePosition.Y = setMachinePosition.MachinePosition;
+						break;
+					case ControlAxis.Z:
+						Connection.Status.MachinePosition.Z = setMachinePosition.MachinePosition;
+						break;
 				}
-			}
-		}
 
-		private void setMachineXPositionToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var setMachineXPosition = new SetMachineXPosition();
-			if (setMachineXPosition.ShowDialog() == DialogResult.OK)
-			{
-				Connection.Status.MachinePosition.X = setMachineXPosition.MachineXPosition;
 				Connection.SetStatus(Connection.Status);
+
+				label2.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
 			}
 		}
 
@@ -212,7 +253,7 @@ namespace GrblController
 					Connection.Disconnect();
 					break;
 				case ConnectionState.DisconnectedCanConnect:
-					Connection.Initialize(Parameters);
+					Connection.Initialize();
 					Connection.Connect();
 					break;
 			}

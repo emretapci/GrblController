@@ -18,6 +18,11 @@ namespace GrblController
 			serialPortCombobox.Items.AddRange(SerialPort.GetPortNames());
 			serialPortCombobox.SelectedIndex = Array.IndexOf(SerialPort.GetPortNames(), parameters.SerialPortString);
 
+			if(serialPortCombobox.SelectedIndex == -1 && serialPortCombobox.Items.Count > 0)
+			{
+				serialPortCombobox.SelectedIndex = 0;
+			}
+
 			baudrateCombobox.Items.AddRange(new string[] { "110", "300", "600", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200" });
 			baudrateCombobox.SelectedItem = parameters.Baudrate.ToString();
 		}

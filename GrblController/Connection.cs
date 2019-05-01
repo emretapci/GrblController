@@ -37,11 +37,11 @@ namespace GrblController
 		internal ConnectionState ConnectionState { get; set; }
 		internal MachineState MachineState { get; set; }
 		internal Vector3D MachinePosition { get; set; }
+		internal bool Painting { get; set; }
 	}
 
 	internal class Connection
 	{
-		private Parameters parameters;
 		private SerialPort serialPort;
 		private ManualResetEvent responseReceived = new ManualResetEvent(false);
 		private string response;
@@ -53,15 +53,14 @@ namespace GrblController
 
 		internal Status Status { get; private set; }
 
-		internal void Initialize(Parameters parameters)
+		internal void Initialize()
 		{
-			this.parameters = parameters;
-
 			Status = new Status()
 			{
 				ConnectionState = ConnectionState.DisconnectedCannotConnect,
 				MachineState = MachineState.Unknown,
-				MachinePosition = new Vector3D(0, 0, 0)
+				MachinePosition = new Vector3D(0, 0, 0),
+				Painting = false
 			};
 
 			Disconnect();
@@ -90,7 +89,7 @@ namespace GrblController
 			}
 
 			//Connect with new parameters.
-			serialPort = new SerialPort(parameters.SerialPortString, parameters.Baudrate, Parity.None, 8, StopBits.One);
+			serialPort = new SerialPort(Main.Instance.Parameters.SerialPortString, Main.Instance.Parameters.Baudrate, Parity.None, 8, StopBits.One);
 
 			try
 			{
@@ -98,7 +97,7 @@ namespace GrblController
 			}
 			catch
 			{
-				MessageBox.Show("Cannot open " + parameters.SerialPortString + ". Maybe it is already open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("Cannot open " + Main.Instance.Parameters.SerialPortString + ". Maybe it is already open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Disconnect();
 				return;
 			}
@@ -127,7 +126,7 @@ namespace GrblController
 			while (true)
 			{
 				int newlineIndex = Math.Min(Array.IndexOf(buffer, (byte)'\n'), Array.IndexOf(buffer, (byte)'\r'));
-				if (newlineIndex >= length)
+				if (newlineIndex >= length || newlineIndex < 0)
 				{
 					break;
 				}
@@ -328,191 +327,9 @@ namespace GrblController
 			}
 
 			Parameters.WriteToFile(parameters);
-			this.parameters = parameters;
 		}
 
-		internal void SendSettings(Parameters parameters)
-		{
-			bool settingsChanged = false;
-
-			if (this.parameters.StepPulseTime != parameters.StepPulseTime)
-			{
-				SendSetting(0, parameters.StepPulseTime.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.StepIdleDelay != parameters.StepIdleDelay)
-			{
-				SendSetting(1, parameters.StepIdleDelay.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.StepPortInvert != parameters.StepPortInvert)
-			{
-				SendSetting(2, ((int)parameters.StepPortInvert).ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.DirectionPortInvert != parameters.DirectionPortInvert)
-			{
-				SendSetting(3, ((int)parameters.DirectionPortInvert).ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.StepEnableInvert != parameters.StepEnableInvert)
-			{
-				SendSetting(4, parameters.StepEnableInvert ? "1" : "0");
-				settingsChanged = true;
-			}
-			if (this.parameters.LimitPinsInvert != parameters.LimitPinsInvert)
-			{
-				SendSetting(5, parameters.LimitPinsInvert ? "1" : "0");
-				settingsChanged = true;
-			}
-			if (this.parameters.ProbePinInvert != parameters.ProbePinInvert)
-			{
-				SendSetting(6, parameters.ProbePinInvert ? "1" : "0");
-				settingsChanged = true;
-			}
-			if (this.parameters.StatusReport != parameters.StatusReport)
-			{
-				SendSetting(10, ((int)parameters.StatusReport).ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.JunctionDeviation != parameters.JunctionDeviation)
-			{
-				SendSetting(11, parameters.JunctionDeviation.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.ArcTolerance != parameters.ArcTolerance)
-			{
-				SendSetting(12, parameters.ArcTolerance.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.ReportInches != parameters.ReportInches)
-			{
-				SendSetting(13, parameters.ReportInches ? "1" : "0");
-				settingsChanged = true;
-			}
-			if (this.parameters.SoftLimits != parameters.SoftLimits)
-			{
-				SendSetting(20, parameters.SoftLimits ? "1" : "0");
-				settingsChanged = true;
-			}
-			if (this.parameters.HardLimits != parameters.HardLimits)
-			{
-				SendSetting(21, parameters.HardLimits ? "1" : "0");
-				settingsChanged = true;
-			}
-			if (this.parameters.HomingCycle != parameters.HomingCycle)
-			{
-				SendSetting(22, parameters.HomingCycle ? "1" : "0");
-				settingsChanged = true;
-			}
-			if (this.parameters.HomingDirectionInvert != parameters.HomingDirectionInvert)
-			{
-				SendSetting(23, ((int)parameters.HomingDirectionInvert).ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.HomingFeed != parameters.HomingFeed)
-			{
-				SendSetting(24, parameters.HomingFeed.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.HomingSeek != parameters.HomingSeek)
-			{
-				SendSetting(25, parameters.HomingSeek.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.HomingDebounce != parameters.HomingDebounce)
-			{
-				SendSetting(26, parameters.HomingDebounce.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.HomingPullOff != parameters.HomingPullOff)
-			{
-				SendSetting(27, parameters.HomingPullOff.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.MaximumSpindleSpeed != parameters.MaximumSpindleSpeed)
-			{
-				SendSetting(30, parameters.MaximumSpindleSpeed.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.MinimumSpindleSpeed != parameters.MinimumSpindleSpeed)
-			{
-				SendSetting(31, parameters.MinimumSpindleSpeed.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.LaserMode != parameters.LaserMode)
-			{
-				SendSetting(32, parameters.LaserMode ? "1" : "0");
-				settingsChanged = true;
-			}
-			if (this.parameters.XSteps != parameters.XSteps)
-			{
-				SendSetting(100, parameters.XSteps.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.YSteps != parameters.YSteps)
-			{
-				SendSetting(101, parameters.YSteps.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.ZSteps != parameters.ZSteps)
-			{
-				SendSetting(102, parameters.ZSteps.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.XFeedRate != parameters.XFeedRate)
-			{
-				SendSetting(110, parameters.XFeedRate.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.YFeedRate != parameters.YFeedRate)
-			{
-				SendSetting(111, parameters.YFeedRate.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.ZFeedRate != parameters.ZFeedRate)
-			{
-				SendSetting(112, parameters.ZFeedRate.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.XAcceleration != parameters.XAcceleration)
-			{
-				SendSetting(120, parameters.XAcceleration.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.YAcceleration != parameters.YAcceleration)
-			{
-				SendSetting(121, parameters.YAcceleration.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.ZAcceleration != parameters.ZAcceleration)
-			{
-				SendSetting(122, parameters.ZAcceleration.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.XMaximumTravel != parameters.XMaximumTravel)
-			{
-				SendSetting(130, parameters.XMaximumTravel.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.YMaximumTravel != parameters.YMaximumTravel)
-			{
-				SendSetting(131, parameters.YMaximumTravel.ToString());
-				settingsChanged = true;
-			}
-			if (this.parameters.ZMaximumTravel != parameters.ZMaximumTravel)
-			{
-				SendSetting(132, parameters.ZMaximumTravel.ToString());
-				settingsChanged = true;
-			}
-
-			if (settingsChanged)
-			{
-				Disconnect();
-			}
-		}
-
-		private void SendSetting(int setting, string val)
+		internal void SendSetting(int setting, string val)
 		{
 			Send("$" + setting + "=" + val);
 			if (responseReceived.WaitOne(1000))
@@ -549,7 +366,7 @@ namespace GrblController
 				serialPort = null;
 			}
 
-			if (Array.IndexOf(SerialPort.GetPortNames(), parameters.SerialPortString) >= 0)
+			if (Array.IndexOf(SerialPort.GetPortNames(), Main.Instance.Parameters.SerialPortString) >= 0)
 			{
 				Status.ConnectionState = ConnectionState.DisconnectedCanConnect;
 				SetStatus(Status);

@@ -3,18 +3,21 @@ using System.Windows.Forms;
 
 namespace GrblController
 {
-	public partial class SetMachineXPosition : Form
+	public partial class SetMachinePosition : Form
 	{
-		internal double MachineXPosition { get; private set; }
+		internal double MachinePosition { get; private set; }
 
-		internal SetMachineXPosition()
+		internal SetMachinePosition()
 		{
 			InitializeComponent();
 		}
 
-		private void SetMachineXPosition_Load(object sender, EventArgs e)
+		private void SetMachinePosition_Load(object sender, EventArgs e)
 		{
+			var parameters = Parameters.ReadFromFile();
+
 			machineXPositionTextBox.Text = Main.Instance.Connection.Status.MachinePosition.X.ToString("0.0");
+			controlAxis.SelectedIndex = (int)parameters.ControlAxis;
 		}
 
 		private void buttonOK_Click(object sender, EventArgs e)
@@ -28,7 +31,14 @@ namespace GrblController
 				}
 				else if (d <= Main.Instance.Parameters.TablesTotalLength)
 				{
-					MachineXPosition = d;
+					var parameters = Parameters.ReadFromFile();
+
+					parameters.ControlAxis = (ControlAxis)controlAxis.SelectedIndex;
+
+					MachinePosition = d;
+
+					Parameters.WriteToFile(parameters);
+
 					DialogResult = DialogResult.OK;
 					Close();
 				}
@@ -41,6 +51,13 @@ namespace GrblController
 			{
 				MessageBox.Show("Invalid value for Machine X coordinate.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
+
+
+		}
+
+		private void controlAxis_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			controlAxisLabel.Text = "Machine " + controlAxis.SelectedItem.ToString() + " position";
 		}
 	}
 }

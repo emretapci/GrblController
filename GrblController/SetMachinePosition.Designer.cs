@@ -1,6 +1,6 @@
 ﻿namespace GrblController
 {
-	partial class SetMachineXPosition
+	partial class SetMachinePosition
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -31,14 +31,16 @@
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.buttonOK = new System.Windows.Forms.Button();
 			this.machineXPositionTextBox = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.controlAxisLabel = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.controlAxis = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
 			// 
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(179, 83);
+			this.buttonCancel.Location = new System.Drawing.Point(195, 87);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(110, 35);
 			this.buttonCancel.TabIndex = 13;
@@ -47,7 +49,7 @@
 			// 
 			// buttonOK
 			// 
-			this.buttonOK.Location = new System.Drawing.Point(63, 83);
+			this.buttonOK.Location = new System.Drawing.Point(79, 87);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(110, 35);
 			this.buttonOK.TabIndex = 12;
@@ -57,38 +59,63 @@
 			// 
 			// machineXPositionTextBox
 			// 
-			this.machineXPositionTextBox.Location = new System.Drawing.Point(153, 19);
+			this.machineXPositionTextBox.Location = new System.Drawing.Point(148, 42);
 			this.machineXPositionTextBox.Name = "machineXPositionTextBox";
-			this.machineXPositionTextBox.Size = new System.Drawing.Size(100, 23);
+			this.machineXPositionTextBox.Size = new System.Drawing.Size(121, 23);
 			this.machineXPositionTextBox.TabIndex = 14;
 			// 
-			// label1
+			// controlAxisLabel
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(21, 22);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(126, 16);
-			this.label1.TabIndex = 15;
-			this.label1.Text = "Machine X position";
+			this.controlAxisLabel.AutoSize = true;
+			this.controlAxisLabel.Location = new System.Drawing.Point(16, 45);
+			this.controlAxisLabel.Name = "controlAxisLabel";
+			this.controlAxisLabel.Size = new System.Drawing.Size(126, 16);
+			this.controlAxisLabel.TabIndex = 15;
+			this.controlAxisLabel.Text = "Machine X position";
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(259, 22);
+			this.label2.Location = new System.Drawing.Point(275, 45);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(30, 16);
 			this.label2.TabIndex = 16;
 			this.label2.Text = "mm";
 			// 
-			// SetMachineXPosition
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(32, 19);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(82, 16);
+			this.label3.TabIndex = 17;
+			this.label3.Text = "Control axis";
+			// 
+			// controlAxis
+			// 
+			this.controlAxis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.controlAxis.FormattingEnabled = true;
+			this.controlAxis.Items.AddRange(new object[] {
+            "X",
+            "Y",
+            "Z"});
+			this.controlAxis.Location = new System.Drawing.Point(148, 12);
+			this.controlAxis.Name = "controlAxis";
+			this.controlAxis.Size = new System.Drawing.Size(121, 24);
+			this.controlAxis.TabIndex = 18;
+			this.controlAxis.SelectedIndexChanged += new System.EventHandler(this.controlAxis_SelectedIndexChanged);
+			// 
+			// SetMachinePosition
 			// 
 			this.AcceptButton = this.buttonOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(301, 130);
+			this.ClientSize = new System.Drawing.Size(326, 144);
+			this.Controls.Add(this.controlAxis);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this.controlAxisLabel);
 			this.Controls.Add(this.machineXPositionTextBox);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonOK);
@@ -98,11 +125,11 @@
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "SetMachineXPosition";
+			this.Name = "SetMachinePosition";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Set machine X position";
-			this.Load += new System.EventHandler(this.SetMachineXPosition_Load);
+			this.Text = "Set machine position";
+			this.Load += new System.EventHandler(this.SetMachinePosition_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -113,7 +140,9 @@
 		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.Button buttonOK;
 		private System.Windows.Forms.TextBox machineXPositionTextBox;
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label controlAxisLabel;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.ComboBox controlAxis;
 	}
 }

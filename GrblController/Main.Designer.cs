@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.tablePanel = new System.Windows.Forms.Panel();
-			this.machineXPositionPanel = new System.Windows.Forms.Panel();
+			this.machinePositionPanel = new System.Windows.Forms.Panel();
 			this.table2Panel = new System.Windows.Forms.Panel();
 			this.table2PanelPaintedArea = new System.Windows.Forms.Panel();
 			this.table1Panel = new System.Windows.Forms.Panel();
@@ -41,7 +41,7 @@
 			this.tableLengthsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.serialPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.gRBLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.setMachineXPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setMachinePositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.startStopButton = new System.Windows.Forms.Button();
 			this.connectDisconnectButton = new System.Windows.Forms.Button();
 			this.activityLog = new System.Windows.Forms.ListBox();
@@ -57,7 +57,7 @@
 			this.table1Label1d2 = new System.Windows.Forms.Label();
 			this.table2Label1d4 = new System.Windows.Forms.Label();
 			this.table2Label0 = new System.Windows.Forms.Label();
-			this.machineXPositionLabel = new System.Windows.Forms.Label();
+			this.machinePositionLabel = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.tablePanel.SuspendLayout();
 			this.table2Panel.SuspendLayout();
@@ -71,7 +71,7 @@
 			// 
 			this.tablePanel.BackColor = System.Drawing.Color.LightGray;
 			this.tablePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.tablePanel.Controls.Add(this.machineXPositionPanel);
+			this.tablePanel.Controls.Add(this.machinePositionPanel);
 			this.tablePanel.Controls.Add(this.table2Panel);
 			this.tablePanel.Controls.Add(this.table1Panel);
 			this.tablePanel.Location = new System.Drawing.Point(12, 36);
@@ -80,13 +80,13 @@
 			this.tablePanel.Size = new System.Drawing.Size(354, 508);
 			this.tablePanel.TabIndex = 0;
 			// 
-			// machineXPositionPanel
+			// machinePositionPanel
 			// 
-			this.machineXPositionPanel.BackColor = System.Drawing.Color.Red;
-			this.machineXPositionPanel.Location = new System.Drawing.Point(0, 458);
-			this.machineXPositionPanel.Name = "machineXPositionPanel";
-			this.machineXPositionPanel.Size = new System.Drawing.Size(354, 4);
-			this.machineXPositionPanel.TabIndex = 3;
+			this.machinePositionPanel.BackColor = System.Drawing.Color.Red;
+			this.machinePositionPanel.Location = new System.Drawing.Point(0, 458);
+			this.machinePositionPanel.Name = "machinePositionPanel";
+			this.machinePositionPanel.Size = new System.Drawing.Size(354, 4);
+			this.machinePositionPanel.TabIndex = 3;
 			// 
 			// table2Panel
 			// 
@@ -173,7 +173,7 @@
             this.tableLengthsToolStripMenuItem,
             this.serialPortToolStripMenuItem,
             this.gRBLToolStripMenuItem,
-            this.setMachineXPositionToolStripMenuItem});
+            this.setMachinePositionToolStripMenuItem});
 			this.settingsToolStripMenuItem.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
 			this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
 			this.settingsToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
@@ -182,30 +182,30 @@
 			// tableLengthsToolStripMenuItem
 			// 
 			this.tableLengthsToolStripMenuItem.Name = "tableLengthsToolStripMenuItem";
-			this.tableLengthsToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+			this.tableLengthsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
 			this.tableLengthsToolStripMenuItem.Text = "Table lengths";
 			this.tableLengthsToolStripMenuItem.Click += new System.EventHandler(this.tableLengthsToolStripMenuItem_Click);
 			// 
 			// serialPortToolStripMenuItem
 			// 
 			this.serialPortToolStripMenuItem.Name = "serialPortToolStripMenuItem";
-			this.serialPortToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+			this.serialPortToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
 			this.serialPortToolStripMenuItem.Text = "Serial port";
 			this.serialPortToolStripMenuItem.Click += new System.EventHandler(this.serialPortToolStripMenuItem_Click);
 			// 
 			// gRBLToolStripMenuItem
 			// 
 			this.gRBLToolStripMenuItem.Name = "gRBLToolStripMenuItem";
-			this.gRBLToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+			this.gRBLToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
 			this.gRBLToolStripMenuItem.Text = "GRBL";
 			this.gRBLToolStripMenuItem.Click += new System.EventHandler(this.gRBLToolStripMenuItem_Click);
 			// 
-			// setMachineXPositionToolStripMenuItem
+			// setMachinePositionToolStripMenuItem
 			// 
-			this.setMachineXPositionToolStripMenuItem.Name = "setMachineXPositionToolStripMenuItem";
-			this.setMachineXPositionToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-			this.setMachineXPositionToolStripMenuItem.Text = "Set machine X position";
-			this.setMachineXPositionToolStripMenuItem.Click += new System.EventHandler(this.setMachineXPositionToolStripMenuItem_Click);
+			this.setMachinePositionToolStripMenuItem.Name = "setMachinePositionToolStripMenuItem";
+			this.setMachinePositionToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.setMachinePositionToolStripMenuItem.Text = "Set machine position";
+			this.setMachinePositionToolStripMenuItem.Click += new System.EventHandler(this.setMachinePositionToolStripMenuItem_Click);
 			// 
 			// startStopButton
 			// 
@@ -376,16 +376,16 @@
 			this.table2Label0.TabIndex = 25;
 			this.table2Label0.Text = "0";
 			// 
-			// machineXPositionLabel
+			// machinePositionLabel
 			// 
-			this.machineXPositionLabel.AutoSize = true;
-			this.machineXPositionLabel.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.machineXPositionLabel.Location = new System.Drawing.Point(131, 559);
-			this.machineXPositionLabel.Name = "machineXPositionLabel";
-			this.machineXPositionLabel.Size = new System.Drawing.Size(52, 16);
-			this.machineXPositionLabel.TabIndex = 30;
-			this.machineXPositionLabel.Text = "0.0 mm";
-			this.machineXPositionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.machinePositionLabel.AutoSize = true;
+			this.machinePositionLabel.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+			this.machinePositionLabel.Location = new System.Drawing.Point(131, 559);
+			this.machinePositionLabel.Name = "machinePositionLabel";
+			this.machinePositionLabel.Size = new System.Drawing.Size(52, 16);
+			this.machinePositionLabel.TabIndex = 30;
+			this.machinePositionLabel.Text = "0.0 mm";
+			this.machinePositionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// label2
 			// 
@@ -402,7 +402,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(886, 653);
-			this.Controls.Add(this.machineXPositionLabel);
+			this.Controls.Add(this.machinePositionLabel);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.table1Label0);
 			this.Controls.Add(this.table1LabelFull);
@@ -460,7 +460,7 @@
 		private System.Windows.Forms.ListBox activityLog;
 		private System.Windows.Forms.Panel slider2Panel;
 		private System.Windows.Forms.Panel slider1Panel;
-		private System.Windows.Forms.ToolStripMenuItem setMachineXPositionToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem setMachinePositionToolStripMenuItem;
 		private System.Windows.Forms.Label table1Label0;
 		private System.Windows.Forms.Label table1LabelFull;
 		private System.Windows.Forms.Label table2LabelFull;
@@ -471,9 +471,9 @@
 		private System.Windows.Forms.Label table1Label1d2;
 		private System.Windows.Forms.Label table2Label1d4;
 		private System.Windows.Forms.Label table2Label0;
-		private System.Windows.Forms.Label machineXPositionLabel;
+		private System.Windows.Forms.Label machinePositionLabel;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Panel machineXPositionPanel;
+		private System.Windows.Forms.Panel machinePositionPanel;
 	}
 }
 

@@ -19,6 +19,13 @@ namespace GrblController
 		WorkPositionWithBuffer
 	}
 
+	internal enum ControlAxis
+	{
+		X,
+		Y,
+		Z
+	}
+
 	internal class Parameters
 	{
 		internal double TablesTotalLength
@@ -37,6 +44,8 @@ namespace GrblController
 
 		internal string SerialPortString { get; set; }
 		internal int Baudrate { get; set; }
+
+		internal ControlAxis ControlAxis { get; set; }
 
 		internal double StepPulseTime { get; set; } //usec
 		internal double StepIdleDelay { get; set; } //msec
@@ -83,6 +92,8 @@ namespace GrblController
 
 			SerialPortString = "COM1";
 			Baudrate = 115200;
+
+			ControlAxis = ControlAxis.Y;
 
 			StepPulseTime = 10;
 			StepIdleDelay = 255;
@@ -137,6 +148,8 @@ namespace GrblController
 
 					SerialPortString = doc["Parameters"]["SerialPortString"].InnerText,
 					Baudrate = int.Parse(doc["Parameters"]["Baudrate"].InnerText),
+
+					ControlAxis = (ControlAxis)Enum.Parse(typeof(ControlAxis), doc["Parameters"]["ControlAxis"].InnerText),
 
 					StepPulseTime = double.Parse(doc["Parameters"]["StepPulseTime"].InnerText),
 					StepIdleDelay = double.Parse(doc["Parameters"]["StepIdleDelay"].InnerText),
@@ -195,6 +208,8 @@ namespace GrblController
 
 					new XElement("SerialPortString", parameters.SerialPortString.ToString()),
 					new XElement("Baudrate", parameters.Baudrate.ToString()),
+
+					new XElement("ControlAxis", parameters.ControlAxis.ToString()),
 
 					new XElement("StepPulseTime", parameters.StepPulseTime.ToString()),
 					new XElement("StepIdleDelay", parameters.StepIdleDelay.ToString()),
