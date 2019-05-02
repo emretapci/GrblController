@@ -6,9 +6,9 @@ FEATURE: homing should be done as, when the user clicks home button, the machine
 
 FEATURE: manual movement of the active coordinate.
 
-FEATURE: keep the default values for settings in a separate default.xml file.
+FEATURE: (DONE) keep the default values for settings in a separate default.xml file.
 
 FEATURE: find a way to stop the executing G code then Stop button is clicked.
 
-REFACTOR: merge all settings in one form.
+REFACTOR: (DONE) merge all settings in one form.
 

@@ -133,12 +133,12 @@ namespace GrblController
 			ZMaximumTravel = 200;
 		}
 
-		internal static Parameters ReadFromFile()
+		internal static Parameters ReadFromFile(string filename)
 		{
 			try
 			{
 				var doc = new XmlDocument();
-				doc.Load("config.xml");
+				doc.Load(filename);
 
 				var parameters = new Parameters()
 				{
@@ -194,12 +194,12 @@ namespace GrblController
 			catch
 			{
 				var parameters = new Parameters();
-				WriteToFile(parameters);
+				WriteToFile(filename, parameters);
 				return parameters;
 			}
 		}
 
-		internal static void WriteToFile(Parameters parameters)
+		internal static void WriteToFile(string filename, Parameters parameters)
 		{
 			new XDocument(
 				new XElement("Parameters",
@@ -249,7 +249,7 @@ namespace GrblController
 					new XElement("XMaximumTravel", parameters.XMaximumTravel.ToString()),
 					new XElement("YMaximumTravel", parameters.YMaximumTravel.ToString()),
 					new XElement("ZMaximumTravel", parameters.ZMaximumTravel.ToString())
-				)).Save("config.xml");
+				)).Save(filename);
 		}
 	}
 }

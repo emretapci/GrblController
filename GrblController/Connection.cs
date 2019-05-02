@@ -36,7 +36,7 @@ namespace GrblController
 	{
 		internal ConnectionState ConnectionState { get; set; }
 		internal MachineState MachineState { get; set; }
-		internal Vector3D MachinePosition { get; set; }
+		internal Vector3D MachinePosition { get; set; } //can be negative.
 		internal bool Painting { get; set; }
 
 		internal double MachineCoordinate
@@ -203,8 +203,6 @@ namespace GrblController
 						var val = settingRegex.Match(line).Groups["value"].Value;
 
 						//settings in the config file is the master. config on the board is always overridden.
-						//RecordSetting(setting, val);
-						//Main.Instance.AddLog("$" + setting + "=" + val);
 
 						processed = true;
 					}
@@ -219,7 +217,10 @@ namespace GrblController
 						var statusMatches = StatusMatch(line);
 						if (statusMatches.ContainsKey("MPosX") && statusMatches.ContainsKey("MPosY") && statusMatches.ContainsKey("MPosZ"))
 						{
-							SetStatus(new Status(Status) { MachinePosition = new Vector3D(-double.Parse(statusMatches["MPosX"]), -double.Parse(statusMatches["MPosY"]), -double.Parse(statusMatches["MPosZ"])) });
+							SetStatus(new Status(Status) {
+								MachinePosition = new Vector3D(double.Parse(statusMatches["MPosX"]), double.Parse(statusMatches["MPosY"]), double.Parse(statusMatches["MPosZ"])),
+								MachineState = (MachineState)Enum.Parse(typeof(MachineState), statusMatches["state"])
+							});
 							processed = true;
 						}
 					}
@@ -275,6 +276,7 @@ namespace GrblController
 			var regex = new Regex[] {
 				new Regex(@"(?<state>(Idle|Run|Hold|Jog|Alarm|Door|Check|Home|Sleep))"),
 				new Regex(@"(MPos:(?<MPosX>\-?\d+(\.\d*)?),(?<MPosY>\-?\d+(\.\d*)?),(?<MPosZ>\-?\d+(\.\d*)?))"),
+				new Regex(@"(WPos:(?<WPosX>\-?\d+(\.\d*)?),(?<WPosY>\-?\d+(\.\d*)?),(?<WPosZ>\-?\d+(\.\d*)?))"),
 				new Regex(@"(Ov:(?<OvX>\-?\d+(\.\d*)?),(?<OvY>\-?\d+(\.\d*)?),(?<OvZ>\-?\d+(\.\d*)?))"),
 				new Regex(@"(WCO:(?<WCOX>\-?\d+(\.\d*)?),(?<WCOY>\-?\d+(\.\d*)?),(?<WCOZ>\-?\d+(\.\d*)?))"),
 				new Regex(@"(Bf:(?<BfAvBl>\d+),(?<BfAvByRxBuf>\d+))"),
@@ -298,119 +300,6 @@ namespace GrblController
 			}
 
 			return matchesDict;
-		}
-
-		private void RecordSetting(string setting, string val)
-		{
-			var parameters = Parameters.ReadFromFile();
-
-			switch (setting)
-			{
-				case "0":
-					parameters.StepPulseTime = double.Parse(val);
-					break;
-				case "1":
-					parameters.StepIdleDelay = double.Parse(val);
-					break;
-				case "2":
-					parameters.StepPortInvert = (Mask)(int.Parse(val) & 7);
-					break;
-				case "3":
-					parameters.DirectionPortInvert = (Mask)(int.Parse(val) & 7);
-					break;
-				case "4":
-					parameters.StepEnableInvert = (int.Parse(val) > 0);
-					break;
-				case "5":
-					parameters.LimitPinsInvert = (int.Parse(val) > 0);
-					break;
-				case "6":
-					parameters.ProbePinInvert = (int.Parse(val) > 0);
-					break;
-				case "10":
-					parameters.StatusReport = (StatusReport)(int.Parse(val) & 3);
-					break;
-				case "11":
-					parameters.JunctionDeviation = double.Parse(val);
-					break;
-				case "12":
-					parameters.ArcTolerance = double.Parse(val);
-					break;
-				case "13":
-					parameters.ReportInches = (int.Parse(val) > 0);
-					break;
-				case "20":
-					parameters.SoftLimits = (int.Parse(val) > 0);
-					break;
-				case "21":
-					parameters.HardLimits = (int.Parse(val) > 0);
-					break;
-				case "22":
-					parameters.HomingCycle = (int.Parse(val) > 0);
-					break;
-				case "23":
-					parameters.HomingDirectionInvert = (Mask)(int.Parse(val) & 7);
-					break;
-				case "24":
-					parameters.HomingFeed = double.Parse(val);
-					break;
-				case "25":
-					parameters.HomingSeek = double.Parse(val);
-					break;
-				case "26":
-					parameters.HomingDebounce = double.Parse(val);
-					break;
-				case "27":
-					parameters.HomingPullOff = double.Parse(val);
-					break;
-				case "30":
-					parameters.MaximumSpindleSpeed = double.Parse(val);
-					break;
-				case "31":
-					parameters.MinimumSpindleSpeed = double.Parse(val);
-					break;
-				case "32":
-					parameters.LaserMode = (int.Parse(val) > 0);
-					break;
-				case "100":
-					parameters.XSteps = double.Parse(val);
-					break;
-				case "101":
-					parameters.YSteps = double.Parse(val);
-					break;
-				case "102":
-					parameters.ZSteps = double.Parse(val);
-					break;
-				case "110":
-					parameters.XFeedRate = double.Parse(val);
-					break;
-				case "111":
-					parameters.YFeedRate = double.Parse(val);
-					break;
-				case "112":
-					parameters.ZFeedRate = double.Parse(val);
-					break;
-				case "120":
-					parameters.XAcceleration = double.Parse(val);
-					break;
-				case "121":
-					parameters.YAcceleration = double.Parse(val);
-					break;
-				case "122":
-					parameters.ZAcceleration = double.Parse(val);
-					break;
-				case "130":
-					parameters.XMaximumTravel = double.Parse(val);
-					break;
-				case "131":
-					parameters.YMaximumTravel = double.Parse(val);
-					break;
-				case "132":
-					parameters.ZMaximumTravel = double.Parse(val);
-					break;
-			}
-
-			Parameters.WriteToFile(parameters);
 		}
 
 		internal void SendSetting(int setting, string val)

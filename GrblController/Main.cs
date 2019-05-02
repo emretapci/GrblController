@@ -15,6 +15,8 @@ namespace GrblController
 		internal GeometryController GeometryController { get; private set; }
 		internal Connection Connection { get; private set; }
 		internal Parameters Parameters { get; private set; }
+		internal string ConfigFilename { get { return "config.xml"; } }
+		internal string DefaultFilename { get { return "default.xml"; } }
 
 		internal double Table1PaintedAreaRatio
 		{
@@ -37,7 +39,8 @@ namespace GrblController
 			InitializeComponent();
 			table1Labels = new Label[] { table1Label0, table1Label1d4, table1Label1d2, table1Label3d4, table1LabelFull };
 			table2Labels = new Label[] { table2Label0, table2Label1d4, table2Label1d2, table2Label3d4, table2LabelFull };
-			Parameters = Parameters.ReadFromFile();
+			Parameters.ReadFromFile(DefaultFilename); //if non-existent, create one.
+			Parameters = Parameters.ReadFromFile(ConfigFilename);
 			Connection = new Connection();
 			GeometryController = new GeometryController();
 			Instance = this;
@@ -47,14 +50,14 @@ namespace GrblController
 		{
 			Connection.Initialize();
 
-			Parameters = Parameters.ReadFromFile();
+			Parameters = Parameters.ReadFromFile(Main.Instance.ConfigFilename);
 			table1Slider_ValueChanged(null, null);
 			table2Slider_ValueChanged(null, null);
 			UpdateXPanel();
 
 			Connection.onStatusChanged += StatusChanged;
 
-			label2.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
+			machineCoordinate.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
 			StatusChanged(Connection.Status, Connection.Status);
 		}
 
@@ -77,6 +80,7 @@ namespace GrblController
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
 					homeButton.Enabled = false;
+					Text = "GRBL Controller [Disconnected]";
 					break;
 				case ConnectionState.DisconnectedCanConnect:
 					connectDisconnectButton.Text = "Connect";
@@ -84,6 +88,7 @@ namespace GrblController
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
 					homeButton.Enabled = false;
+					Text = "GRBL Controller [Disconnected]";
 					break;
 				case ConnectionState.Connecting:
 					connectDisconnectButton.Text = "Connecting (stop)";
@@ -92,6 +97,7 @@ namespace GrblController
 					startStopButton.Enabled = false;
 					AddLog("Connecting...");
 					homeButton.Enabled = false;
+					Text = "GRBL Controller [Connecting...]";
 					break;
 				case ConnectionState.ConnectedStarted:
 					connectDisconnectButton.Text = "Disconnect";
@@ -99,6 +105,7 @@ namespace GrblController
 					startStopButton.Text = "Stop";
 					startStopButton.Enabled = true;
 					homeButton.Enabled = true;
+					Text = "GRBL Controller [Connected] [Running]";
 					break;
 				case ConnectionState.ConnectedStopped:
 					connectDisconnectButton.Text = "Disconnect";
@@ -106,10 +113,11 @@ namespace GrblController
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = true;
 					homeButton.Enabled = true;
+					Text = "GRBL Controller [Connected]";
 					break;
 			}
 
-			Parameters = Parameters.ReadFromFile();
+			Parameters = Parameters.ReadFromFile(ConfigFilename);
 
 			if ((oldStatus.ConnectionState == ConnectionState.Connecting || oldStatus.ConnectionState == ConnectionState.DisconnectedCanConnect
 					|| oldStatus.ConnectionState == ConnectionState.DisconnectedCannotConnect) &&
@@ -141,6 +149,8 @@ namespace GrblController
 			}
 
 			machinePositionLabel.Text = newStatus.MachineCoordinate.ToString("0.0 mm");
+			machineStateLabel.Text = "Machine state: " + newStatus.MachineState.ToString();
+			allCoordinatesLabel.Text = "X=" + newStatus.MachinePosition.X.ToString("0.0") + " Y=" + newStatus.MachinePosition.Y.ToString("0.0") + " Z=" + newStatus.MachinePosition.Z.ToString("0.0");
 
 			UpdateXPanel();
 		}
@@ -190,47 +200,6 @@ namespace GrblController
 			machinePositionPanel.BackColor = Connection.Status.Painting ? Color.Red : Color.Blue;
 		}
 
-		private void tableLengthsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if ((new TableLengthSettings()).ShowDialog() == DialogResult.OK)
-			{
-				table1Slider_ValueChanged(null, null);
-				table2Slider_ValueChanged(null, null);
-				Parameters = Parameters.ReadFromFile();
-			}
-		}
-
-		private void serialPortToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if ((new SerialPortSettings()).ShowDialog() == DialogResult.OK)
-			{
-				table1Slider_ValueChanged(null, null);
-				table2Slider_ValueChanged(null, null);
-				Parameters = Parameters.ReadFromFile();
-				Connection.Disconnect();
-			}
-		}
-
-		private void gRBLToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var grblSettingsForm = new GrblSettings();
-			grblSettingsForm.ShowDialog();
-		}
-
-		private void setMachinePositionToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var setMachinePosition = new SetMachinePosition();
-			if (setMachinePosition.ShowDialog() == DialogResult.OK)
-			{
-				Parameters = Parameters.ReadFromFile();
-
-				Connection.Status.MachineCoordinate = setMachinePosition.MachinePosition;
-				Connection.SetStatus(Connection.Status);
-
-				label2.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
-			}
-		}
-
 		private void connectDisconnectButton_Click(object sender, EventArgs e)
 		{
 			switch (Connection.Status.ConnectionState)
@@ -261,8 +230,7 @@ namespace GrblController
 
 		private void homeButton_Click(object sender, EventArgs e)
 		{
-			GeometryController.Stop();
-			GeometryController.GoHome();
+			GeometryController.StartHomingCycle();
 		}
 
 		internal void AddLog(string s)
@@ -284,6 +252,19 @@ namespace GrblController
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			//GeometryController.Stop();
+		}
+
+		private void settingsButton_Click(object sender, EventArgs e)
+		{
+			var settingsForm = new Settings();
+			if (settingsForm.ShowDialog() == DialogResult.OK)
+			{
+				table1Slider_ValueChanged(null, null);
+				table2Slider_ValueChanged(null, null);
+				Parameters = Parameters.ReadFromFile(ConfigFilename);
+				Connection.Status.MachineCoordinate = settingsForm.MachinePosition;
+				machineCoordinate.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
+			}
 		}
 	}
 }

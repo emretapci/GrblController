@@ -9,7 +9,7 @@ namespace GrblController
 		private ManualResetEvent stopped = new ManualResetEvent(false);
 		private ManualResetEvent targetReached = new ManualResetEvent(false);
 
-		private double targetCoord;
+		private double targetCoord; //can be negative.
 
 		private Thread thread;
 
@@ -25,12 +25,13 @@ namespace GrblController
 			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { ConnectionState = ConnectionState.ConnectedStarted });
 		}
 
-		internal void GoHome()
+		internal void StartHomingCycle()
 		{
-			Main.Instance.AddLog("Go home.");
+			Main.Instance.AddLog("Starting homing cycle.");
 			Stop();
 			Main.Instance.Connection.Send("$X");
-			Main.Instance.Connection.Send("G28 " + Main.Instance.Parameters.ControlAxis.ToString() + "0");
+			Thread.Sleep(1000);
+			Main.Instance.Connection.Send("$H");
 			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 		}
 
@@ -58,7 +59,7 @@ namespace GrblController
 		private void WaitXPosition(double targetCoord)
 		{
 			targetReached.Reset();
-			this.targetCoord = targetCoord;
+			this.targetCoord = (Main.Instance.Parameters.ReverseFeed ? -1 : 1) * targetCoord;
 
 			if (WaitHandle.WaitAny(new WaitHandle[] { targetReached, willStop }) == 1)
 			{

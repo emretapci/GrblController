@@ -36,12 +36,6 @@
 			this.table1PanelPaintedArea = new System.Windows.Forms.Panel();
 			this.table1Slider = new System.Windows.Forms.VScrollBar();
 			this.table2Slider = new System.Windows.Forms.VScrollBar();
-			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tableLengthsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.serialPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.gRBLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.setMachinePositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.startStopButton = new System.Windows.Forms.Button();
 			this.connectDisconnectButton = new System.Windows.Forms.Button();
 			this.activityLog = new System.Windows.Forms.ListBox();
@@ -58,12 +52,16 @@
 			this.table2Label1d4 = new System.Windows.Forms.Label();
 			this.table2Label0 = new System.Windows.Forms.Label();
 			this.machinePositionLabel = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
+			this.machineCoordinate = new System.Windows.Forms.Label();
 			this.homeButton = new System.Windows.Forms.Button();
+			this.settingsButton = new System.Windows.Forms.Button();
+			this.allCoordinatesLabel = new System.Windows.Forms.Label();
+			this.manualDown = new System.Windows.Forms.Button();
+			this.machineStateLabel = new System.Windows.Forms.Label();
+			this.manualUp = new System.Windows.Forms.Button();
 			this.tablePanel.SuspendLayout();
 			this.table2Panel.SuspendLayout();
 			this.table1Panel.SuspendLayout();
-			this.menuStrip1.SuspendLayout();
 			this.slider2Panel.SuspendLayout();
 			this.slider1Panel.SuspendLayout();
 			this.SuspendLayout();
@@ -156,61 +154,9 @@
 			this.table2Slider.TabIndex = 1;
 			this.table2Slider.ValueChanged += new System.EventHandler(this.table2Slider_ValueChanged);
 			// 
-			// menuStrip1
-			// 
-			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(886, 24);
-			this.menuStrip1.TabIndex = 14;
-			this.menuStrip1.Text = "menuStrip1";
-			// 
-			// settingsToolStripMenuItem
-			// 
-			this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tableLengthsToolStripMenuItem,
-            this.serialPortToolStripMenuItem,
-            this.gRBLToolStripMenuItem,
-            this.setMachinePositionToolStripMenuItem});
-			this.settingsToolStripMenuItem.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-			this.settingsToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
-			this.settingsToolStripMenuItem.Text = "Settings";
-			// 
-			// tableLengthsToolStripMenuItem
-			// 
-			this.tableLengthsToolStripMenuItem.Name = "tableLengthsToolStripMenuItem";
-			this.tableLengthsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.tableLengthsToolStripMenuItem.Text = "Table lengths";
-			this.tableLengthsToolStripMenuItem.Click += new System.EventHandler(this.tableLengthsToolStripMenuItem_Click);
-			// 
-			// serialPortToolStripMenuItem
-			// 
-			this.serialPortToolStripMenuItem.Name = "serialPortToolStripMenuItem";
-			this.serialPortToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.serialPortToolStripMenuItem.Text = "Serial port";
-			this.serialPortToolStripMenuItem.Click += new System.EventHandler(this.serialPortToolStripMenuItem_Click);
-			// 
-			// gRBLToolStripMenuItem
-			// 
-			this.gRBLToolStripMenuItem.Name = "gRBLToolStripMenuItem";
-			this.gRBLToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.gRBLToolStripMenuItem.Text = "GRBL";
-			this.gRBLToolStripMenuItem.Click += new System.EventHandler(this.gRBLToolStripMenuItem_Click);
-			// 
-			// setMachinePositionToolStripMenuItem
-			// 
-			this.setMachinePositionToolStripMenuItem.Name = "setMachinePositionToolStripMenuItem";
-			this.setMachinePositionToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.setMachinePositionToolStripMenuItem.Text = "Set machine position";
-			this.setMachinePositionToolStripMenuItem.Click += new System.EventHandler(this.setMachinePositionToolStripMenuItem_Click);
-			// 
 			// startStopButton
 			// 
-			this.startStopButton.Location = new System.Drawing.Point(632, 571);
+			this.startStopButton.Location = new System.Drawing.Point(632, 614);
 			this.startStopButton.Name = "startStopButton";
 			this.startStopButton.Size = new System.Drawing.Size(110, 49);
 			this.startStopButton.TabIndex = 15;
@@ -220,7 +166,7 @@
 			// 
 			// connectDisconnectButton
 			// 
-			this.connectDisconnectButton.Location = new System.Drawing.Point(516, 571);
+			this.connectDisconnectButton.Location = new System.Drawing.Point(516, 614);
 			this.connectDisconnectButton.Name = "connectDisconnectButton";
 			this.connectDisconnectButton.Size = new System.Drawing.Size(110, 49);
 			this.connectDisconnectButton.TabIndex = 16;
@@ -231,10 +177,10 @@
 			// activityLog
 			// 
 			this.activityLog.FormattingEnabled = true;
-			this.activityLog.ItemHeight = 15;
+			this.activityLog.ItemHeight = 17;
 			this.activityLog.Location = new System.Drawing.Point(474, 36);
 			this.activityLog.Name = "activityLog";
-			this.activityLog.Size = new System.Drawing.Size(384, 529);
+			this.activityLog.Size = new System.Drawing.Size(384, 514);
 			this.activityLog.TabIndex = 19;
 			// 
 			// slider2Panel
@@ -265,7 +211,7 @@
 			this.table1Label0.Location = new System.Drawing.Point(417, 68);
 			this.table1Label0.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1Label0.Name = "table1Label0";
-			this.table1Label0.Size = new System.Drawing.Size(16, 16);
+			this.table1Label0.Size = new System.Drawing.Size(18, 19);
 			this.table1Label0.TabIndex = 20;
 			this.table1Label0.Text = "0";
 			// 
@@ -277,7 +223,7 @@
 			this.table1LabelFull.Location = new System.Drawing.Point(417, 240);
 			this.table1LabelFull.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1LabelFull.Name = "table1LabelFull";
-			this.table1LabelFull.Size = new System.Drawing.Size(30, 16);
+			this.table1LabelFull.Size = new System.Drawing.Size(32, 19);
 			this.table1LabelFull.TabIndex = 24;
 			this.table1LabelFull.Text = "full";
 			// 
@@ -289,7 +235,7 @@
 			this.table2LabelFull.Location = new System.Drawing.Point(417, 498);
 			this.table2LabelFull.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2LabelFull.Name = "table2LabelFull";
-			this.table2LabelFull.Size = new System.Drawing.Size(30, 16);
+			this.table2LabelFull.Size = new System.Drawing.Size(32, 19);
 			this.table2LabelFull.TabIndex = 29;
 			this.table2LabelFull.Text = "full";
 			// 
@@ -301,7 +247,7 @@
 			this.table1Label3d4.Location = new System.Drawing.Point(417, 197);
 			this.table1Label3d4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1Label3d4.Name = "table1Label3d4";
-			this.table1Label3d4.Size = new System.Drawing.Size(28, 16);
+			this.table1Label3d4.Size = new System.Drawing.Size(32, 19);
 			this.table1Label3d4.TabIndex = 23;
 			this.table1Label3d4.Text = "3/4";
 			// 
@@ -313,7 +259,7 @@
 			this.table2Label3d4.Location = new System.Drawing.Point(417, 455);
 			this.table2Label3d4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2Label3d4.Name = "table2Label3d4";
-			this.table2Label3d4.Size = new System.Drawing.Size(28, 16);
+			this.table2Label3d4.Size = new System.Drawing.Size(32, 19);
 			this.table2Label3d4.TabIndex = 28;
 			this.table2Label3d4.Text = "3/4";
 			// 
@@ -325,7 +271,7 @@
 			this.table1Label1d4.Location = new System.Drawing.Point(417, 111);
 			this.table1Label1d4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1Label1d4.Name = "table1Label1d4";
-			this.table1Label1d4.Size = new System.Drawing.Size(28, 16);
+			this.table1Label1d4.Size = new System.Drawing.Size(32, 19);
 			this.table1Label1d4.TabIndex = 21;
 			this.table1Label1d4.Text = "1/4";
 			// 
@@ -337,7 +283,7 @@
 			this.table2Label1d2.Location = new System.Drawing.Point(417, 412);
 			this.table2Label1d2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2Label1d2.Name = "table2Label1d2";
-			this.table2Label1d2.Size = new System.Drawing.Size(28, 16);
+			this.table2Label1d2.Size = new System.Drawing.Size(32, 19);
 			this.table2Label1d2.TabIndex = 27;
 			this.table2Label1d2.Text = "1/2";
 			// 
@@ -349,7 +295,7 @@
 			this.table1Label1d2.Location = new System.Drawing.Point(417, 154);
 			this.table1Label1d2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table1Label1d2.Name = "table1Label1d2";
-			this.table1Label1d2.Size = new System.Drawing.Size(28, 16);
+			this.table1Label1d2.Size = new System.Drawing.Size(32, 19);
 			this.table1Label1d2.TabIndex = 22;
 			this.table1Label1d2.Text = "1/2";
 			// 
@@ -361,7 +307,7 @@
 			this.table2Label1d4.Location = new System.Drawing.Point(417, 369);
 			this.table2Label1d4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2Label1d4.Name = "table2Label1d4";
-			this.table2Label1d4.Size = new System.Drawing.Size(28, 16);
+			this.table2Label1d4.Size = new System.Drawing.Size(32, 19);
 			this.table2Label1d4.TabIndex = 26;
 			this.table2Label1d4.Text = "1/4";
 			// 
@@ -373,7 +319,7 @@
 			this.table2Label0.Location = new System.Drawing.Point(417, 326);
 			this.table2Label0.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.table2Label0.Name = "table2Label0";
-			this.table2Label0.Size = new System.Drawing.Size(16, 16);
+			this.table2Label0.Size = new System.Drawing.Size(18, 19);
 			this.table2Label0.TabIndex = 25;
 			this.table2Label0.Text = "0";
 			// 
@@ -383,24 +329,24 @@
 			this.machinePositionLabel.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
 			this.machinePositionLabel.Location = new System.Drawing.Point(131, 559);
 			this.machinePositionLabel.Name = "machinePositionLabel";
-			this.machinePositionLabel.Size = new System.Drawing.Size(52, 16);
+			this.machinePositionLabel.Size = new System.Drawing.Size(63, 19);
 			this.machinePositionLabel.TabIndex = 30;
 			this.machinePositionLabel.Text = "0.0 mm";
 			this.machinePositionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// label2
+			// machineCoordinate
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(12, 560);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(113, 15);
-			this.label2.TabIndex = 31;
-			this.label2.Text = "Machine X position:";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			this.machineCoordinate.AutoSize = true;
+			this.machineCoordinate.Location = new System.Drawing.Point(12, 560);
+			this.machineCoordinate.Name = "machineCoordinate";
+			this.machineCoordinate.Size = new System.Drawing.Size(133, 17);
+			this.machineCoordinate.TabIndex = 31;
+			this.machineCoordinate.Text = "Machine X position:";
+			this.machineCoordinate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// homeButton
 			// 
-			this.homeButton.Location = new System.Drawing.Point(748, 571);
+			this.homeButton.Location = new System.Drawing.Point(748, 614);
 			this.homeButton.Name = "homeButton";
 			this.homeButton.Size = new System.Drawing.Size(110, 49);
 			this.homeButton.TabIndex = 32;
@@ -408,14 +354,70 @@
 			this.homeButton.UseVisualStyleBackColor = true;
 			this.homeButton.Click += new System.EventHandler(this.homeButton_Click);
 			// 
+			// settingsButton
+			// 
+			this.settingsButton.Location = new System.Drawing.Point(400, 614);
+			this.settingsButton.Name = "settingsButton";
+			this.settingsButton.Size = new System.Drawing.Size(110, 49);
+			this.settingsButton.TabIndex = 34;
+			this.settingsButton.Text = "Settings";
+			this.settingsButton.UseVisualStyleBackColor = true;
+			this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+			// 
+			// allCoordinatesLabel
+			// 
+			this.allCoordinatesLabel.AutoSize = true;
+			this.allCoordinatesLabel.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+			this.allCoordinatesLabel.Location = new System.Drawing.Point(12, 614);
+			this.allCoordinatesLabel.Name = "allCoordinatesLabel";
+			this.allCoordinatesLabel.Size = new System.Drawing.Size(149, 19);
+			this.allCoordinatesLabel.TabIndex = 33;
+			this.allCoordinatesLabel.Text = "X=0.0 Y=0.0 Z=0.0";
+			this.allCoordinatesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// manualDown
+			// 
+			this.manualDown.Location = new System.Drawing.Point(516, 559);
+			this.manualDown.Name = "manualDown";
+			this.manualDown.Size = new System.Drawing.Size(110, 49);
+			this.manualDown.TabIndex = 35;
+			this.manualDown.Text = "Down";
+			this.manualDown.UseVisualStyleBackColor = true;
+			this.manualDown.Visible = false;
+			// 
+			// machineStateLabel
+			// 
+			this.machineStateLabel.AutoSize = true;
+			this.machineStateLabel.Location = new System.Drawing.Point(12, 584);
+			this.machineStateLabel.Name = "machineStateLabel";
+			this.machineStateLabel.Size = new System.Drawing.Size(102, 17);
+			this.machineStateLabel.TabIndex = 37;
+			this.machineStateLabel.Text = "Machine state:";
+			this.machineStateLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// manualUp
+			// 
+			this.manualUp.Location = new System.Drawing.Point(632, 559);
+			this.manualUp.Name = "manualUp";
+			this.manualUp.Size = new System.Drawing.Size(110, 49);
+			this.manualUp.TabIndex = 36;
+			this.manualUp.Text = "Up";
+			this.manualUp.UseVisualStyleBackColor = true;
+			this.manualUp.Visible = false;
+			// 
 			// Main
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(886, 653);
+			this.ClientSize = new System.Drawing.Size(886, 693);
+			this.Controls.Add(this.machineStateLabel);
+			this.Controls.Add(this.manualUp);
+			this.Controls.Add(this.manualDown);
+			this.Controls.Add(this.settingsButton);
+			this.Controls.Add(this.allCoordinatesLabel);
 			this.Controls.Add(this.homeButton);
 			this.Controls.Add(this.machinePositionLabel);
-			this.Controls.Add(this.label2);
+			this.Controls.Add(this.machineCoordinate);
 			this.Controls.Add(this.table1Label0);
 			this.Controls.Add(this.table1LabelFull);
 			this.Controls.Add(this.table2LabelFull);
@@ -432,10 +434,8 @@
 			this.Controls.Add(this.connectDisconnectButton);
 			this.Controls.Add(this.slider1Panel);
 			this.Controls.Add(this.slider2Panel);
-			this.Controls.Add(this.menuStrip1);
 			this.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.MainMenuStrip = this.menuStrip1;
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MaximizeBox = false;
 			this.Name = "Main";
@@ -445,8 +445,6 @@
 			this.tablePanel.ResumeLayout(false);
 			this.table2Panel.ResumeLayout(false);
 			this.table1Panel.ResumeLayout(false);
-			this.menuStrip1.ResumeLayout(false);
-			this.menuStrip1.PerformLayout();
 			this.slider2Panel.ResumeLayout(false);
 			this.slider1Panel.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -463,17 +461,11 @@
 		private System.Windows.Forms.Panel table1Panel;
 		private System.Windows.Forms.Panel table2PanelPaintedArea;
 		private System.Windows.Forms.Panel table1PanelPaintedArea;
-		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem tableLengthsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem serialPortToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem gRBLToolStripMenuItem;
 		private System.Windows.Forms.Button startStopButton;
 		private System.Windows.Forms.Button connectDisconnectButton;
 		private System.Windows.Forms.ListBox activityLog;
 		private System.Windows.Forms.Panel slider2Panel;
 		private System.Windows.Forms.Panel slider1Panel;
-		private System.Windows.Forms.ToolStripMenuItem setMachinePositionToolStripMenuItem;
 		private System.Windows.Forms.Label table1Label0;
 		private System.Windows.Forms.Label table1LabelFull;
 		private System.Windows.Forms.Label table2LabelFull;
@@ -485,9 +477,14 @@
 		private System.Windows.Forms.Label table2Label1d4;
 		private System.Windows.Forms.Label table2Label0;
 		private System.Windows.Forms.Label machinePositionLabel;
-		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label machineCoordinate;
 		private System.Windows.Forms.Panel machinePositionPanel;
 		private System.Windows.Forms.Button homeButton;
+		private System.Windows.Forms.Button settingsButton;
+		private System.Windows.Forms.Label allCoordinatesLabel;
+		private System.Windows.Forms.Button manualDown;
+		private System.Windows.Forms.Label machineStateLabel;
+		private System.Windows.Forms.Button manualUp;
 	}
 }
 
