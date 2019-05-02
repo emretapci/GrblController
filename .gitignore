@@ -1,4 +1,3 @@
-/GrblController/bin
-/GrblController/obj
-/.vs
-!/GrblController/bin/Debug/*
+GrblController/bin
+GrblController/obj
+.vs
