@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Parameters>
+  <StartOffset>100</StartOffset>
+  <Table1Length>500</Table1Length>
+  <MiddleGap>100</MiddleGap>
+  <Table2Length>500</Table2Length>
+  <EndOffset>100</EndOffset>
+  <SerialPortString>COM3</SerialPortString>
+  <Baudrate>115200</Baudrate>
+  <ControlAxis>Y</ControlAxis>
+  <ReverseFeed>False</ReverseFeed>
+  <StepPulseTime>10</StepPulseTime>
+  <StepIdleDelay>255</StepIdleDelay>
+  <StepPortInvert>0</StepPortInvert>
+  <DirectionPortInvert>6</DirectionPortInvert>
+  <StepEnableInvert>True</StepEnableInvert>
+  <LimitPinsInvert>False</LimitPinsInvert>
+  <ProbePinInvert>False</ProbePinInvert>
+  <StatusReport>1</StatusReport>
+  <JunctionDeviation>0.02</JunctionDeviation>
+  <ArcTolerance>0.002</ArcTolerance>
+  <ReportInches>False</ReportInches>
+  <SoftLimits>False</SoftLimits>
+  <HardLimits>True</HardLimits>
+  <HomingCycle>False</HomingCycle>
+  <HomingDirectionInvert>1</HomingDirectionInvert>
+  <HomingFeed>25</HomingFeed>
+  <HomingSeek>500</HomingSeek>
+  <HomingDebounce>250</HomingDebounce>
+  <HomingPullOff>1</HomingPullOff>
+  <MaximumSpindleSpeed>12000</MaximumSpindleSpeed>
+  <MinimumSpindleSpeed>0</MinimumSpindleSpeed>
+  <LaserMode>False</LaserMode>
+  <XSteps>200</XSteps>
+  <YSteps>200</YSteps>
+  <ZSteps>200</ZSteps>
+  <XFeedRate>3000</XFeedRate>
+  <YFeedRate>3000</YFeedRate>
+  <ZFeedRate>2000</ZFeedRate>
+  <XAcceleration>25</XAcceleration>
+  <YAcceleration>25</YAcceleration>
+  <ZAcceleration>50</ZAcceleration>
+  <XMaximumTravel>200</XMaximumTravel>
+  <YMaximumTravel>200</YMaximumTravel>
+  <ZMaximumTravel>200</ZMaximumTravel>
+  <CalibrateBeforeHit>G38.2 Y1000 F500</CalibrateBeforeHit>
+  <CalibrateAfterHit>$J=G91 Y-5 F100</CalibrateAfterHit>
+  <CalibrateHitTimeout>60</CalibrateHitTimeout>
+</Parameters>

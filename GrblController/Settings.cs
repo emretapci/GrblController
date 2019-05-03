@@ -98,6 +98,14 @@ namespace GrblController
 			baudrateCombobox.SelectedItem = parameters.Baudrate.ToString();
 
 			#endregion
+
+			#region Load Calibrate codes settings to form
+
+			beforeHittingLimit.Text = parameters.CalibrateBeforeHit;
+			afterHittingLimit.Text = parameters.CalibrateAfterHit;
+			hitTimeout.Text = parameters.CalibrateHitTimeout.ToString();
+
+			#endregion
 		}
 
 		private void buttonOK_Click(object sender, EventArgs e)
@@ -169,7 +177,7 @@ namespace GrblController
 			{
 				if (d < 0)
 				{
-					MessageBox.Show("Machine X coordinate cannot be negative.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("\"Machine coordinate\" cannot be negative.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return;
 				}
 				else if (d <= Main.Instance.Parameters.TablesTotalLength)
@@ -180,13 +188,13 @@ namespace GrblController
 				}
 				else
 				{
-					MessageBox.Show("Machine X coordinate cannot be bigger than tables' total length.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("\"Machine coordinate\" cannot be bigger than tables' total length.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return;
 				}
 			}
 			else
 			{
-				MessageBox.Show("Invalid value for Machine X coordinate.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("Invalid value for \"Machine coordinate\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 
@@ -196,6 +204,23 @@ namespace GrblController
 
 			newParameters.SerialPortString = serialPortCombobox.SelectedItem != null ? serialPortCombobox.SelectedItem.ToString() : "";
 			newParameters.Baudrate = int.Parse(baudrateCombobox.SelectedItem.ToString());
+
+			#endregion
+
+			#region Get Calibrate codes settings from form
+
+			newParameters.CalibrateBeforeHit = beforeHittingLimit.Text;
+			newParameters.CalibrateAfterHit = afterHittingLimit.Text;
+			int i;
+			if(int.TryParse(hitTimeout.Text, out i))
+			{
+				newParameters.CalibrateHitTimeout = i;
+			}
+			else
+			{
+				MessageBox.Show("Invalid value for \"Hit timeout\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
 
 			#endregion
 

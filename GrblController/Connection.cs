@@ -15,7 +15,8 @@ namespace GrblController
 		DisconnectedCanConnect,
 		Connecting,
 		ConnectedStarted,
-		ConnectedStopped
+		ConnectedStopped,
+		ConnectedCalibrating
 	}
 
 	internal enum MachineState
@@ -43,7 +44,7 @@ namespace GrblController
 		{
 			get
 			{
-				switch(Main.Instance.Parameters.ControlAxis)
+				switch (Main.Instance.Parameters.ControlAxis)
 				{
 					case ControlAxis.X:
 						return MachinePosition.X;
@@ -86,6 +87,8 @@ namespace GrblController
 
 	internal class Connection
 	{
+		private ManualResetEvent willStop = new ManualResetEvent(false);
+		private ManualResetEvent stopped = new ManualResetEvent(false);
 		private SerialPort serialPort;
 		private ManualResetEvent responseReceived = new ManualResetEvent(false);
 		private string response;
@@ -189,11 +192,21 @@ namespace GrblController
 					{
 						var version = versionRegex.Match(line).Groups["version"].Value;
 						Main.Instance.AddLog("GRBL version received: " + version);
-						SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
 
-						//not necessary anymore. will be flushed anyway.
-						//Main.Instance.AddLog("Receiving settings.");
-						//Send("$$");
+						Main.Instance.AddLog("Writing settings to board.");
+						(new Thread(new ThreadStart(() =>
+						{
+							Thread.Sleep(100);
+							if (WriteSettingsToBoard())
+							{
+								SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
+							}
+							else
+							{
+								SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
+							}
+						}))).Start();
+
 						statusTimer.Start();
 						processed = true;
 					}
@@ -206,7 +219,7 @@ namespace GrblController
 
 						processed = true;
 					}
-					else if (Status.ConnectionState == ConnectionState.ConnectedStopped && okRegex.IsMatch(line))
+					else if (okRegex.IsMatch(line))
 					{
 						response = line.Trim();
 						responseReceived.Set();
@@ -217,7 +230,8 @@ namespace GrblController
 						var statusMatches = StatusMatch(line);
 						if (statusMatches.ContainsKey("MPosX") && statusMatches.ContainsKey("MPosY") && statusMatches.ContainsKey("MPosZ"))
 						{
-							SetStatus(new Status(Status) {
+							SetStatus(new Status(Status)
+							{
 								MachinePosition = new Vector3D(double.Parse(statusMatches["MPosX"]), double.Parse(statusMatches["MPosY"]), double.Parse(statusMatches["MPosZ"])),
 								MachineState = (MachineState)Enum.Parse(typeof(MachineState), statusMatches["state"])
 							});
@@ -233,42 +247,44 @@ namespace GrblController
 			}
 		}
 
-		internal void WriteSettingsToBoard()
+		private bool WriteSettingsToBoard()
 		{
-			SendSetting(0, Main.Instance.Parameters.StepPulseTime.ToString());
-			SendSetting(1, Main.Instance.Parameters.StepIdleDelay.ToString());
-			SendSetting(2, ((int)Main.Instance.Parameters.StepPortInvert).ToString());
-			SendSetting(3, ((int)Main.Instance.Parameters.DirectionPortInvert).ToString());
-			SendSetting(4, Main.Instance.Parameters.StepEnableInvert ? "1" : "0");
-			SendSetting(5, Main.Instance.Parameters.LimitPinsInvert ? "1" : "0");
-			SendSetting(6, Main.Instance.Parameters.ProbePinInvert ? "1" : "0");
-			SendSetting(10, ((int)Main.Instance.Parameters.StatusReport).ToString());
-			SendSetting(11, Main.Instance.Parameters.JunctionDeviation.ToString());
-			SendSetting(12, Main.Instance.Parameters.ArcTolerance.ToString());
-			SendSetting(13, Main.Instance.Parameters.ReportInches ? "1" : "0");
-			SendSetting(20, Main.Instance.Parameters.SoftLimits ? "1" : "0");
-			SendSetting(21, Main.Instance.Parameters.HardLimits ? "1" : "0");
-			SendSetting(22, Main.Instance.Parameters.HomingCycle ? "1" : "0");
-			SendSetting(23, ((int)Main.Instance.Parameters.HomingDirectionInvert).ToString());
-			SendSetting(24, Main.Instance.Parameters.HomingFeed.ToString());
-			SendSetting(25, Main.Instance.Parameters.HomingSeek.ToString());
-			SendSetting(26, Main.Instance.Parameters.HomingDebounce.ToString());
-			SendSetting(27, Main.Instance.Parameters.HomingPullOff.ToString());
-			SendSetting(30, Main.Instance.Parameters.MaximumSpindleSpeed.ToString());
-			SendSetting(31, Main.Instance.Parameters.MinimumSpindleSpeed.ToString());
-			SendSetting(32, Main.Instance.Parameters.LaserMode ? "1" : "0");
-			SendSetting(100, Main.Instance.Parameters.XSteps.ToString());
-			SendSetting(101, Main.Instance.Parameters.YSteps.ToString());
-			SendSetting(102, Main.Instance.Parameters.ZSteps.ToString());
-			SendSetting(110, Main.Instance.Parameters.XFeedRate.ToString());
-			SendSetting(111, Main.Instance.Parameters.YFeedRate.ToString());
-			SendSetting(112, Main.Instance.Parameters.ZFeedRate.ToString());
-			SendSetting(120, Main.Instance.Parameters.XAcceleration.ToString());
-			SendSetting(121, Main.Instance.Parameters.YAcceleration.ToString());
-			SendSetting(122, Main.Instance.Parameters.ZAcceleration.ToString());
-			SendSetting(130, Main.Instance.Parameters.XMaximumTravel.ToString());
-			SendSetting(131, Main.Instance.Parameters.YMaximumTravel.ToString());
-			SendSetting(132, Main.Instance.Parameters.ZMaximumTravel.ToString());
+			bool result = true;
+			result &= SendSetting(0, Main.Instance.Parameters.StepPulseTime.ToString());
+			result &= SendSetting(1, Main.Instance.Parameters.StepIdleDelay.ToString());
+			result &= SendSetting(2, ((int)Main.Instance.Parameters.StepPortInvert).ToString());
+			result &= SendSetting(3, ((int)Main.Instance.Parameters.DirectionPortInvert).ToString());
+			result &= SendSetting(4, Main.Instance.Parameters.StepEnableInvert ? "1" : "0");
+			result &= SendSetting(5, Main.Instance.Parameters.LimitPinsInvert ? "1" : "0");
+			result &= SendSetting(6, Main.Instance.Parameters.ProbePinInvert ? "1" : "0");
+			result &= SendSetting(10, ((int)Main.Instance.Parameters.StatusReport).ToString());
+			result &= SendSetting(11, Main.Instance.Parameters.JunctionDeviation.ToString());
+			result &= SendSetting(12, Main.Instance.Parameters.ArcTolerance.ToString());
+			result &= SendSetting(13, Main.Instance.Parameters.ReportInches ? "1" : "0");
+			result &= SendSetting(20, Main.Instance.Parameters.SoftLimits ? "1" : "0");
+			result &= SendSetting(21, Main.Instance.Parameters.HardLimits ? "1" : "0");
+			result &= SendSetting(22, Main.Instance.Parameters.HomingCycle ? "1" : "0");
+			result &= SendSetting(23, ((int)Main.Instance.Parameters.HomingDirectionInvert).ToString());
+			result &= SendSetting(24, Main.Instance.Parameters.HomingFeed.ToString());
+			result &= SendSetting(25, Main.Instance.Parameters.HomingSeek.ToString());
+			result &= SendSetting(26, Main.Instance.Parameters.HomingDebounce.ToString());
+			result &= SendSetting(27, Main.Instance.Parameters.HomingPullOff.ToString());
+			result &= SendSetting(30, Main.Instance.Parameters.MaximumSpindleSpeed.ToString());
+			result &= SendSetting(31, Main.Instance.Parameters.MinimumSpindleSpeed.ToString());
+			result &= SendSetting(32, Main.Instance.Parameters.LaserMode ? "1" : "0");
+			result &= SendSetting(100, Main.Instance.Parameters.XSteps.ToString());
+			result &= SendSetting(101, Main.Instance.Parameters.YSteps.ToString());
+			result &= SendSetting(102, Main.Instance.Parameters.ZSteps.ToString());
+			result &= SendSetting(110, Main.Instance.Parameters.XFeedRate.ToString());
+			result &= SendSetting(111, Main.Instance.Parameters.YFeedRate.ToString());
+			result &= SendSetting(112, Main.Instance.Parameters.ZFeedRate.ToString());
+			result &= SendSetting(120, Main.Instance.Parameters.XAcceleration.ToString());
+			result &= SendSetting(121, Main.Instance.Parameters.YAcceleration.ToString());
+			result &= SendSetting(122, Main.Instance.Parameters.ZAcceleration.ToString());
+			result &= SendSetting(130, Main.Instance.Parameters.XMaximumTravel.ToString());
+			result &= SendSetting(131, Main.Instance.Parameters.YMaximumTravel.ToString());
+			result &= SendSetting(132, Main.Instance.Parameters.ZMaximumTravel.ToString());
+			return result;
 		}
 
 		private Dictionary<string, string> StatusMatch(string line)
@@ -302,28 +318,38 @@ namespace GrblController
 			return matchesDict;
 		}
 
-		internal void SendSetting(int setting, string val)
+		internal bool SendSetting(int setting, string val)
 		{
+			responseReceived.Reset();
 			Send("$" + setting + "=" + val);
-			if (responseReceived.WaitOne(1000))
+			if (responseReceived.WaitOne(100))
 			{
 				if (response == "ok")
 				{
-					//Main.Instance.AddLog("\"$" + setting + "=" + val + "\" command accepted.");
+					return true;
 				}
 				else
 				{
 					Main.Instance.AddLog("ERROR: Board did not accept \"$" + setting + "=" + val + "\".");
+					return false;
 				}
 			}
 			else
 			{
 				Main.Instance.AddLog("ERROR: Board did not respond to command \"$" + setting + "=" + val + "\".");
+				return false;
 			}
 		}
 
 		internal void Disconnect()
 		{
+			if(Status.ConnectionState == ConnectionState.ConnectedCalibrating)
+			{
+				stopped.Reset();
+				willStop.Set();
+				stopped.WaitOne();
+			}
+
 			if (Status.ConnectionState == ConnectionState.ConnectedStarted)
 			{
 				Main.Instance.GeometryController.Stop();
@@ -341,13 +367,68 @@ namespace GrblController
 
 			if (Array.IndexOf(SerialPort.GetPortNames(), Main.Instance.Parameters.SerialPortString) >= 0)
 			{
-				Status.ConnectionState = ConnectionState.DisconnectedCanConnect;
 				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
 			}
 			else
 			{
 				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCannotConnect });
 			}
+		}
+
+		internal void Calibrate()
+		{
+			(new Thread(new ThreadStart(() =>
+			{
+				Main.Instance.AddLog("Starting calibration.");
+				Main.Instance.GeometryController.Stop();
+				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false, ConnectionState = ConnectionState.ConnectedCalibrating });
+
+				if (string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateBeforeHit) &&
+					string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateAfterHit))
+				{
+					Main.Instance.AddLog("Calibration codes are empty. Nothing to do.");
+					return;
+				}
+
+				if (!string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateBeforeHit))
+				{
+					Send("$X");
+					Thread.Sleep(1000);
+
+					responseReceived.Reset();
+					response = "";
+					Main.Instance.AddLog("Sending: [" + Main.Instance.Parameters.CalibrateBeforeHit + "]");
+					Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateBeforeHit);
+
+					if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }, Main.Instance.Parameters.CalibrateHitTimeout * 1000) == 0)
+					{
+						if (response == "ok")
+						{
+							if (!string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateAfterHit))
+							{
+								responseReceived.Reset();
+								response = "";
+								Main.Instance.AddLog("Sending: [" + Main.Instance.Parameters.CalibrateAfterHit + "]");
+								Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateAfterHit);
+								if (responseReceived.WaitOne(5000))
+								{
+									if (response == "ok")
+									{
+										Main.Instance.AddLog("Calibration successful.");
+										Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { ConnectionState = ConnectionState.ConnectedStopped });
+										return;
+									}
+								}
+							}
+						}
+						else
+						{
+							Main.Instance.AddLog("ERROR: Board did not respond in " + Main.Instance.Parameters.CalibrateHitTimeout + " seconds.");
+						}
+					}
+					stopped.Set();
+				}
+			}))).Start();
 		}
 	}
 }

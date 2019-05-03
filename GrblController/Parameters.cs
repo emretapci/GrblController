@@ -83,6 +83,10 @@ namespace GrblController
 		internal double YMaximumTravel { get; set; } //mm
 		internal double ZMaximumTravel { get; set; } //mm
 
+		internal string CalibrateBeforeHit { get; set; }
+		internal string CalibrateAfterHit { get; set; }
+		internal int CalibrateHitTimeout { get; set; } //seconds
+
 		internal Parameters()
 		{
 			StartOffset = 100;
@@ -131,6 +135,10 @@ namespace GrblController
 			XMaximumTravel = 200;
 			YMaximumTravel = 200;
 			ZMaximumTravel = 200;
+
+			CalibrateBeforeHit = "";
+			CalibrateAfterHit = "";
+			CalibrateHitTimeout = 60;
 		}
 
 		internal static Parameters ReadFromFile(string filename)
@@ -187,7 +195,11 @@ namespace GrblController
 					ZAcceleration = double.Parse(doc["Parameters"]["ZAcceleration"].InnerText),
 					XMaximumTravel = double.Parse(doc["Parameters"]["XMaximumTravel"].InnerText),
 					YMaximumTravel = double.Parse(doc["Parameters"]["YMaximumTravel"].InnerText),
-					ZMaximumTravel = double.Parse(doc["Parameters"]["ZMaximumTravel"].InnerText)
+					ZMaximumTravel = double.Parse(doc["Parameters"]["ZMaximumTravel"].InnerText),
+
+					CalibrateBeforeHit = doc["Parameters"]["CalibrateBeforeHit"].InnerText,
+					CalibrateAfterHit = doc["Parameters"]["CalibrateAfterHit"].InnerText,
+					CalibrateHitTimeout = int.Parse(doc["Parameters"]["CalibrateHitTimeout"].InnerText)
 				};
 				return parameters;
 			}
@@ -248,7 +260,10 @@ namespace GrblController
 					new XElement("ZAcceleration", parameters.ZAcceleration.ToString()),
 					new XElement("XMaximumTravel", parameters.XMaximumTravel.ToString()),
 					new XElement("YMaximumTravel", parameters.YMaximumTravel.ToString()),
-					new XElement("ZMaximumTravel", parameters.ZMaximumTravel.ToString())
+					new XElement("ZMaximumTravel", parameters.ZMaximumTravel.ToString()),
+					new XElement("CalibrateBeforeHit", parameters.CalibrateBeforeHit.ToString()),
+					new XElement("CalibrateAfterHit", parameters.CalibrateAfterHit.ToString()),
+					new XElement("CalibrateHitTimeout", parameters.CalibrateHitTimeout.ToString())
 				)).Save(filename);
 		}
 	}
