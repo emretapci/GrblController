@@ -68,7 +68,7 @@ namespace GrblController
 			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + Main.Instance.Parameters.StartOffset.ToString("0.0"));
 			WaitXPosition(Main.Instance.Parameters.StartOffset);
 
-			if(exiting)
+			if (exiting)
 			{
 				stopped.Set();
 				return;
@@ -161,6 +161,13 @@ namespace GrblController
 			Main.Instance.AddLog("Set status to Stopped.");
 			Main.Instance.Connection.Status.ConnectionState = ConnectionState.ConnectedStopped;
 			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
+		}
+
+		internal void GoToCoordinate(double machineCoordinate)
+		{
+			Main.Instance.AddLog("Going to machine coordinate " + Main.Instance.Parameters.ControlAxis.ToString() + "=" + Main.Instance.Connection.Status.MachineCoordinate);
+			var target = Main.Instance.Connection.Status.MachineCoordinate;
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis.ToString() + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + target.ToString("0.0"));
 		}
 	}
 }

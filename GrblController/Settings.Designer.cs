@@ -146,7 +146,7 @@
 			this.label132 = new System.Windows.Forms.Label();
 			this.label133 = new System.Windows.Forms.Label();
 			this.controlAxisLabel = new System.Windows.Forms.Label();
-			this.machineXPositionTextBox = new System.Windows.Forms.TextBox();
+			this.machinePositionTextBox = new System.Windows.Forms.TextBox();
 			this.tableTabPage = new System.Windows.Forms.TabPage();
 			this.label121 = new System.Windows.Forms.Label();
 			this.label122 = new System.Windows.Forms.Label();
@@ -164,6 +164,8 @@
 			this.label129 = new System.Windows.Forms.Label();
 			this.label130 = new System.Windows.Forms.Label();
 			this.calibrateCodes = new System.Windows.Forms.TabPage();
+			this.zeroize = new System.Windows.Forms.TextBox();
+			this.label64 = new System.Windows.Forms.Label();
 			this.label63 = new System.Windows.Forms.Label();
 			this.hitTimeout = new System.Windows.Forms.TextBox();
 			this.label62 = new System.Windows.Forms.Label();
@@ -171,8 +173,6 @@
 			this.label61 = new System.Windows.Forms.Label();
 			this.beforeHittingLimit = new System.Windows.Forms.TextBox();
 			this.label60 = new System.Windows.Forms.Label();
-			this.zeroize = new System.Windows.Forms.TextBox();
-			this.label64 = new System.Windows.Forms.Label();
 			this.tabControl4.SuspendLayout();
 			this.grblTabPage.SuspendLayout();
 			this.serialPortTabPage.SuspendLayout();
@@ -1342,7 +1342,7 @@
 			this.machineTabPage.Controls.Add(this.label132);
 			this.machineTabPage.Controls.Add(this.label133);
 			this.machineTabPage.Controls.Add(this.controlAxisLabel);
-			this.machineTabPage.Controls.Add(this.machineXPositionTextBox);
+			this.machineTabPage.Controls.Add(this.machinePositionTextBox);
 			this.machineTabPage.Location = new System.Drawing.Point(4, 28);
 			this.machineTabPage.Name = "machineTabPage";
 			this.machineTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -1405,16 +1405,16 @@
 			this.controlAxisLabel.AutoSize = true;
 			this.controlAxisLabel.Location = new System.Drawing.Point(21, 52);
 			this.controlAxisLabel.Name = "controlAxisLabel";
-			this.controlAxisLabel.Size = new System.Drawing.Size(148, 19);
+			this.controlAxisLabel.Size = new System.Drawing.Size(132, 19);
 			this.controlAxisLabel.TabIndex = 22;
-			this.controlAxisLabel.Text = "Machine X position";
+			this.controlAxisLabel.Text = "Machine position";
 			// 
-			// machineXPositionTextBox
+			// machinePositionTextBox
 			// 
-			this.machineXPositionTextBox.Location = new System.Drawing.Point(153, 49);
-			this.machineXPositionTextBox.Name = "machineXPositionTextBox";
-			this.machineXPositionTextBox.Size = new System.Drawing.Size(121, 27);
-			this.machineXPositionTextBox.TabIndex = 21;
+			this.machinePositionTextBox.Location = new System.Drawing.Point(153, 49);
+			this.machinePositionTextBox.Name = "machinePositionTextBox";
+			this.machinePositionTextBox.Size = new System.Drawing.Size(121, 27);
+			this.machinePositionTextBox.TabIndex = 21;
 			// 
 			// tableTabPage
 			// 
@@ -1594,6 +1594,23 @@
 			this.calibrateCodes.Text = "Calibrate codes";
 			this.calibrateCodes.UseVisualStyleBackColor = true;
 			// 
+			// zeroize
+			// 
+			this.zeroize.Location = new System.Drawing.Point(152, 45);
+			this.zeroize.Name = "zeroize";
+			this.zeroize.Size = new System.Drawing.Size(323, 27);
+			this.zeroize.TabIndex = 36;
+			// 
+			// label64
+			// 
+			this.label64.AutoSize = true;
+			this.label64.Location = new System.Drawing.Point(101, 48);
+			this.label64.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label64.Name = "label64";
+			this.label64.Size = new System.Drawing.Size(63, 19);
+			this.label64.TabIndex = 35;
+			this.label64.Text = "Zeroize";
+			// 
 			// label63
 			// 
 			this.label63.AutoSize = true;
@@ -1654,23 +1671,6 @@
 			this.label60.Size = new System.Drawing.Size(139, 19);
 			this.label60.TabIndex = 28;
 			this.label60.Text = "Before hitting limit";
-			// 
-			// zeroize
-			// 
-			this.zeroize.Location = new System.Drawing.Point(152, 45);
-			this.zeroize.Name = "zeroize";
-			this.zeroize.Size = new System.Drawing.Size(323, 27);
-			this.zeroize.TabIndex = 36;
-			// 
-			// label64
-			// 
-			this.label64.AutoSize = true;
-			this.label64.Location = new System.Drawing.Point(101, 48);
-			this.label64.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label64.Name = "label64";
-			this.label64.Size = new System.Drawing.Size(63, 19);
-			this.label64.TabIndex = 35;
-			this.label64.Text = "Zeroize";
 			// 
 			// Settings
 			// 
@@ -1832,7 +1832,7 @@
 		private System.Windows.Forms.Label label132;
 		private System.Windows.Forms.Label label133;
 		private System.Windows.Forms.Label controlAxisLabel;
-		private System.Windows.Forms.TextBox machineXPositionTextBox;
+		private System.Windows.Forms.TextBox machinePositionTextBox;
 		private System.Windows.Forms.Label label52;
 		private System.Windows.Forms.Label label107;
 		private System.Windows.Forms.Label label105;

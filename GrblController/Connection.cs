@@ -344,7 +344,7 @@ namespace GrblController
 
 		internal void Disconnect()
 		{
-			if(Status.ConnectionState == ConnectionState.ConnectedCalibrating)
+			if (Status.ConnectionState == ConnectionState.ConnectedCalibrating)
 			{
 				stopped.Reset();
 				willStop.Set();
@@ -366,13 +366,21 @@ namespace GrblController
 				serialPort = null;
 			}
 
-			if (Array.IndexOf(SerialPort.GetPortNames(), Main.Instance.Parameters.SerialPortString) >= 0)
+			CheckCanConnect();
+		}
+
+		internal void CheckCanConnect()
+		{
+			if (Status.ConnectionState == ConnectionState.DisconnectedCanConnect || Status.ConnectionState == ConnectionState.DisconnectedCannotConnect)
 			{
-				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
-			}
-			else
-			{
-				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCannotConnect });
+				if (Array.IndexOf(SerialPort.GetPortNames(), Main.Instance.Parameters.SerialPortString) >= 0)
+				{
+					SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
+				}
+				else
+				{
+					SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCannotConnect });
+				}
 			}
 		}
 

@@ -272,6 +272,7 @@ namespace GrblController
 				table2Slider_ValueChanged(null, null);
 				Parameters = Parameters.ReadFromFile(ConfigFilename);
 				Connection.Status.MachineCoordinate = settingsForm.MachinePosition;
+				GeometryController.GoToCoordinate(Connection.Status.MachineCoordinate);
 				machineCoordinate.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
 			}
 		}

@@ -78,7 +78,8 @@ namespace GrblController
 
 			#region Load Machine settings to form
 
-			machineXPositionTextBox.Text = Main.Instance.Connection.Status.MachinePosition.X.ToString("0.0");
+			controlAxisLabel.Text = "Machine " + Main.Instance.Parameters.ControlAxis.ToString() + " position";
+			machinePositionTextBox.Text = ((Main.Instance.Parameters.ReverseFeed ? -1 : 1) * Main.Instance.Connection.Status.MachineCoordinate).ToString("0.0");
 			controlAxis.SelectedIndex = (int)parameters.ControlAxis;
 			reverseFeed.Checked = parameters.ReverseFeed;
 
@@ -174,7 +175,7 @@ namespace GrblController
 			#region Get Machine settings from form
 
 			double d;
-			if (double.TryParse(machineXPositionTextBox.Text, out d))
+			if (double.TryParse(machinePositionTextBox.Text, out d))
 			{
 				if (d < 0)
 				{
@@ -406,6 +407,8 @@ namespace GrblController
 			}
 
 			#endregion
+
+			Main.Instance.Connection.CheckCanConnect();
 
 			Parameters.WriteToFile("config.xml", newParameters);
 
