@@ -338,8 +338,8 @@
 			// 
 			this.machineCoordinate.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
 			this.machineCoordinate.Name = "machineCoordinate";
-			this.machineCoordinate.Size = new System.Drawing.Size(40, 24);
-			this.machineCoordinate.Text = "X=0";
+			this.machineCoordinate.Size = new System.Drawing.Size(235, 24);
+			this.machineCoordinate.Text = "Machine/Work position: Unknown";
 			// 
 			// menuStrip1
 			// 

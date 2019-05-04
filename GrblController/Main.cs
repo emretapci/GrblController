@@ -52,14 +52,13 @@ namespace GrblController
 
 			ResizeSliders();
 
-			Parameters = Parameters.ReadFromFile(Main.Instance.ConfigFilename);
+			Parameters = Parameters.ReadFromFile(ConfigFilename);
 			table1Slider_ValueChanged(null, null);
 			table2Slider_ValueChanged(null, null);
 			UpdateMachinePositionPanel();
 
 			Connection.onStatusChanged += StatusChanged;
 
-			machineCoordinate.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
 			StatusChanged(Connection.Status, Connection.Status);
 		}
 
@@ -172,7 +171,14 @@ namespace GrblController
 				AddLog("Stopped sending G codes.");
 			}
 
-			machineCoordinate.Text = "Machine coordinate: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : Math.Abs(newStatus.MachineCoordinate).ToString("0.0 mm"));
+			if(Connection.Status.PositionType == PositionType.Unknown)
+			{
+				machineCoordinate.Text = "Machine/Work position: Unknown";
+			}
+			else
+			{
+				machineCoordinate.Text = Connection.Status.PositionType.ToString() + " position: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : Math.Abs(newStatus.MachineCoordinate).ToString("0.0 mm"));
+			}
 			machineState.Text = "Machine state: " + newStatus.MachineState.ToString();
 
 			UpdateMachinePositionPanel();

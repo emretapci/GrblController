@@ -166,9 +166,6 @@
 			this.calibrateCodes = new System.Windows.Forms.TabPage();
 			this.zeroize = new System.Windows.Forms.TextBox();
 			this.label64 = new System.Windows.Forms.Label();
-			this.label63 = new System.Windows.Forms.Label();
-			this.hitTimeout = new System.Windows.Forms.TextBox();
-			this.label62 = new System.Windows.Forms.Label();
 			this.afterHittingLimit = new System.Windows.Forms.TextBox();
 			this.label61 = new System.Windows.Forms.Label();
 			this.beforeHittingLimit = new System.Windows.Forms.TextBox();
@@ -1579,9 +1576,6 @@
 			// 
 			this.calibrateCodes.Controls.Add(this.zeroize);
 			this.calibrateCodes.Controls.Add(this.label64);
-			this.calibrateCodes.Controls.Add(this.label63);
-			this.calibrateCodes.Controls.Add(this.hitTimeout);
-			this.calibrateCodes.Controls.Add(this.label62);
 			this.calibrateCodes.Controls.Add(this.afterHittingLimit);
 			this.calibrateCodes.Controls.Add(this.label61);
 			this.calibrateCodes.Controls.Add(this.beforeHittingLimit);
@@ -1610,33 +1604,6 @@
 			this.label64.Size = new System.Drawing.Size(63, 19);
 			this.label64.TabIndex = 35;
 			this.label64.Text = "Zeroize";
-			// 
-			// label63
-			// 
-			this.label63.AutoSize = true;
-			this.label63.Location = new System.Drawing.Point(238, 114);
-			this.label63.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label63.Name = "label63";
-			this.label63.Size = new System.Drawing.Size(70, 19);
-			this.label63.TabIndex = 34;
-			this.label63.Text = "seconds";
-			// 
-			// hitTimeout
-			// 
-			this.hitTimeout.Location = new System.Drawing.Point(152, 111);
-			this.hitTimeout.Name = "hitTimeout";
-			this.hitTimeout.Size = new System.Drawing.Size(79, 27);
-			this.hitTimeout.TabIndex = 33;
-			// 
-			// label62
-			// 
-			this.label62.AutoSize = true;
-			this.label62.Location = new System.Drawing.Point(71, 114);
-			this.label62.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label62.Name = "label62";
-			this.label62.Size = new System.Drawing.Size(85, 19);
-			this.label62.TabIndex = 32;
-			this.label62.Text = "Hit timeout";
 			// 
 			// afterHittingLimit
 			// 
@@ -1851,9 +1818,6 @@
 		private System.Windows.Forms.Label label61;
 		private System.Windows.Forms.TextBox beforeHittingLimit;
 		private System.Windows.Forms.Label label60;
-		private System.Windows.Forms.Label label63;
-		private System.Windows.Forms.TextBox hitTimeout;
-		private System.Windows.Forms.Label label62;
 		private System.Windows.Forms.TextBox zeroize;
 		private System.Windows.Forms.Label label64;
 	}

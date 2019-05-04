@@ -33,12 +33,20 @@ namespace GrblController
 		Sleep
 	}
 
+	internal enum PositionType
+	{
+		Unknown,
+		Machine,
+		Work
+	}
+
 	internal class Status
 	{
 		internal ConnectionState ConnectionState { get; set; }
 		internal MachineState MachineState { get; set; }
 		internal Vector3D MachinePosition { get; set; } //can be negative.
 		internal bool Painting { get; set; }
+		internal PositionType PositionType { get; set; }
 
 		internal double MachineCoordinate //can be negative.
 		{
@@ -82,6 +90,7 @@ namespace GrblController
 			MachineState = status.MachineState;
 			MachinePosition = new Vector3D(status.MachinePosition);
 			Painting = status.Painting;
+			PositionType = status.PositionType;
 		}
 	}
 
@@ -111,7 +120,8 @@ namespace GrblController
 				ConnectionState = ConnectionState.DisconnectedCannotConnect,
 				MachineState = MachineState.Unknown,
 				MachinePosition = new Vector3D(),
-				Painting = false
+				Painting = false,
+				PositionType = PositionType.Unknown
 			};
 
 			Disconnect();
@@ -198,7 +208,7 @@ namespace GrblController
 				{
 					var versionRegex = new Regex(@"Grbl\s(?<version>[\d\.a-z]*)\s\[\'\$\'\sfor\shelp\]");
 					var settingRegex = new Regex(@"\$(?<setting>\d+)=(?<value>\d+(\.\d*)?)");
-					var alarmRegex = new Regex(@"ALARM:1");
+					var alarmRegex = new Regex(@"ALARM:\d+");
 					var errorRegex = new Regex(@"error:\s*\d*");
 
 					if ((Status.ConnectionState == ConnectionState.Connecting || Status.ConnectionState == ConnectionState.ConnectedCalibrating)
@@ -257,6 +267,16 @@ namespace GrblController
 							SetStatus(new Status(Status)
 							{
 								MachinePosition = new Vector3D(double.Parse(statusMatches["MPosX"]), double.Parse(statusMatches["MPosY"]), double.Parse(statusMatches["MPosZ"])),
+								PositionType = PositionType.Machine,
+								MachineState = (MachineState)Enum.Parse(typeof(MachineState), statusMatches["state"])
+							});
+						}
+						if (statusMatches.ContainsKey("WPosX") && statusMatches.ContainsKey("WPosY") && statusMatches.ContainsKey("WPosZ"))
+						{
+							SetStatus(new Status(Status)
+							{
+								MachinePosition = new Vector3D(double.Parse(statusMatches["WPosX"]), double.Parse(statusMatches["WPosY"]), double.Parse(statusMatches["WPosZ"])),
+								PositionType = PositionType.Work,
 								MachineState = (MachineState)Enum.Parse(typeof(MachineState), statusMatches["state"])
 							});
 						}
@@ -321,7 +341,7 @@ namespace GrblController
 			};
 
 			var matches = regex.Select(r => r.Matches(line)).Where(m => m.Count > 0).Select(m => m[0]);
-			var namedMatches = new string[] { "state", "MPosX", "MPosY", "MPosZ", "OvX", "OvY", "OvZ", "WCO", "Bf", "Ln", "FeedRate1", "FeedRate2", "SpnSpd", "Pins", "AccState" };
+			var namedMatches = new string[] { "state", "MPosX", "MPosY", "MPosZ", "WPosX", "WPosY", "WPosZ", "OvX", "OvY", "OvZ", "WCO", "Bf", "Ln", "FeedRate1", "FeedRate2", "SpnSpd", "Pins", "AccState" };
 
 			var matchesDict = new Dictionary<string, string>();
 
@@ -425,27 +445,10 @@ namespace GrblController
 					return;
 				}
 
-				#region Unlock
-
-				responseReceived.Reset();
-				response = "";
-				Main.Instance.AddLog("Sending: $X");
-				Main.Instance.Connection.Send("$X");
-
-				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				if (!Unlock())
 				{
-					stopped.Set();
 					return;
 				}
-
-				if (response != "ok")
-				{
-					Main.Instance.AddLog("ERROR: Invalid response to unlock command. (" + response + ")");
-					stopped.Set();
-					return;
-				}
-
-				#endregion
 
 				#region Before hit
 
@@ -487,27 +490,11 @@ namespace GrblController
 
 				#endregion
 
-				#region Unlock
-
-				responseReceived.Reset();
-				response = "";
-				Main.Instance.AddLog("Sending: $X");
-				Main.Instance.Connection.Send("$X");
-
-				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				Thread.Sleep(2000);
+				if(!Unlock())
 				{
-					stopped.Set();
 					return;
 				}
-
-				if (response != "ok")
-				{
-					Main.Instance.AddLog("ERROR: Invalid response to unlock command. (" + response + ")");
-					stopped.Set();
-					return;
-				}
-
-				#endregion
 
 				#region Zeroize
 
@@ -557,6 +544,31 @@ namespace GrblController
 				Main.Instance.AddLog("Calibration successful.");
 				SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
 			}))).Start();
+		}
+
+		internal bool Unlock()
+		{
+			if (Status.MachineState == MachineState.Alarm)
+			{
+				responseReceived.Reset();
+				response = "";
+				Main.Instance.AddLog("Sending: $X");
+				Main.Instance.Connection.Send("$X");
+
+				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				{
+					stopped.Set();
+					return false;
+				}
+
+				if (response != "ok")
+				{
+					Main.Instance.AddLog("ERROR: Invalid response to unlock command. (" + response + ")");
+					stopped.Set();
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 }
