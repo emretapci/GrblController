@@ -79,7 +79,7 @@ namespace GrblController
 			#region Load Machine settings to form
 
 			controlAxisLabel.Text = "Machine " + Main.Instance.Parameters.ControlAxis.ToString() + " position";
-			machinePositionTextBox.Text = ((Main.Instance.Parameters.ReverseFeed ? -1 : 1) * Main.Instance.Connection.Status.MachineCoordinate).ToString("0.0");
+			machinePositionTextBox.Text = double.IsNaN(Main.Instance.Connection.Status.MachineCoordinate) ? "Unknown" : Math.Abs(Main.Instance.Connection.Status.MachineCoordinate).ToString("0.0");
 			controlAxis.SelectedIndex = (int)parameters.ControlAxis;
 			reverseFeed.Checked = parameters.ReverseFeed;
 
@@ -186,7 +186,7 @@ namespace GrblController
 				{
 					newParameters.ControlAxis = (ControlAxis)controlAxis.SelectedIndex;
 					newParameters.ReverseFeed = reverseFeed.Checked;
-					MachinePosition = d;
+					MachinePosition = (newParameters.ReverseFeed ? -1 : 1) * d;
 				}
 				else
 				{

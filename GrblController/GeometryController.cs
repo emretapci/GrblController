@@ -165,7 +165,7 @@ namespace GrblController
 
 		internal void GoToCoordinate(double machineCoordinate)
 		{
-			Main.Instance.AddLog("Going to machine coordinate " + Main.Instance.Parameters.ControlAxis.ToString() + "=" + Main.Instance.Connection.Status.MachineCoordinate);
+			Main.Instance.AddLog("Going to machine coordinate " + Main.Instance.Parameters.ControlAxis.ToString() + "=" + Math.Abs(Main.Instance.Connection.Status.MachineCoordinate));
 			var target = Main.Instance.Connection.Status.MachineCoordinate;
 			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis.ToString() + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + target.ToString("0.0"));
 		}

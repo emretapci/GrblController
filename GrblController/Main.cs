@@ -172,7 +172,7 @@ namespace GrblController
 				AddLog("Stopped sending G codes.");
 			}
 
-			machineCoordinate.Text = "Machine coordinate: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : newStatus.MachineCoordinate.ToString("0.0 mm"));
+			machineCoordinate.Text = "Machine coordinate: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : Math.Abs(newStatus.MachineCoordinate).ToString("0.0 mm"));
 			machineState.Text = "Machine state: " + newStatus.MachineState.ToString();
 
 			UpdateMachinePositionPanel();
