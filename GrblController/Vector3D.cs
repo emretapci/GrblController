@@ -6,6 +6,13 @@
 		internal double Y { get; set; }
 		internal double Z { get; set; }
 
+		internal Vector3D()
+		{
+			X = double.NaN;
+			Y = double.NaN;
+			Z = double.NaN;
+		}
+
 		internal Vector3D(double x, double y, double z)
 		{
 			X = x;

@@ -40,7 +40,7 @@ namespace GrblController
 		internal Vector3D MachinePosition { get; set; } //can be negative.
 		internal bool Painting { get; set; }
 
-		internal double MachineCoordinate
+		internal double MachineCoordinate //can be negative.
 		{
 			get
 			{
@@ -106,7 +106,7 @@ namespace GrblController
 			{
 				ConnectionState = ConnectionState.DisconnectedCannotConnect,
 				MachineState = MachineState.Unknown,
-				MachinePosition = new Vector3D(0, 0, 0),
+				MachinePosition = new Vector3D(),
 				Painting = false
 			};
 
@@ -160,7 +160,14 @@ namespace GrblController
 		{
 			if (serialPort != null && serialPort.IsOpen)
 			{
-				serialPort.WriteLine(command);
+				try
+				{
+					serialPort.WriteLine(command);
+				}
+				catch(Exception e)
+				{
+					Main.Instance.AddLog("ERROR: " + e.Message);
+				}
 			}
 		}
 
@@ -366,7 +373,14 @@ namespace GrblController
 				serialPort = null;
 			}
 
-			CheckCanConnect();
+			if (Array.IndexOf(SerialPort.GetPortNames(), Main.Instance.Parameters.SerialPortString) >= 0)
+			{
+				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
+			}
+			else
+			{
+				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCannotConnect });
+			}
 		}
 
 		internal void CheckCanConnect()

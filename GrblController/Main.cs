@@ -84,9 +84,9 @@ namespace GrblController
 
 		private void StatusChanged(Status oldStatus, Status newStatus)
 		{
-			if (InvokeRequired && !IsDisposed)
+			if (InvokeRequired)
 			{
-				Invoke(new Action(() =>
+				BeginInvoke(new Action(() =>
 				{
 					StatusChanged(oldStatus, newStatus);
 				}));
@@ -172,7 +172,7 @@ namespace GrblController
 				AddLog("Stopped sending G codes.");
 			}
 
-			machineCoordinate.Text = newStatus.MachineCoordinate.ToString("0.0 mm");
+			machineCoordinate.Text = "Machine coordinate: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : newStatus.MachineCoordinate.ToString("0.0 mm"));
 			machineState.Text = "Machine state: " + newStatus.MachineState.ToString();
 
 			UpdateMachinePositionPanel();
@@ -237,16 +237,16 @@ namespace GrblController
 
 		internal void AddLog(string s)
 		{
-			if (InvokeRequired && !IsDisposed)
+			if (InvokeRequired)
 			{
-				Invoke(new Action(() =>
+				BeginInvoke(new Action(() =>
 				{
 					AddLog(s);
 				}));
 				return;
 			}
 
-			while(activityLog.Items.Count >= 50)
+			while (activityLog.Items.Count >= 50)
 			{
 				activityLog.Items.RemoveAt(0);
 			}
@@ -272,7 +272,10 @@ namespace GrblController
 				table2Slider_ValueChanged(null, null);
 				Parameters = Parameters.ReadFromFile(ConfigFilename);
 				Connection.Status.MachineCoordinate = settingsForm.MachinePosition;
-				GeometryController.GoToCoordinate(Connection.Status.MachineCoordinate);
+				if (Connection.Status.ConnectionState == ConnectionState.ConnectedStopped)
+				{
+					GeometryController.GoToCoordinate(Connection.Status.MachineCoordinate);
+				}
 				machineCoordinate.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
 			}
 		}
@@ -285,6 +288,7 @@ namespace GrblController
 				case ConnectionState.ConnectedStarted:
 				case ConnectionState.ConnectedStopped:
 					Connection.Disconnect();
+					Connection.CheckCanConnect();
 					break;
 				case ConnectionState.DisconnectedCanConnect:
 					Connection.Initialize();
