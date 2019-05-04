@@ -101,13 +101,11 @@ namespace GrblController
 		private SerialPort serialPort;
 		private ManualResetEvent responseReceived = new ManualResetEvent(false);
 		private ManualResetEvent versionStringReceived = new ManualResetEvent(false);
-		private ManualResetEvent alarmReceived = new ManualResetEvent(false);
+		private ManualResetEvent probeReceived = new ManualResetEvent(false);
 		private string response;
 		private byte[] buffer = new byte[1000];
 		private int length = 0;
 		private System.Timers.Timer statusTimer;
-		private bool running;
-		private bool wakeUpReset = true;
 
 		internal event Action<Status, Status> onStatusChanged;
 
@@ -168,8 +166,6 @@ namespace GrblController
 			SetStatus(new Status(Status) { ConnectionState = ConnectionState.Connecting });
 
 			serialPort.Write(new byte[] { 0x18 }, 0, 1);
-
-			running = true;
 		}
 
 		internal void Send(string command)
@@ -208,7 +204,7 @@ namespace GrblController
 				{
 					var versionRegex = new Regex(@"Grbl\s(?<version>[\d\.a-z]*)\s\[\'\$\'\sfor\shelp\]");
 					var settingRegex = new Regex(@"\$(?<setting>\d+)=(?<value>\d+(\.\d*)?)");
-					var alarmRegex = new Regex(@"ALARM:\s*\d+\s*");
+					var probeRegex = new Regex(@"\[PRB:\-?\d+(\.\d*)?,\-?\d+(\.\d*)?,\-?\d+(\.\d*)?(:\d)?\]");
 					var errorRegex = new Regex(@"error:\s*\d*");
 
 					if ((Status.ConnectionState == ConnectionState.Connecting || Status.ConnectionState == ConnectionState.ConnectedCalibrating)
@@ -217,35 +213,31 @@ namespace GrblController
 						versionStringReceived.Set();
 						var version = versionRegex.Match(line).Groups["version"].Value;
 
-						if (wakeUpReset)
-						{
-							Main.Instance.AddLog("GRBL version received: " + version);
+						Main.Instance.AddLog("GRBL version received: " + version);
 
-							Main.Instance.AddLog("Writing settings to board.");
-							(new Thread(new ThreadStart(() =>
+						(new Thread(new ThreadStart(() =>
+						{
+							Thread.Sleep(100);
+							if (WriteSettingsToBoard())
 							{
-								Thread.Sleep(100);
-								if (WriteSettingsToBoard())
-								{
-									SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
-								}
-								else
-								{
-									Disconnect();
-									SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
-								}
-							}))).Start();
-						}
+								SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
+							}
+							else
+							{
+								Disconnect();
+								SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
+							}
+						}))).Start();
 
 						statusTimer.Start();
-					}
-					else if (alarmRegex.IsMatch(line))
-					{
-						alarmReceived.Set();
 					}
 					else if (errorRegex.IsMatch(line))
 					{
 						Main.Instance.AddLog(line);
+					}
+					else if (probeRegex.IsMatch(line))
+					{
+						probeReceived.Set();
 					}
 					else if ((Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.ConnectedCalibrating)
 						&& settingRegex.IsMatch(line))
@@ -287,6 +279,8 @@ namespace GrblController
 
 		private bool WriteSettingsToBoard()
 		{
+			Main.Instance.AddLog("Writing settings to board.");
+
 			bool result = true;
 			result &= SendSetting(0, Main.Instance.Parameters.StepPulseTime.ToString());
 			result &= SendSetting(1, Main.Instance.Parameters.StepIdleDelay.ToString());
@@ -381,8 +375,6 @@ namespace GrblController
 
 		internal void Disconnect()
 		{
-			running = false;
-
 			if (Status.ConnectionState == ConnectionState.ConnectedCalibrating)
 			{
 				stopped.Reset();
@@ -452,13 +444,13 @@ namespace GrblController
 					return;
 				}
 
-				#region Before hit
+				#region Probing
 
-				alarmReceived.Reset();
-				Main.Instance.AddLog("Sending: " + Main.Instance.Parameters.CalibrateBeforeHit);
+				probeReceived.Reset();
+				Main.Instance.AddLog("Probing now...");
 				Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateBeforeHit);
 
-				if (WaitHandle.WaitAny(new WaitHandle[] { alarmReceived, willStop }) == 1)
+				if (WaitHandle.WaitAny(new WaitHandle[] { probeReceived, willStop }) == 1)
 				{
 					stopped.Set();
 					return;
@@ -466,43 +458,35 @@ namespace GrblController
 
 				#endregion
 
-				#region Reset
+				#region Set feed rate
 
-				wakeUpReset = false;
-				versionStringReceived.Reset();
+				responseReceived.Reset();
+				response = "";
+				Main.Instance.AddLog("Setting feed rate.");
+				Main.Instance.Connection.Send("G94 F100");
+
+				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				{
+					stopped.Set();
+					return;
+				}
+
+				if (response != "ok")
+				{
+					Main.Instance.AddLog("ERROR: Invalid response to G94 set feed rate command. (" + response + ")");
+					stopped.Set();
+					return;
+				}
+
+				#endregion
+
 				Thread.Sleep(1000);
-				Main.Instance.AddLog("Sending: 0x18 (Reset)");
-				serialPort.Write(new byte[] { 0x18 }, 0, 1);
-
-				int resetResult = WaitHandle.WaitAny(new WaitHandle[] { versionStringReceived, willStop }, 5000);
-				if (resetResult == 1)
-				{
-					wakeUpReset = true;
-					stopped.Set();
-					return;
-				}
-				else if (resetResult == WaitHandle.WaitTimeout)
-				{
-					wakeUpReset = true;
-					stopped.Set();
-					Main.Instance.AddLog("Calibration unsuccessful. Version string not received.");
-					return;
-				}
-				wakeUpReset = true;
-
-				#endregion
-
-				Thread.Sleep(2000);
-				if(!Unlock())
-				{
-					return;
-				}
 
 				#region Zeroize
 
 				responseReceived.Reset();
 				response = "";
-				Main.Instance.AddLog("Sending: " + Main.Instance.Parameters.Zeroize);
+				Main.Instance.AddLog("Zeroizing.");
 				Main.Instance.Connection.Send(Main.Instance.Parameters.Zeroize);
 
 				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
@@ -513,18 +497,18 @@ namespace GrblController
 
 				if (response != "ok")
 				{
-					Main.Instance.AddLog("ERROR: Invalid response to calibration zeroize command. (" + response + ")");
+					Main.Instance.AddLog("ERROR: Invalid response to zeroize command. (" + response + ")");
 					stopped.Set();
 					return;
 				}
 
 				#endregion
 
-				#region After hit
+				#region Jog to 5 mm
 
 				responseReceived.Reset();
 				response = "";
-				Main.Instance.AddLog("Sending: " + Main.Instance.Parameters.CalibrateAfterHit);
+				Main.Instance.AddLog("Jogging to 5 mm");
 				Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateAfterHit);
 
 				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
@@ -535,7 +519,7 @@ namespace GrblController
 
 				if (response != "ok")
 				{
-					Main.Instance.AddLog("ERROR: Invalid response to calibration after hit G codes. (" + response + ")");
+					Main.Instance.AddLog("ERROR: Invalid response to jogging to 5 mm command. (" + response + ")");
 					stopped.Set();
 					return;
 				}
