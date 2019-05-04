@@ -102,6 +102,7 @@ namespace GrblController
 			#region Load Calibrate codes settings to form
 
 			beforeHittingLimit.Text = parameters.CalibrateBeforeHit;
+			zeroize.Text = parameters.Zeroize;
 			afterHittingLimit.Text = parameters.CalibrateAfterHit;
 			hitTimeout.Text = parameters.CalibrateHitTimeout.ToString();
 
@@ -210,6 +211,7 @@ namespace GrblController
 			#region Get Calibrate codes settings from form
 
 			newParameters.CalibrateBeforeHit = beforeHittingLimit.Text;
+			newParameters.Zeroize= zeroize.Text;
 			newParameters.CalibrateAfterHit = afterHittingLimit.Text;
 			int i;
 			if(int.TryParse(hitTimeout.Text, out i))

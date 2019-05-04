@@ -44,6 +44,7 @@
   <YMaximumTravel>200</YMaximumTravel>
   <ZMaximumTravel>200</ZMaximumTravel>
   <CalibrateBeforeHit>G38.2 Y1000 F500</CalibrateBeforeHit>
+  <Zeroize>G10 P1 L20 Y0</Zeroize>
   <CalibrateAfterHit>$J=G91 Y-5 F100</CalibrateAfterHit>
   <CalibrateHitTimeout>60</CalibrateHitTimeout>
 </Parameters>

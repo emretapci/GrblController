@@ -84,6 +84,7 @@ namespace GrblController
 		internal double ZMaximumTravel { get; set; } //mm
 
 		internal string CalibrateBeforeHit { get; set; }
+		internal string Zeroize { get; set; }
 		internal string CalibrateAfterHit { get; set; }
 		internal int CalibrateHitTimeout { get; set; } //seconds
 
@@ -137,6 +138,7 @@ namespace GrblController
 			ZMaximumTravel = 200;
 
 			CalibrateBeforeHit = "";
+			Zeroize = "";
 			CalibrateAfterHit = "";
 			CalibrateHitTimeout = 60;
 		}
@@ -198,6 +200,7 @@ namespace GrblController
 					ZMaximumTravel = double.Parse(doc["Parameters"]["ZMaximumTravel"].InnerText),
 
 					CalibrateBeforeHit = doc["Parameters"]["CalibrateBeforeHit"].InnerText,
+					Zeroize = doc["Parameters"]["Zeroize"].InnerText,
 					CalibrateAfterHit = doc["Parameters"]["CalibrateAfterHit"].InnerText,
 					CalibrateHitTimeout = int.Parse(doc["Parameters"]["CalibrateHitTimeout"].InnerText)
 				};
@@ -262,6 +265,7 @@ namespace GrblController
 					new XElement("YMaximumTravel", parameters.YMaximumTravel.ToString()),
 					new XElement("ZMaximumTravel", parameters.ZMaximumTravel.ToString()),
 					new XElement("CalibrateBeforeHit", parameters.CalibrateBeforeHit.ToString()),
+					new XElement("Zeroize", parameters.Zeroize.ToString()),
 					new XElement("CalibrateAfterHit", parameters.CalibrateAfterHit.ToString()),
 					new XElement("CalibrateHitTimeout", parameters.CalibrateHitTimeout.ToString())
 				)).Save(filename);
