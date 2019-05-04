@@ -442,6 +442,8 @@ namespace GrblController
 					string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateAfterHit))
 				{
 					Main.Instance.AddLog("Calibration codes are empty. Nothing to do.");
+					stopped.Set();
+					SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
 					return;
 				}
 
