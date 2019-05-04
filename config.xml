@@ -5,7 +5,7 @@
   <MiddleGap>100</MiddleGap>
   <Table2Length>500</Table2Length>
   <EndOffset>100</EndOffset>
-  <SerialPortString>COM3</SerialPortString>
+  <SerialPortString>COM4</SerialPortString>
   <Baudrate>115200</Baudrate>
   <ControlAxis>Y</ControlAxis>
   <ReverseFeed>False</ReverseFeed>

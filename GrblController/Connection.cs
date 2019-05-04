@@ -203,6 +203,7 @@ namespace GrblController
 							}
 							else
 							{
+								Disconnect();
 								SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
 							}
 						}))).Start();
@@ -361,7 +362,7 @@ namespace GrblController
 				Status.ConnectionState == ConnectionState.Connecting) && serialPort != null)
 			{
 				serialPort.DataReceived -= ProcessData;
-				serialPort.Dispose();
+				serialPort.Close();
 				serialPort = null;
 			}
 
