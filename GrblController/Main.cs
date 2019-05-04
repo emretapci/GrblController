@@ -176,6 +176,11 @@ namespace GrblController
 			machineState.Text = "Machine state: " + newStatus.MachineState.ToString();
 
 			UpdateMachinePositionPanel();
+
+			if (statusUpdatedAlarmPanel.BackColor == Color.Red)
+				statusUpdatedAlarmPanel.BackColor = DefaultBackColor;
+			else
+				statusUpdatedAlarmPanel.BackColor = Color.Red;
 		}
 
 		private void table1Slider_ValueChanged(object sender, EventArgs e)

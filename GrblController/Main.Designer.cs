@@ -58,7 +58,7 @@
 			this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.calibrateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.panel1 = new System.Windows.Forms.Panel();
+			this.statusUpdatedAlarmPanel = new System.Windows.Forms.Panel();
 			this.tablePanel.SuspendLayout();
 			this.table2Panel.SuspendLayout();
 			this.table1Panel.SuspendLayout();
@@ -385,19 +385,19 @@
 			this.calibrateToolStripMenuItem.Text = "Calibrate";
 			this.calibrateToolStripMenuItem.Click += new System.EventHandler(this.calibrateToolStripMenuItem_Click);
 			// 
-			// panel1
+			// statusUpdatedAlarmPanel
 			// 
-			this.panel1.Location = new System.Drawing.Point(765, 505);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(4, 4);
-			this.panel1.TabIndex = 40;
+			this.statusUpdatedAlarmPanel.Location = new System.Drawing.Point(343, 276);
+			this.statusUpdatedAlarmPanel.Name = "statusUpdatedAlarmPanel";
+			this.statusUpdatedAlarmPanel.Size = new System.Drawing.Size(4, 4);
+			this.statusUpdatedAlarmPanel.TabIndex = 40;
 			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(795, 547);
-			this.Controls.Add(this.panel1);
+			this.Controls.Add(this.statusUpdatedAlarmPanel);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.table1Label0);
@@ -470,7 +470,7 @@
 		private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem calibrateToolStripMenuItem;
-		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Panel statusUpdatedAlarmPanel;
 	}
 }
 
