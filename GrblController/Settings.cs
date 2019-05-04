@@ -194,7 +194,7 @@ namespace GrblController
 					return;
 				}
 			}
-			else
+			else if(machinePositionTextBox.Text != "Unknown")
 			{
 				MessageBox.Show("Invalid value for \"Machine coordinate\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;

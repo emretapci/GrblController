@@ -91,10 +91,14 @@ namespace GrblController
 		private ManualResetEvent stopped = new ManualResetEvent(false);
 		private SerialPort serialPort;
 		private ManualResetEvent responseReceived = new ManualResetEvent(false);
+		private ManualResetEvent versionStringReceived = new ManualResetEvent(false);
+		private ManualResetEvent alarmReceived = new ManualResetEvent(false);
 		private string response;
 		private byte[] buffer = new byte[1000];
 		private int length = 0;
 		private System.Timers.Timer statusTimer;
+		private bool running;
+		private bool wakeUpReset = true;
 
 		internal event Action<Status, Status> onStatusChanged;
 
@@ -154,6 +158,8 @@ namespace GrblController
 			SetStatus(new Status(Status) { ConnectionState = ConnectionState.Connecting });
 
 			serialPort.Write(new byte[] { 0x18 }, 0, 1);
+
+			running = true;
 		}
 
 		internal void Send(string command)
@@ -164,7 +170,7 @@ namespace GrblController
 				{
 					serialPort.WriteLine(command);
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					Main.Instance.AddLog("ERROR: " + e.Message);
 				}
@@ -192,48 +198,58 @@ namespace GrblController
 				{
 					var versionRegex = new Regex(@"Grbl\s(?<version>[\d\.a-z]*)\s\[\'\$\'\sfor\shelp\]");
 					var settingRegex = new Regex(@"\$(?<setting>\d+)=(?<value>\d+(\.\d*)?)");
-					var okRegex = new Regex(@"ok");
-					bool processed = false;
+					var alarmRegex = new Regex(@"ALARM:1");
+					var errorRegex = new Regex(@"error:\s*\d*");
 
-					if (Status.ConnectionState == ConnectionState.Connecting && versionRegex.IsMatch(line))
+					if ((Status.ConnectionState == ConnectionState.Connecting || Status.ConnectionState == ConnectionState.ConnectedCalibrating)
+						&& versionRegex.IsMatch(line))
 					{
+						versionStringReceived.Set();
 						var version = versionRegex.Match(line).Groups["version"].Value;
-						Main.Instance.AddLog("GRBL version received: " + version);
 
-						Main.Instance.AddLog("Writing settings to board.");
-						(new Thread(new ThreadStart(() =>
+						if (wakeUpReset)
 						{
-							Thread.Sleep(100);
-							if (WriteSettingsToBoard())
+							Main.Instance.AddLog("GRBL version received: " + version);
+
+							Main.Instance.AddLog("Writing settings to board.");
+							(new Thread(new ThreadStart(() =>
 							{
-								SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
-							}
-							else
-							{
-								Disconnect();
-								SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
-							}
-						}))).Start();
+								Thread.Sleep(100);
+								if (WriteSettingsToBoard())
+								{
+									SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
+								}
+								else
+								{
+									Disconnect();
+									SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
+								}
+							}))).Start();
+						}
 
 						statusTimer.Start();
-						processed = true;
 					}
-					else if (Status.ConnectionState == ConnectionState.ConnectedStopped && settingRegex.IsMatch(line))
+					else if (alarmRegex.IsMatch(line))
+					{
+						alarmReceived.Set();
+					}
+					else if (errorRegex.IsMatch(line))
+					{
+						Main.Instance.AddLog(line);
+					}
+					else if ((Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.ConnectedCalibrating)
+						&& settingRegex.IsMatch(line))
 					{
 						var setting = settingRegex.Match(line).Groups["setting"].Value;
 						var val = settingRegex.Match(line).Groups["value"].Value;
-
-						//settings in the config file is the master. config on the board is always overridden.
-
-						processed = true;
 					}
-					else if (okRegex.IsMatch(line))
+					else if (line.Trim() == "ok")
 					{
-						response = line.Trim();
+						response = "ok";
 						responseReceived.Set();
-						processed = true;
 					}
-					else if (Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.ConnectedStarted)
+					else if (Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.ConnectedStarted
+						|| Status.ConnectionState == ConnectionState.ConnectedCalibrating)
 					{
 						var statusMatches = StatusMatch(line);
 						if (statusMatches.ContainsKey("MPosX") && statusMatches.ContainsKey("MPosY") && statusMatches.ContainsKey("MPosZ"))
@@ -243,14 +259,8 @@ namespace GrblController
 								MachinePosition = new Vector3D(double.Parse(statusMatches["MPosX"]), double.Parse(statusMatches["MPosY"]), double.Parse(statusMatches["MPosZ"])),
 								MachineState = (MachineState)Enum.Parse(typeof(MachineState), statusMatches["state"])
 							});
-							processed = true;
 						}
 					}
-
-					/*if (!processed && line.Trim() != "ok")
-					{
-						Main.Instance.AddLog(line);
-					}*/
 				}
 			}
 		}
@@ -351,6 +361,8 @@ namespace GrblController
 
 		internal void Disconnect()
 		{
+			running = false;
+
 			if (Status.ConnectionState == ConnectionState.ConnectedCalibrating)
 			{
 				stopped.Reset();
@@ -413,44 +425,137 @@ namespace GrblController
 					return;
 				}
 
-				if (!string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateBeforeHit))
+				#region Unlock
+
+				responseReceived.Reset();
+				response = "";
+				Main.Instance.AddLog("Sending: $X");
+				Main.Instance.Connection.Send("$X");
+
+				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
 				{
-					Send("$X");
-					Thread.Sleep(1000);
-
-					responseReceived.Reset();
-					response = "";
-					Main.Instance.AddLog("Sending: [" + Main.Instance.Parameters.CalibrateBeforeHit + "]");
-					Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateBeforeHit);
-
-					if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }, Main.Instance.Parameters.CalibrateHitTimeout * 1000) == 0)
-					{
-						if (response == "ok")
-						{
-							if (!string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateAfterHit))
-							{
-								responseReceived.Reset();
-								response = "";
-								Main.Instance.AddLog("Sending: [" + Main.Instance.Parameters.CalibrateAfterHit + "]");
-								Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateAfterHit);
-								if (responseReceived.WaitOne(5000))
-								{
-									if (response == "ok")
-									{
-										Main.Instance.AddLog("Calibration successful.");
-										Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { ConnectionState = ConnectionState.ConnectedStopped });
-										return;
-									}
-								}
-							}
-						}
-						else
-						{
-							Main.Instance.AddLog("ERROR: Board did not respond in " + Main.Instance.Parameters.CalibrateHitTimeout + " seconds.");
-						}
-					}
 					stopped.Set();
+					return;
 				}
+
+				if (response != "ok")
+				{
+					Main.Instance.AddLog("ERROR: Invalid response to unlock command. (" + response + ")");
+					stopped.Set();
+					return;
+				}
+
+				#endregion
+
+				#region Before hit
+
+				alarmReceived.Reset();
+				Main.Instance.AddLog("Sending: " + Main.Instance.Parameters.CalibrateBeforeHit);
+				Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateBeforeHit);
+
+				if (WaitHandle.WaitAny(new WaitHandle[] { alarmReceived, willStop }) == 1)
+				{
+					stopped.Set();
+					return;
+				}
+
+				#endregion
+
+				#region Reset
+
+				wakeUpReset = false;
+				versionStringReceived.Reset();
+				Thread.Sleep(1000);
+				Main.Instance.AddLog("Sending: 0x18 (Reset)");
+				serialPort.Write(new byte[] { 0x18 }, 0, 1);
+
+				int resetResult = WaitHandle.WaitAny(new WaitHandle[] { versionStringReceived, willStop }, 5000);
+				if (resetResult == 1)
+				{
+					wakeUpReset = true;
+					stopped.Set();
+					return;
+				}
+				else if (resetResult == WaitHandle.WaitTimeout)
+				{
+					wakeUpReset = true;
+					stopped.Set();
+					Main.Instance.AddLog("Calibration unsuccessful. Version string not received.");
+					return;
+				}
+				wakeUpReset = true;
+
+				#endregion
+
+				#region Unlock
+
+				responseReceived.Reset();
+				response = "";
+				Main.Instance.AddLog("Sending: $X");
+				Main.Instance.Connection.Send("$X");
+
+				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				{
+					stopped.Set();
+					return;
+				}
+
+				if (response != "ok")
+				{
+					Main.Instance.AddLog("ERROR: Invalid response to unlock command. (" + response + ")");
+					stopped.Set();
+					return;
+				}
+
+				#endregion
+
+				#region Zeroize
+
+				responseReceived.Reset();
+				response = "";
+				Main.Instance.AddLog("Sending: " + Main.Instance.Parameters.Zeroize);
+				Main.Instance.Connection.Send(Main.Instance.Parameters.Zeroize);
+
+				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				{
+					stopped.Set();
+					return;
+				}
+
+				if (response != "ok")
+				{
+					Main.Instance.AddLog("ERROR: Invalid response to calibration zeroize command. (" + response + ")");
+					stopped.Set();
+					return;
+				}
+
+				#endregion
+
+				#region After hit
+
+				responseReceived.Reset();
+				response = "";
+				Main.Instance.AddLog("Sending: " + Main.Instance.Parameters.CalibrateAfterHit);
+				Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateAfterHit);
+
+				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				{
+					stopped.Set();
+					return;
+				}
+
+				if (response != "ok")
+				{
+					Main.Instance.AddLog("ERROR: Invalid response to calibration after hit G codes. (" + response + ")");
+					stopped.Set();
+					return;
+				}
+
+				#endregion
+
+				stopped.Set();
+				Main.Instance.AddLog("Calibration successful.");
+				SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
 			}))).Start();
 		}
 	}
