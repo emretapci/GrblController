@@ -43,7 +43,7 @@
   <XMaximumTravel>200</XMaximumTravel>
   <YMaximumTravel>200</YMaximumTravel>
   <ZMaximumTravel>200</ZMaximumTravel>
-  <CalibrateBeforeHit>G38.2 Y1000 F500</CalibrateBeforeHit>
+  <CalibrateBeforeHit>G38.2 Y-1000 F500</CalibrateBeforeHit>
   <Zeroize>G10 P1 L20 Y0</Zeroize>
-  <CalibrateAfterHit>$J=G91 Y-5 F100</CalibrateAfterHit>
+  <CalibrateAfterHit>$J=G91 Y5 F100</CalibrateAfterHit>
 </Parameters>
