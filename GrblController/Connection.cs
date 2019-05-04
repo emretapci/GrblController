@@ -208,7 +208,7 @@ namespace GrblController
 				{
 					var versionRegex = new Regex(@"Grbl\s(?<version>[\d\.a-z]*)\s\[\'\$\'\sfor\shelp\]");
 					var settingRegex = new Regex(@"\$(?<setting>\d+)=(?<value>\d+(\.\d*)?)");
-					var alarmRegex = new Regex(@"ALARM:\d+");
+					var alarmRegex = new Regex(@"ALARM:\s*\d+\s*");
 					var errorRegex = new Regex(@"error:\s*\d*");
 
 					if ((Status.ConnectionState == ConnectionState.Connecting || Status.ConnectionState == ConnectionState.ConnectedCalibrating)
