@@ -258,6 +258,7 @@ namespace GrblController
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
+			Connection.onStatusChanged -= StatusChanged;
 			Connection.Disconnect();
 			GeometryController.Stop();
 		}
