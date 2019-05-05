@@ -56,7 +56,7 @@ namespace GrblController
 		private void WaitXPosition(double targetCoord)
 		{
 			targetReached.Reset();
-			this.targetCoord = (Main.Instance.Parameters.ReverseFeed ? -1 : 1) * targetCoord;
+			this.targetCoord = targetCoord;
 			WaitHandle.WaitAny(new WaitHandle[] { targetReached, willStop });
 		}
 
@@ -65,7 +65,7 @@ namespace GrblController
 			Main.Instance.Connection.Send("$X");
 
 			Main.Instance.AddLog("Go to beginning of Table 1 paint area.");
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + Main.Instance.Parameters.StartOffset.ToString("0.0"));
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + Main.Instance.Parameters.StartOffset.ToString("0.0"));
 			WaitXPosition(Main.Instance.Parameters.StartOffset);
 
 			if (exiting)
@@ -87,7 +87,7 @@ namespace GrblController
 
 			Main.Instance.AddLog("Go to end of Table 1 paint area.");
 			var target = Main.Instance.Parameters.StartOffset + Main.Instance.Table1PaintedAreaRatio * Main.Instance.Parameters.Table1Length;
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + target.ToString("0.0"));
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
 			WaitXPosition(target);
 
 			if (exiting)
@@ -112,7 +112,7 @@ namespace GrblController
 
 			Main.Instance.AddLog("Go to beginning of Table 2 paint area.");
 			target = Main.Instance.Parameters.StartOffset + Main.Instance.Parameters.Table1Length + Main.Instance.Parameters.MiddleGap;
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + target.ToString("0.0"));
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
 			WaitXPosition(target);
 
 			if (exiting)
@@ -137,7 +137,7 @@ namespace GrblController
 
 			Main.Instance.AddLog("Go to end of Table 2 paint area.");
 			target = Main.Instance.Parameters.StartOffset + Main.Instance.Parameters.Table1Length + Main.Instance.Parameters.MiddleGap + Main.Instance.Table2PaintedAreaRatio * Main.Instance.Parameters.Table2Length;
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + (Main.Instance.Parameters.ReverseFeed ? "-" : "") + target.ToString("0.0"));
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
 			WaitXPosition(target);
 
 			if (exiting)
@@ -167,7 +167,7 @@ namespace GrblController
 		{
 			Main.Instance.Connection.Unlock();
 
-			Main.Instance.AddLog("Going to " + Main.Instance.Connection.Status.PositionType.ToString() +" coordinate " + Main.Instance.Parameters.ControlAxis.ToString() + "=" + Math.Abs(Main.Instance.Connection.Status.MachineCoordinate));
+			Main.Instance.AddLog("Going to machine coordinate " + Main.Instance.Parameters.ControlAxis.ToString() + "=" + Math.Abs(Main.Instance.Connection.Status.MachineCoordinate));
 			var target = Main.Instance.Connection.Status.MachineCoordinate;
 			var command = "G0" + Main.Instance.Parameters.ControlAxis.ToString() + target.ToString("0.0");
 			Main.Instance.Connection.Send(command);

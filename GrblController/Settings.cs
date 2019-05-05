@@ -34,7 +34,6 @@ namespace GrblController
 			stepEnableInvert.Checked = parameters.StepEnableInvert;
 			limitPinsInvert.Checked = parameters.LimitPinsInvert;
 			probePinInvert.Checked = parameters.ProbePinInvert;
-			statusReport.SelectedIndex = (int)parameters.StatusReport;
 			junctionDeviation.Text = parameters.JunctionDeviation.ToString();
 			arcTolerance.Text = parameters.ArcTolerance.ToString();
 			reportInches.Checked = parameters.ReportInches;
@@ -81,7 +80,6 @@ namespace GrblController
 			controlAxisLabel.Text = "Machine " + Main.Instance.Parameters.ControlAxis.ToString() + " position";
 			machinePositionTextBox.Text = double.IsNaN(Main.Instance.Connection.Status.MachineCoordinate) ? "Unknown" : Math.Abs(Main.Instance.Connection.Status.MachineCoordinate).ToString("0.0");
 			controlAxis.SelectedIndex = (int)parameters.ControlAxis;
-			reverseFeed.Checked = parameters.ReverseFeed;
 
 			#endregion
 
@@ -97,14 +95,6 @@ namespace GrblController
 
 			baudrateCombobox.Items.AddRange(new string[] { "110", "300", "600", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200" });
 			baudrateCombobox.SelectedItem = parameters.Baudrate.ToString();
-
-			#endregion
-
-			#region Load Calibrate codes settings to form
-
-			beforeHittingLimit.Text = parameters.CalibrateBeforeHit;
-			zeroize.Text = parameters.Zeroize;
-			afterHittingLimit.Text = parameters.CalibrateAfterHit;
 
 			#endregion
 		}
@@ -123,7 +113,6 @@ namespace GrblController
 			newParameters.StepEnableInvert = stepEnableInvert.Checked;
 			newParameters.LimitPinsInvert = limitPinsInvert.Checked;
 			newParameters.ProbePinInvert = probePinInvert.Checked;
-			newParameters.StatusReport = (StatusReport)statusReport.SelectedIndex;
 			newParameters.JunctionDeviation = double.Parse(junctionDeviation.Text);
 			newParameters.ArcTolerance = double.Parse(arcTolerance.Text);
 			newParameters.ReportInches = reportInches.Checked;
@@ -184,8 +173,7 @@ namespace GrblController
 				else if (d <= Main.Instance.Parameters.TablesTotalLength)
 				{
 					newParameters.ControlAxis = (ControlAxis)controlAxis.SelectedIndex;
-					newParameters.ReverseFeed = reverseFeed.Checked;
-					MachinePosition = (newParameters.ReverseFeed ? -1 : 1) * d;
+					MachinePosition = d;
 				}
 				else
 				{
@@ -205,14 +193,6 @@ namespace GrblController
 
 			newParameters.SerialPortString = serialPortCombobox.SelectedItem != null ? serialPortCombobox.SelectedItem.ToString() : "";
 			newParameters.Baudrate = int.Parse(baudrateCombobox.SelectedItem.ToString());
-
-			#endregion
-
-			#region Get Calibrate codes settings from form
-
-			newParameters.CalibrateBeforeHit = beforeHittingLimit.Text;
-			newParameters.Zeroize= zeroize.Text;
-			newParameters.CalibrateAfterHit = afterHittingLimit.Text;
 
 			#endregion
 
@@ -248,10 +228,6 @@ namespace GrblController
 				if (newParameters.ProbePinInvert != oldParameters.ProbePinInvert)
 				{
 					Main.Instance.Connection.SendSetting(6, newParameters.ProbePinInvert ? "1" : "0");
-				}
-				if (newParameters.StatusReport != oldParameters.StatusReport)
-				{
-					Main.Instance.Connection.SendSetting(10, ((int)newParameters.StatusReport).ToString());
 				}
 				if (newParameters.JunctionDeviation != oldParameters.JunctionDeviation)
 				{

@@ -171,14 +171,7 @@ namespace GrblController
 				AddLog("Stopped sending G codes.");
 			}
 
-			if(Connection.Status.PositionType == PositionType.Unknown)
-			{
-				machineCoordinate.Text = "Machine/Work position: Unknown";
-			}
-			else
-			{
-				machineCoordinate.Text = Connection.Status.PositionType.ToString() + " position: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : Math.Abs(newStatus.MachineCoordinate).ToString("0.0 mm"));
-			}
+			machineCoordinate.Text = "Machine position: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : Math.Abs(newStatus.MachineCoordinate).ToString("0.0 mm"));
 			machineState.Text = "Machine state: " + newStatus.MachineState.ToString();
 
 			UpdateMachinePositionPanel();

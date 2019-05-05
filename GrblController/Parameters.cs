@@ -12,13 +12,6 @@ namespace GrblController
 		Z = 4
 	}
 
-	internal enum StatusReport
-	{
-		WorkPosition,
-		MachinePosition,
-		WorkPositionWithBuffer
-	}
-
 	internal enum ControlAxis
 	{
 		X,
@@ -46,7 +39,6 @@ namespace GrblController
 		internal int Baudrate { get; set; }
 
 		internal ControlAxis ControlAxis { get; set; }
-		internal bool ReverseFeed { get; set; }
 
 		internal double StepPulseTime { get; set; } //usec
 		internal double StepIdleDelay { get; set; } //msec
@@ -55,7 +47,6 @@ namespace GrblController
 		internal bool StepEnableInvert { get; set; } //usec
 		internal bool LimitPinsInvert { get; set; } //usec
 		internal bool ProbePinInvert { get; set; } //usec
-		internal StatusReport StatusReport { get; set; }
 		internal double JunctionDeviation { get; set; } //mm
 		internal double ArcTolerance { get; set; } //mm
 		internal bool ReportInches { get; set; }
@@ -83,10 +74,6 @@ namespace GrblController
 		internal double YMaximumTravel { get; set; } //mm
 		internal double ZMaximumTravel { get; set; } //mm
 
-		internal string CalibrateBeforeHit { get; set; }
-		internal string Zeroize { get; set; }
-		internal string CalibrateAfterHit { get; set; }
-
 		internal Parameters()
 		{
 			StartOffset = 100;
@@ -99,7 +86,6 @@ namespace GrblController
 			Baudrate = 115200;
 
 			ControlAxis = ControlAxis.Y;
-			ReverseFeed = false;
 
 			StepPulseTime = 10;
 			StepIdleDelay = 255;
@@ -108,7 +94,6 @@ namespace GrblController
 			StepEnableInvert = true;
 			LimitPinsInvert = false;
 			ProbePinInvert = false;
-			StatusReport = StatusReport.MachinePosition;
 			JunctionDeviation = 0.02;
 			ArcTolerance = 0.002;
 			ReportInches = false;
@@ -135,10 +120,6 @@ namespace GrblController
 			XMaximumTravel = 200;
 			YMaximumTravel = 200;
 			ZMaximumTravel = 200;
-
-			CalibrateBeforeHit = "";
-			Zeroize = "";
-			CalibrateAfterHit = "";
 		}
 
 		internal static Parameters ReadFromFile(string filename)
@@ -160,7 +141,6 @@ namespace GrblController
 					Baudrate = int.Parse(doc["Parameters"]["Baudrate"].InnerText),
 
 					ControlAxis = (ControlAxis)Enum.Parse(typeof(ControlAxis), doc["Parameters"]["ControlAxis"].InnerText),
-					ReverseFeed = bool.Parse(doc["Parameters"]["ReverseFeed"].InnerText),
 
 					StepPulseTime = double.Parse(doc["Parameters"]["StepPulseTime"].InnerText),
 					StepIdleDelay = double.Parse(doc["Parameters"]["StepIdleDelay"].InnerText),
@@ -169,7 +149,6 @@ namespace GrblController
 					StepEnableInvert = bool.Parse(doc["Parameters"]["StepEnableInvert"].InnerText),
 					LimitPinsInvert = bool.Parse(doc["Parameters"]["LimitPinsInvert"].InnerText),
 					ProbePinInvert = bool.Parse(doc["Parameters"]["ProbePinInvert"].InnerText),
-					StatusReport = (StatusReport)Enum.Parse(typeof(StatusReport), doc["Parameters"]["StatusReport"].InnerText),
 					JunctionDeviation = double.Parse(doc["Parameters"]["JunctionDeviation"].InnerText),
 					ArcTolerance = double.Parse(doc["Parameters"]["ArcTolerance"].InnerText),
 					ReportInches = bool.Parse(doc["Parameters"]["ReportInches"].InnerText),
@@ -195,11 +174,7 @@ namespace GrblController
 					ZAcceleration = double.Parse(doc["Parameters"]["ZAcceleration"].InnerText),
 					XMaximumTravel = double.Parse(doc["Parameters"]["XMaximumTravel"].InnerText),
 					YMaximumTravel = double.Parse(doc["Parameters"]["YMaximumTravel"].InnerText),
-					ZMaximumTravel = double.Parse(doc["Parameters"]["ZMaximumTravel"].InnerText),
-
-					CalibrateBeforeHit = doc["Parameters"]["CalibrateBeforeHit"].InnerText,
-					Zeroize = doc["Parameters"]["Zeroize"].InnerText,
-					CalibrateAfterHit = doc["Parameters"]["CalibrateAfterHit"].InnerText
+					ZMaximumTravel = double.Parse(doc["Parameters"]["ZMaximumTravel"].InnerText)
 				};
 				return parameters;
 			}
@@ -225,7 +200,6 @@ namespace GrblController
 					new XElement("Baudrate", parameters.Baudrate.ToString()),
 
 					new XElement("ControlAxis", parameters.ControlAxis.ToString()),
-					new XElement("ReverseFeed", parameters.ReverseFeed.ToString()),
 
 					new XElement("StepPulseTime", parameters.StepPulseTime.ToString()),
 					new XElement("StepIdleDelay", parameters.StepIdleDelay.ToString()),
@@ -234,7 +208,6 @@ namespace GrblController
 					new XElement("StepEnableInvert", parameters.StepEnableInvert.ToString()),
 					new XElement("LimitPinsInvert", parameters.LimitPinsInvert.ToString()),
 					new XElement("ProbePinInvert", parameters.ProbePinInvert.ToString()),
-					new XElement("StatusReport", ((int)parameters.StatusReport).ToString()),
 					new XElement("JunctionDeviation", parameters.JunctionDeviation.ToString()),
 					new XElement("ArcTolerance", parameters.ArcTolerance.ToString()),
 					new XElement("ReportInches", parameters.ReportInches.ToString()),
@@ -260,10 +233,7 @@ namespace GrblController
 					new XElement("ZAcceleration", parameters.ZAcceleration.ToString()),
 					new XElement("XMaximumTravel", parameters.XMaximumTravel.ToString()),
 					new XElement("YMaximumTravel", parameters.YMaximumTravel.ToString()),
-					new XElement("ZMaximumTravel", parameters.ZMaximumTravel.ToString()),
-					new XElement("CalibrateBeforeHit", parameters.CalibrateBeforeHit.ToString()),
-					new XElement("Zeroize", parameters.Zeroize.ToString()),
-					new XElement("CalibrateAfterHit", parameters.CalibrateAfterHit.ToString())
+					new XElement("ZMaximumTravel", parameters.ZMaximumTravel.ToString())
 				)).Save(filename);
 		}
 	}

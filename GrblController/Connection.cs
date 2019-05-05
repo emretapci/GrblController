@@ -33,20 +33,12 @@ namespace GrblController
 		Sleep
 	}
 
-	internal enum PositionType
-	{
-		Unknown,
-		Machine,
-		Work
-	}
-
 	internal class Status
 	{
 		internal ConnectionState ConnectionState { get; set; }
 		internal MachineState MachineState { get; set; }
 		internal Vector3D MachinePosition { get; set; } //can be negative.
 		internal bool Painting { get; set; }
-		internal PositionType PositionType { get; set; }
 
 		internal double MachineCoordinate //can be negative.
 		{
@@ -90,7 +82,6 @@ namespace GrblController
 			MachineState = status.MachineState;
 			MachinePosition = new Vector3D(status.MachinePosition);
 			Painting = status.Painting;
-			PositionType = status.PositionType;
 		}
 	}
 
@@ -118,8 +109,7 @@ namespace GrblController
 				ConnectionState = ConnectionState.DisconnectedCannotConnect,
 				MachineState = MachineState.Unknown,
 				MachinePosition = new Vector3D(),
-				Painting = false,
-				PositionType = PositionType.Unknown
+				Painting = false
 			};
 
 			Disconnect();
@@ -220,6 +210,14 @@ namespace GrblController
 							Thread.Sleep(100);
 							if (WriteSettingsToBoard())
 							{
+								if (Unlock())
+								{
+									Thread.Sleep(500);
+									if (SendGCodeAndWaitForOk("G54"))
+									{
+										Main.Instance.AddLog("Work coordinates selected.");
+									}
+								}
 								SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
 							}
 							else
@@ -254,21 +252,11 @@ namespace GrblController
 						|| Status.ConnectionState == ConnectionState.ConnectedCalibrating)
 					{
 						var statusMatches = StatusMatch(line);
-						if (statusMatches.ContainsKey("MPosX") && statusMatches.ContainsKey("MPosY") && statusMatches.ContainsKey("MPosZ"))
-						{
-							SetStatus(new Status(Status)
-							{
-								MachinePosition = new Vector3D(double.Parse(statusMatches["MPosX"]), double.Parse(statusMatches["MPosY"]), double.Parse(statusMatches["MPosZ"])),
-								PositionType = PositionType.Machine,
-								MachineState = (MachineState)Enum.Parse(typeof(MachineState), statusMatches["state"])
-							});
-						}
 						if (statusMatches.ContainsKey("WPosX") && statusMatches.ContainsKey("WPosY") && statusMatches.ContainsKey("WPosZ"))
 						{
 							SetStatus(new Status(Status)
 							{
 								MachinePosition = new Vector3D(double.Parse(statusMatches["WPosX"]), double.Parse(statusMatches["WPosY"]), double.Parse(statusMatches["WPosZ"])),
-								PositionType = PositionType.Work,
 								MachineState = (MachineState)Enum.Parse(typeof(MachineState), statusMatches["state"])
 							});
 						}
@@ -289,7 +277,7 @@ namespace GrblController
 			result &= SendSetting(4, Main.Instance.Parameters.StepEnableInvert ? "1" : "0");
 			result &= SendSetting(5, Main.Instance.Parameters.LimitPinsInvert ? "1" : "0");
 			result &= SendSetting(6, Main.Instance.Parameters.ProbePinInvert ? "1" : "0");
-			result &= SendSetting(10, ((int)Main.Instance.Parameters.StatusReport).ToString());
+			result &= SendSetting(10, "0"); //Work coordinates
 			result &= SendSetting(11, Main.Instance.Parameters.JunctionDeviation.ToString());
 			result &= SendSetting(12, Main.Instance.Parameters.ArcTolerance.ToString());
 			result &= SendSetting(13, Main.Instance.Parameters.ReportInches ? "1" : "0");
@@ -430,25 +418,14 @@ namespace GrblController
 				Main.Instance.GeometryController.Stop();
 				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false, ConnectionState = ConnectionState.ConnectedCalibrating });
 
-				if (string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateBeforeHit) &&
-					string.IsNullOrWhiteSpace(Main.Instance.Parameters.CalibrateAfterHit))
-				{
-					Main.Instance.AddLog("Calibration codes are empty. Nothing to do.");
-					stopped.Set();
-					SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
-					return;
-				}
-
 				if (!Unlock())
-				{
 					return;
-				}
 
 				#region Probing
 
 				probeReceived.Reset();
 				Main.Instance.AddLog("Probing now...");
-				Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateBeforeHit);
+				Main.Instance.Connection.Send("G38.2 Y-1000 F500");
 
 				if (WaitHandle.WaitAny(new WaitHandle[] { probeReceived, willStop }) == 1)
 				{
@@ -460,21 +437,10 @@ namespace GrblController
 
 				#region Set feed rate
 
-				responseReceived.Reset();
-				response = "";
 				Main.Instance.AddLog("Setting feed rate.");
-				Main.Instance.Connection.Send("G94 F100");
-
-				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				if (!SendGCodeAndWaitForOk("G94 F100"))
 				{
-					stopped.Set();
-					return;
-				}
-
-				if (response != "ok")
-				{
-					Main.Instance.AddLog("ERROR: Invalid response to G94 set feed rate command. (" + response + ")");
-					stopped.Set();
+					Main.Instance.AddLog("ERROR: Invalid response. (" + response + ")");
 					return;
 				}
 
@@ -484,21 +450,10 @@ namespace GrblController
 
 				#region Zeroize
 
-				responseReceived.Reset();
-				response = "";
 				Main.Instance.AddLog("Zeroizing.");
-				Main.Instance.Connection.Send(Main.Instance.Parameters.Zeroize);
-
-				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				if (!SendGCodeAndWaitForOk("G10 P0 L20 Y0"))
 				{
-					stopped.Set();
-					return;
-				}
-
-				if (response != "ok")
-				{
-					Main.Instance.AddLog("ERROR: Invalid response to zeroize command. (" + response + ")");
-					stopped.Set();
+					Main.Instance.AddLog("ERROR: Invalid response. (" + response + ")");
 					return;
 				}
 
@@ -506,21 +461,10 @@ namespace GrblController
 
 				#region Jog to 5 mm
 
-				responseReceived.Reset();
-				response = "";
 				Main.Instance.AddLog("Jogging to 5 mm");
-				Main.Instance.Connection.Send(Main.Instance.Parameters.CalibrateAfterHit);
-
-				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+				if(!SendGCodeAndWaitForOk("$J=G91 Y5 F100"))
 				{
-					stopped.Set();
-					return;
-				}
-
-				if (response != "ok")
-				{
-					Main.Instance.AddLog("ERROR: Invalid response to jogging to 5 mm command. (" + response + ")");
-					stopped.Set();
+					Main.Instance.AddLog("ERROR: Invalid response. (" + response + ")");
 					return;
 				}
 
@@ -532,13 +476,35 @@ namespace GrblController
 			}))).Start();
 		}
 
+		private bool SendGCodeAndWaitForOk(string command)
+		{
+			responseReceived.Reset();
+			response = "";
+			Main.Instance.Connection.Send(command);
+
+			if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
+			{
+				stopped.Set();
+				return false;
+			}
+
+			if (response != "ok")
+			{
+				stopped.Set();
+				return false;
+			}
+
+			stopped.Set();
+			return true;
+		}
+
 		internal bool Unlock()
 		{
-			if (Status.MachineState == MachineState.Alarm)
+			if (Status.MachineState == MachineState.Alarm || Status.MachineState == MachineState.Unknown)
 			{
 				responseReceived.Reset();
 				response = "";
-				Main.Instance.AddLog("Sending: $X");
+				Main.Instance.AddLog("Unlocking.");
 				Main.Instance.Connection.Send("$X");
 
 				if (WaitHandle.WaitAny(new WaitHandle[] { responseReceived, willStop }) == 1)
@@ -549,7 +515,7 @@ namespace GrblController
 
 				if (response != "ok")
 				{
-					Main.Instance.AddLog("ERROR: Invalid response to unlock command. (" + response + ")");
+					Main.Instance.AddLog("ERROR: Invalid response. (" + response + ")");
 					stopped.Set();
 					return false;
 				}
