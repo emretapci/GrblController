@@ -18,19 +18,19 @@ namespace GrblController
 		internal string ConfigFilename { get { return "config.xml"; } }
 		internal string DefaultFilename { get { return "default.xml"; } }
 
-		internal double Table1PaintedAreaRatio
+		internal double Table1PaintedArea //0-4
 		{
 			get
 			{
-				return table1Slider.Value / 4.0;
+				return table1Slider.Value;
 			}
 		}
 
-		internal double Table2PaintedAreaRatio
+		internal double Table2PaintedArea //0-4
 		{
 			get
 			{
-				return table2Slider.Value / 4.0;
+				return table2Slider.Value;
 			}
 		}
 
@@ -79,6 +79,21 @@ namespace GrblController
 			{
 				table2Labels[i].Location = new Point(slider2Panel.Location.X + slider2Panel.Size.Width + 5, (int)(slider2Panel.Size.Height * (1 - ratio) / 2 + slider2Panel.Location.Y + i * ratio * slider2Panel.Height / (table2Labels.Length - 1) - table2Labels[i].Size.Height / 2));
 			}
+		}
+
+		internal void SetSlidersEnabled(bool enabled)
+		{
+			if (InvokeRequired)
+			{
+				BeginInvoke(new Action(() =>
+				{
+					SetSlidersEnabled(enabled);
+				}));
+				return;
+			}
+
+			table1Slider.Enabled = enabled;
+			table2Slider.Enabled = enabled;
 		}
 
 		private void StatusChanged(Status oldStatus, Status newStatus)
@@ -161,16 +176,6 @@ namespace GrblController
 				AddLog("Disconnected.");
 			}
 
-			if (oldStatus.ConnectionState != ConnectionState.ConnectedStarted && newStatus.ConnectionState == ConnectionState.ConnectedStarted)
-			{
-				AddLog("Started sending G codes.");
-			}
-
-			if (oldStatus.ConnectionState == ConnectionState.ConnectedStarted && newStatus.ConnectionState != ConnectionState.ConnectedStarted)
-			{
-				AddLog("Stopped sending G codes.");
-			}
-
 			machineCoordinate.Text = "Machine position: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : Math.Abs(newStatus.MachineCoordinate).ToString("0.0 mm"));
 			machineState.Text = "Machine state: " + newStatus.MachineState.ToString();
 
@@ -215,10 +220,10 @@ namespace GrblController
 			table2Panel.Size = new Size(tablePanel.Width - 2, (int)(tablePanel.Height * Parameters.Table2Length / dTotalLength));
 
 			table1PanelPaintedArea.Location = new Point(0, 0);
-			table1PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table1Panel.Size.Height * Table1PaintedAreaRatio));
+			table1PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table1Panel.Size.Height * Table1PaintedArea / 4.0));
 
 			table2PanelPaintedArea.Location = new Point(0, 0);
-			table2PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table2Panel.Size.Height * Table2PaintedAreaRatio));
+			table2PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table2Panel.Size.Height * Table2PaintedArea / 4.0));
 		}
 
 		private void UpdateMachinePositionPanel()
