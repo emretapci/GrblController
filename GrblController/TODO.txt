@@ -8,6 +8,10 @@ FEATURE: (DONE) keep the default values for settings in a separate default.xml f
 
 REFACTOR: (DONE) merge all settings in one form.
 
-FEATURE: manual movement of the active coordinate.
+after spray job move to zero position
 
-FEATURE: find a way to stop the executing G code then Stop button is clicked.
+run probe function before spray starts
+
+reduce size of activity window and add two small buttons below start button
+Home, which launches calibration
+Reset Button
