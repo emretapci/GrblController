@@ -155,7 +155,24 @@ namespace GrblController
 
 			SetStatus(new Status(Status) { ConnectionState = ConnectionState.Connecting });
 
-			serialPort.Write(new byte[] { 0x18 }, 0, 1);
+			Reset();
+		}
+
+		internal void Reset()
+		{
+			willStop.Set();
+
+			if (serialPort != null && serialPort.IsOpen)
+			{
+				try
+				{
+					serialPort.Write(new byte[] { 0x18 }, 0, 1);
+				}
+				catch (Exception e)
+				{
+					Main.Instance.AddLog("ERROR: " + e.Message);
+				}
+			}
 		}
 
 		internal void Send(string command)
@@ -197,8 +214,7 @@ namespace GrblController
 					var probeRegex = new Regex(@"\[PRB:\-?\d+(\.\d*)?,\-?\d+(\.\d*)?,\-?\d+(\.\d*)?(:\d)?\]");
 					var errorRegex = new Regex(@"error:\s*\d*");
 
-					if ((Status.ConnectionState == ConnectionState.Connecting || Status.ConnectionState == ConnectionState.ConnectedCalibrating)
-						&& versionRegex.IsMatch(line))
+					if (versionRegex.IsMatch(line))
 					{
 						versionStringReceived.Set();
 						var version = versionRegex.Match(line).Groups["version"].Value;
@@ -207,7 +223,8 @@ namespace GrblController
 
 						(new Thread(new ThreadStart(() =>
 						{
-							Thread.Sleep(100);
+							willStop.Reset();
+							Thread.Sleep(1000);
 							if (WriteSettingsToBoard())
 							{
 								if (Unlock())
@@ -410,11 +427,15 @@ namespace GrblController
 			}
 		}
 
-		internal void Calibrate()
+		internal void Calibrate(Action callback)
 		{
+			willStop.Reset();
+
 			(new Thread(new ThreadStart(() =>
 			{
 				Main.Instance.AddLog("Starting calibration.");
+				Main.Instance.SetSlidersEnabled(false);
+				Main.Instance.SetMenuEnabled(false);
 				Main.Instance.GeometryController.Stop();
 				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false, ConnectionState = ConnectionState.ConnectedCalibrating });
 
@@ -425,7 +446,7 @@ namespace GrblController
 
 				probeReceived.Reset();
 				Main.Instance.AddLog("Probing now...");
-				Main.Instance.Connection.Send("G38.2 Y-1000 F500");
+				Main.Instance.Connection.Send("G38.2 Y-10000 F500");
 
 				if (WaitHandle.WaitAny(new WaitHandle[] { probeReceived, willStop }) == 1)
 				{
@@ -462,7 +483,7 @@ namespace GrblController
 				#region Jog to 5 mm
 
 				Main.Instance.AddLog("Jogging to 5 mm");
-				if(!SendGCodeAndWaitForOk("$J=G91 Y5 F100"))
+				if (!SendGCodeAndWaitForOk("$J=G91 Y5 F100"))
 				{
 					Main.Instance.AddLog("ERROR: Invalid response. (" + response + ")");
 					return;
@@ -473,6 +494,10 @@ namespace GrblController
 				stopped.Set();
 				Main.Instance.AddLog("Calibration successful.");
 				SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
+				Main.Instance.SetSlidersEnabled(true);
+				Main.Instance.SetMenuEnabled(true);
+
+				callback?.Invoke();
 			}))).Start();
 		}
 

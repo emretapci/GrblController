@@ -8,10 +8,10 @@ FEATURE: (DONE) keep the default values for settings in a separate default.xml f
 
 REFACTOR: (DONE) merge all settings in one form.
 
-after spray job move to zero position
+FEATURE: (DONE) after spray job move to zero position
 
-run probe function before spray starts
+FEATURE: (DONE) run probe function before spray starts
 
-reduce size of activity window and add two small buttons below start button
+FEATURE: (DONE) reduce size of activity window and add two small buttons below start button
 Home, which launches calibration
 Reset Button

@@ -96,6 +96,20 @@ namespace GrblController
 			table2Slider.Enabled = enabled;
 		}
 
+		internal void SetMenuEnabled(bool enabled)
+		{
+			if (InvokeRequired)
+			{
+				BeginInvoke(new Action(() =>
+				{
+					SetMenuEnabled(enabled);
+				}));
+				return;
+			}
+
+			menuStrip1.Enabled = enabled;
+		}
+
 		private void StatusChanged(Status oldStatus, Status newStatus)
 		{
 			if (InvokeRequired)
@@ -114,6 +128,8 @@ namespace GrblController
 					connectToolStripMenuItem.Enabled = false;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
+					homeButton.Enabled = false;
+					resetButton.Enabled = false;
 					calibrateToolStripMenuItem.Enabled = false;
 					Text = "GRBL Controller [Disconnected]";
 					break;
@@ -122,6 +138,8 @@ namespace GrblController
 					connectToolStripMenuItem.Enabled = true;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
+					homeButton.Enabled = false;
+					resetButton.Enabled = false;
 					calibrateToolStripMenuItem.Enabled = false;
 					Text = "GRBL Controller [Disconnected]";
 					break;
@@ -130,6 +148,8 @@ namespace GrblController
 					connectToolStripMenuItem.Enabled = true;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
+					homeButton.Enabled = false;
+					resetButton.Enabled = false;
 					AddLog("Connecting...");
 					calibrateToolStripMenuItem.Enabled = false;
 					Text = "GRBL Controller [Connecting...]";
@@ -139,6 +159,8 @@ namespace GrblController
 					connectToolStripMenuItem.Enabled = true;
 					startStopButton.Text = "Stop";
 					startStopButton.Enabled = true;
+					homeButton.Enabled = false;
+					resetButton.Enabled = true;
 					calibrateToolStripMenuItem.Enabled = true;
 					Text = "GRBL Controller [Connected] [Running]";
 					break;
@@ -147,6 +169,8 @@ namespace GrblController
 					connectToolStripMenuItem.Enabled = true;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = true;
+					homeButton.Enabled = true;
+					resetButton.Enabled = true;
 					calibrateToolStripMenuItem.Enabled = true;
 					Text = "GRBL Controller [Connected]";
 					break;
@@ -155,6 +179,8 @@ namespace GrblController
 					connectToolStripMenuItem.Enabled = false;
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
+					homeButton.Enabled = false;
+					resetButton.Enabled = true;
 					calibrateToolStripMenuItem.Enabled = false;
 					Text = "GRBL Controller [Calibrating]";
 					break;
@@ -236,12 +262,23 @@ namespace GrblController
 		{
 			if (Connection.Status.ConnectionState == ConnectionState.ConnectedStopped)
 			{
-				GeometryController.Start();
+				Connection.Calibrate(() => GeometryController.Start());
 			}
 			else if (Connection.Status.ConnectionState == ConnectionState.ConnectedStarted)
 			{
 				GeometryController.Stop();
 			}
+		}
+
+		private void homeButton_Click(object sender, EventArgs e)
+		{
+			Connection.Calibrate(null);
+		}
+
+		private void resetButton_Click(object sender, EventArgs e)
+		{
+			AddLog("Resetting...");
+			Connection.Reset();
 		}
 
 		internal void AddLog(string s)
@@ -308,7 +345,7 @@ namespace GrblController
 
 		private void calibrateToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Connection.Calibrate();
+			Connection.Calibrate(null);
 		}
 	}
 }

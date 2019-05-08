@@ -154,14 +154,20 @@ namespace GrblController
 				Main.Instance.AddLog("Stop sprayer.");
 			}
 
-			Main.Instance.SetSlidersEnabled(true);
 			Main.Instance.Connection.Send("M5");
 			Main.Instance.AddLog("Job finished.");
-			Main.Instance.Connection.Status.ConnectionState = ConnectionState.ConnectedStopped;
+
 			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
+			Main.Instance.AddLog("Returning to zero.");
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + "0");
+			WaitXPosition(0);
+
+			stopped.Set();
+			Main.Instance.SetSlidersEnabled(true);
+			Main.Instance.Connection.Status.ConnectionState = ConnectionState.ConnectedStopped;
 		}
 
-		internal void GoToCoordinate(double machineCoordinate)
+		internal void GoToCoordinate(double coordinate)
 		{
 			Main.Instance.Connection.Unlock();
 
