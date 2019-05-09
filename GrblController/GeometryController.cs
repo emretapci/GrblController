@@ -91,7 +91,7 @@ namespace GrblController
 				}
 
 				Main.Instance.AddLog("Start sprayer.");
-				Main.Instance.Connection.Send("M3");
+				Main.Instance.Connection.Send("M8");
 				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = true });
 
 				Main.Instance.AddLog("Go to end of Table 1 paint area.");
@@ -103,7 +103,7 @@ namespace GrblController
 				{
 					Main.Instance.AddLog("Stop sprayer.");
 					Main.Instance.AddLog("Aborted.");
-					Main.Instance.Connection.Send("M5");
+					Main.Instance.Connection.Send("M9");
 					Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 					stopped.Set();
 					Main.Instance.SetSlidersEnabled(true);
@@ -111,7 +111,7 @@ namespace GrblController
 				}
 
 				Main.Instance.AddLog("Stop sprayer.");
-				Main.Instance.Connection.Send("M5");
+				Main.Instance.Connection.Send("M9");
 				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 			}
 
@@ -132,7 +132,7 @@ namespace GrblController
 				}
 
 				Main.Instance.AddLog("Start sprayer.");
-				Main.Instance.Connection.Send("M3");
+				Main.Instance.Connection.Send("M8");
 				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = true });
 
 				Main.Instance.AddLog("Go to end of Table 2 paint area.");
@@ -144,7 +144,7 @@ namespace GrblController
 				{
 					Main.Instance.AddLog("Stop sprayer.");
 					Main.Instance.AddLog("Aborted.");
-					Main.Instance.Connection.Send("M5");
+					Main.Instance.Connection.Send("M9");
 					Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
 					stopped.Set();
 					Main.Instance.SetSlidersEnabled(true);
@@ -154,7 +154,7 @@ namespace GrblController
 				Main.Instance.AddLog("Stop sprayer.");
 			}
 
-			Main.Instance.Connection.Send("M5");
+			Main.Instance.Connection.Send("M9");
 			Main.Instance.AddLog("Job finished.");
 
 			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
