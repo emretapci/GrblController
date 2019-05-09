@@ -158,9 +158,9 @@ namespace GrblController
 			Main.Instance.AddLog("Job finished.");
 
 			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
-			Main.Instance.AddLog("Returning to zero.");
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + "0");
-			WaitXPosition(0);
+			Main.Instance.AddLog("Returning to 5 mm.");
+			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + "5");
+			WaitXPosition(5);
 
 			stopped.Set();
 			Main.Instance.SetSlidersEnabled(true);
