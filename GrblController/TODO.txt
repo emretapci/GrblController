@@ -15,3 +15,5 @@ FEATURE: (DONE) run probe function before spray starts
 FEATURE: (DONE) reduce size of activity window and add two small buttons below start button
 Home, which launches calibration
 Reset Button
+
+FEATURE: serial port connection should be fully automatic.
