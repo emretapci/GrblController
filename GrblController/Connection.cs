@@ -11,12 +11,16 @@ namespace GrblController
 {
 	internal enum ConnectionState
 	{
-		DisconnectedCannotConnect,
-		DisconnectedCanConnect,
+		Disconnected,
 		Connecting,
-		ConnectedStarted,
-		ConnectedStopped,
-		ConnectedCalibrating
+		Connected
+	}
+
+	internal enum RunState
+	{
+		Running,
+		Stopped,
+		Calibrating
 	}
 
 	internal enum MachineState
@@ -36,6 +40,7 @@ namespace GrblController
 	internal class Status
 	{
 		internal ConnectionState ConnectionState { get; set; }
+		internal RunState RunState { get; set; }
 		internal MachineState MachineState { get; set; }
 		internal Vector3D MachinePosition { get; set; } //can be negative.
 		internal bool Painting { get; set; }
@@ -79,6 +84,7 @@ namespace GrblController
 		internal Status(Status status)
 		{
 			ConnectionState = status.ConnectionState;
+			RunState = status.RunState;
 			MachineState = status.MachineState;
 			MachinePosition = new Vector3D(status.MachinePosition);
 			Painting = status.Painting;
@@ -97,6 +103,8 @@ namespace GrblController
 		private byte[] buffer = new byte[1000];
 		private int length = 0;
 		private System.Timers.Timer statusTimer;
+		private System.Timers.Timer statusCheckTimer;
+		private DateTime lastStatusReportTime;
 
 		internal event Action<Status, Status> onStatusChanged;
 
@@ -106,7 +114,7 @@ namespace GrblController
 		{
 			Status = new Status()
 			{
-				ConnectionState = ConnectionState.DisconnectedCannotConnect,
+				ConnectionState = ConnectionState.Disconnected,
 				MachineState = MachineState.Unknown,
 				MachinePosition = new Vector3D(),
 				Painting = false
@@ -121,6 +129,29 @@ namespace GrblController
 			{
 				Send("?");
 			};
+
+			statusCheckTimer = new System.Timers.Timer(1000);
+			statusCheckTimer.Interval = 500;
+			statusCheckTimer.AutoReset = true;
+			statusCheckTimer.Elapsed += (sender, e) =>
+			{
+				if (DateTime.Now.Subtract(lastStatusReportTime).TotalSeconds > 2)
+				{
+					SetStatus(new Status() { ConnectionState = ConnectionState.Disconnected });
+				}
+			};
+
+			onStatusChanged += (oldStatus, newStatus) =>
+			{
+				if (oldStatus.ConnectionState == ConnectionState.Connected && newStatus.ConnectionState == ConnectionState.Disconnected)
+				{
+					SetStatus(new Status() { ConnectionState = ConnectionState.Connecting });
+				}
+				if (oldStatus.ConnectionState == ConnectionState.Disconnected && newStatus.ConnectionState == ConnectionState.Connecting)
+				{
+					Connect();
+				}
+			};
 		}
 
 		internal void SetStatus(Status status)
@@ -132,13 +163,35 @@ namespace GrblController
 
 		internal void Connect()
 		{
-			if (Status.ConnectionState == ConnectionState.ConnectedStarted || Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.Connecting)
+			(new Thread(new ThreadStart(() =>
 			{
-				return;
-			}
+				while (Status.ConnectionState == ConnectionState.Connecting)
+				{
+					var ports = SerialPort.GetPortNames().ToList();
+					var configPortIndex = ports.IndexOf(Parameters["SerialPortString"]);
+					if (configPortIndex >= 0)
+					{
+						ports.RemoveAt(configPortIndex);
+						ports.Insert(0, Parameters["SerialPortString"]);
+					}
 
+					foreach (var port in ports)
+					{
+						if (TryPort(port))
+						{
+							Parameters["SerialPortString"] = port;
+							Reset();
+							break;
+						}
+					}
+				}
+			}))).Start();
+		}
+
+		private bool TryPort(string port)
+		{
 			//Connect with new parameters.
-			serialPort = new SerialPort(Main.Instance.Parameters.SerialPortString, Main.Instance.Parameters.Baudrate, Parity.None, 8, StopBits.One);
+			serialPort = new SerialPort(port, Main.Instance.Parameters.Baudrate, Parity.None, 8, StopBits.One);
 
 			try
 			{
@@ -146,16 +199,14 @@ namespace GrblController
 			}
 			catch
 			{
-				MessageBox.Show("Cannot open " + Main.Instance.Parameters.SerialPortString + ". Maybe it is already open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				Disconnect();
-				return;
+				return false;
 			}
 
 			serialPort.DataReceived += ProcessData;
 
-			SetStatus(new Status(Status) { ConnectionState = ConnectionState.Connecting });
+			Thread.Sleep(2000);
 
-			Reset();
+			return Status.ConnectionState == ConnectionState.Connected;
 		}
 
 		internal void Reset()
@@ -235,12 +286,11 @@ namespace GrblController
 										Main.Instance.AddLog("Work coordinates selected.");
 									}
 								}
-								SetStatus(new Status(Status) { ConnectionState = ConnectionState.ConnectedStopped });
+								SetStatus(new Status(Status) { ConnectionState = ConnectionState.Connected });
 							}
 							else
 							{
 								Disconnect();
-								SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
 							}
 						}))).Start();
 
@@ -254,8 +304,7 @@ namespace GrblController
 					{
 						probeReceived.Set();
 					}
-					else if ((Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.ConnectedCalibrating)
-						&& settingRegex.IsMatch(line))
+					else if (Status.ConnectionState == ConnectionState.Connected && settingRegex.IsMatch(line))
 					{
 						var setting = settingRegex.Match(line).Groups["setting"].Value;
 						var val = settingRegex.Match(line).Groups["value"].Value;
@@ -265,9 +314,9 @@ namespace GrblController
 						response = "ok";
 						responseReceived.Set();
 					}
-					else if (Status.ConnectionState == ConnectionState.ConnectedStopped || Status.ConnectionState == ConnectionState.ConnectedStarted
-						|| Status.ConnectionState == ConnectionState.ConnectedCalibrating)
+					else if (Status.ConnectionState == ConnectionState.Connected)
 					{
+						lastStatusReportTime = DateTime.Now;
 						var statusMatches = StatusMatch(line);
 						if (statusMatches.ContainsKey("WPosX") && statusMatches.ContainsKey("WPosY") && statusMatches.ContainsKey("WPosZ"))
 						{
@@ -380,36 +429,29 @@ namespace GrblController
 
 		internal void Disconnect()
 		{
-			if (Status.ConnectionState == ConnectionState.ConnectedCalibrating)
+			if (Status.ConnectionState == ConnectionState.Connected && Status.RunState == RunState.Calibrating)
 			{
 				stopped.Reset();
 				willStop.Set();
 				stopped.WaitOne();
 			}
 
-			if (Status.ConnectionState == ConnectionState.ConnectedStarted)
+			if (Status.ConnectionState == ConnectionState.Connected && Status.RunState == RunState.Running)
 			{
 				Main.Instance.GeometryController.Stop();
 			}
 
 			statusTimer?.Stop();
+			statusCheckTimer?.Stop();
 
-			if ((Status.ConnectionState == ConnectionState.ConnectedStarted || Status.ConnectionState == ConnectionState.ConnectedStopped ||
-				Status.ConnectionState == ConnectionState.Connecting) && serialPort != null)
+			if (serialPort != null)
 			{
 				serialPort.DataReceived -= ProcessData;
 				serialPort.Close();
 				serialPort = null;
 			}
 
-			if (Array.IndexOf(SerialPort.GetPortNames(), Main.Instance.Parameters.SerialPortString) >= 0)
-			{
-				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCanConnect });
-			}
-			else
-			{
-				SetStatus(new Status(Status) { ConnectionState = ConnectionState.DisconnectedCannotConnect });
-			}
+			SetStatus(new Status(Status) { ConnectionState = ConnectionState.Disconnected });
 		}
 
 		internal void CheckCanConnect()

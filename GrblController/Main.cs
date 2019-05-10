@@ -15,8 +15,6 @@ namespace GrblController
 		internal GeometryController GeometryController { get; private set; }
 		internal Connection Connection { get; private set; }
 		internal Parameters Parameters { get; private set; }
-		internal string ConfigFilename { get { return "config.xml"; } }
-		internal string DefaultFilename { get { return "default.xml"; } }
 
 		internal double Table1PaintedArea //0-4
 		{
@@ -49,6 +47,7 @@ namespace GrblController
 		private void Main_Load(object sender, EventArgs e)
 		{
 			Connection.Initialize();
+			Connection.Connect();
 
 			ResizeSliders();
 
@@ -323,23 +322,6 @@ namespace GrblController
 					GeometryController.GoToCoordinate(Connection.Status.MachineCoordinate);
 				}
 				machineCoordinate.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
-			}
-		}
-
-		private void connectToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			switch (Connection.Status.ConnectionState)
-			{
-				case ConnectionState.Connecting:
-				case ConnectionState.ConnectedStarted:
-				case ConnectionState.ConnectedStopped:
-					Connection.Disconnect();
-					Connection.CheckCanConnect();
-					break;
-				case ConnectionState.DisconnectedCanConnect:
-					Connection.Initialize();
-					Connection.Connect();
-					break;
 			}
 		}
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -21,12 +22,45 @@ namespace GrblController
 
 	internal class Parameters
 	{
+		private string configFilename = "config.xml";
+		private string defaultFilename = "default.xml";
+		private Dictionary<string, string> parameters;
+
 		internal double TablesTotalLength
 		{
 			get
 			{
 				return StartOffset + Table1Length + MiddleGap + Table2Length + EndOffset;
 			}
+		}
+
+		private string this[string key]
+		{
+			get
+			{
+				if (parameters.ContainsKey(key))
+				{
+					return parameters[key];
+				}
+				return "";
+			}
+			set
+			{
+				if (parameters.ContainsKey(key))
+				{
+					parameters[key] = value;
+				}
+				else
+				{
+					parameters.Add(key, value);
+				}
+				WriteToFile(configFilename);
+			}
+		}
+
+		internal Parameters()
+		{
+			ReadFromFile(configFilename);
 		}
 
 		internal double StartOffset { get; set; } //mm
@@ -76,50 +110,6 @@ namespace GrblController
 
 		internal Parameters()
 		{
-			StartOffset = 100;
-			Table1Length = 500;
-			MiddleGap = 100;
-			Table2Length = 500;
-			EndOffset = 100;
-
-			SerialPortString = "COM1";
-			Baudrate = 115200;
-
-			ControlAxis = ControlAxis.Y;
-
-			StepPulseTime = 10;
-			StepIdleDelay = 255;
-			StepPortInvert = 0;
-			DirectionPortInvert = Mask.Y | Mask.Z;
-			StepEnableInvert = true;
-			LimitPinsInvert = false;
-			ProbePinInvert = false;
-			JunctionDeviation = 0.02;
-			ArcTolerance = 0.002;
-			ReportInches = false;
-			SoftLimits = false;
-			HardLimits = true;
-			HomingCycle = false;
-			HomingDirectionInvert = Mask.X;
-			HomingFeed = 25;
-			HomingSeek = 500;
-			HomingDebounce = 250;
-			HomingPullOff = 1;
-			MaximumSpindleSpeed = 12000;
-			MinimumSpindleSpeed = 0;
-			LaserMode = false;
-			XSteps = 200;
-			YSteps = 200;
-			ZSteps = 200;
-			XFeedRate = 3000;
-			YFeedRate = 3000;
-			ZFeedRate = 2000;
-			XAcceleration = 25;
-			YAcceleration = 25;
-			ZAcceleration = 50;
-			XMaximumTravel = 200;
-			YMaximumTravel = 200;
-			ZMaximumTravel = 200;
 		}
 
 		internal static Parameters ReadFromFile(string filename)
