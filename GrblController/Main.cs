@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace GrblController
@@ -14,7 +13,6 @@ namespace GrblController
 
 		internal GeometryController GeometryController { get; private set; }
 		internal Connection Connection { get; private set; }
-		internal Parameters Parameters { get; private set; }
 
 		internal double Table1PaintedArea //0-4
 		{
@@ -37,8 +35,6 @@ namespace GrblController
 			InitializeComponent();
 			table1Labels = new Label[] { table1Label0, table1Label1d4, table1Label1d2, table1Label3d4, table1LabelFull };
 			table2Labels = new Label[] { table2Label0, table2Label1d4, table2Label1d2, table2Label3d4, table2LabelFull };
-			Parameters.ReadFromFile(DefaultFilename); //if non-existent, create one.
-			Parameters = Parameters.ReadFromFile(ConfigFilename);
 			Connection = new Connection();
 			GeometryController = new GeometryController();
 			Instance = this;
@@ -47,18 +43,16 @@ namespace GrblController
 		private void Main_Load(object sender, EventArgs e)
 		{
 			Connection.Initialize();
-			Connection.Connect();
 
 			ResizeSliders();
 
-			Parameters = Parameters.ReadFromFile(ConfigFilename);
 			table1Slider_ValueChanged(null, null);
 			table2Slider_ValueChanged(null, null);
 			UpdateMachinePositionPanel();
 
-			Connection.onStatusChanged += StatusChanged;
+			Status.onStatusChanged += StatusChanged;
 
-			StatusChanged(Connection.Status, Connection.Status);
+			Status.SetStatus(new Status());
 		}
 
 		private void ResizeSliders()
@@ -120,83 +114,64 @@ namespace GrblController
 				return;
 			}
 
-			switch (Connection.Status.ConnectionState)
+			if (Status.Instance.ConnectionState == ConnectionState.Disconnected)
 			{
-				case ConnectionState.DisconnectedCannotConnect:
-					connectToolStripMenuItem.Text = "Connect";
-					connectToolStripMenuItem.Enabled = false;
-					startStopButton.Text = "Start";
-					startStopButton.Enabled = false;
-					homeButton.Enabled = false;
-					resetButton.Enabled = false;
-					calibrateToolStripMenuItem.Enabled = false;
-					Text = "GRBL Controller [Disconnected]";
-					break;
-				case ConnectionState.DisconnectedCanConnect:
-					connectToolStripMenuItem.Text = "Connect";
-					connectToolStripMenuItem.Enabled = true;
-					startStopButton.Text = "Start";
-					startStopButton.Enabled = false;
-					homeButton.Enabled = false;
-					resetButton.Enabled = false;
-					calibrateToolStripMenuItem.Enabled = false;
-					Text = "GRBL Controller [Disconnected]";
-					break;
-				case ConnectionState.Connecting:
-					connectToolStripMenuItem.Text = "Connecting (stop)";
-					connectToolStripMenuItem.Enabled = true;
-					startStopButton.Text = "Start";
-					startStopButton.Enabled = false;
-					homeButton.Enabled = false;
-					resetButton.Enabled = false;
-					AddLog("Connecting...");
-					calibrateToolStripMenuItem.Enabled = false;
-					Text = "GRBL Controller [Connecting...]";
-					break;
-				case ConnectionState.ConnectedStarted:
-					connectToolStripMenuItem.Text = "Disconnect";
-					connectToolStripMenuItem.Enabled = true;
+				startStopButton.Text = "Start";
+				startStopButton.Enabled = false;
+				homeButton.Enabled = false;
+				resetButton.Enabled = false;
+				calibrateToolStripMenuItem.Enabled = false;
+				Text = "GRBL Controller [Disconnected]";
+			}
+
+			if (Status.Instance.ConnectionState == ConnectionState.Connecting)
+			{
+				startStopButton.Text = "Start";
+				startStopButton.Enabled = false;
+				homeButton.Enabled = false;
+				resetButton.Enabled = false;
+				AddLog("Connecting...");
+				calibrateToolStripMenuItem.Enabled = false;
+				Text = "GRBL Controller [Connecting...]";
+			}
+
+			if (Status.Instance.ConnectionState == ConnectionState.Connected)
+			{
+				if (Status.Instance.RunState == RunState.Running)
+				{
 					startStopButton.Text = "Stop";
 					startStopButton.Enabled = true;
 					homeButton.Enabled = false;
 					resetButton.Enabled = true;
 					calibrateToolStripMenuItem.Enabled = true;
 					Text = "GRBL Controller [Connected] [Running]";
-					break;
-				case ConnectionState.ConnectedStopped:
-					connectToolStripMenuItem.Text = "Disconnect";
-					connectToolStripMenuItem.Enabled = true;
+				}
+				else if (Status.Instance.RunState == RunState.Stopped)
+				{
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = true;
 					homeButton.Enabled = true;
 					resetButton.Enabled = true;
 					calibrateToolStripMenuItem.Enabled = true;
 					Text = "GRBL Controller [Connected]";
-					break;
-				case ConnectionState.ConnectedCalibrating:
-					connectToolStripMenuItem.Text = "Disconnect";
-					connectToolStripMenuItem.Enabled = false;
+				}
+				else if (Status.Instance.RunState == RunState.Calibrating)
+				{
 					startStopButton.Text = "Start";
 					startStopButton.Enabled = false;
 					homeButton.Enabled = false;
 					resetButton.Enabled = true;
 					calibrateToolStripMenuItem.Enabled = false;
 					Text = "GRBL Controller [Calibrating]";
-					break;
+				}
 			}
 
-			Parameters = Parameters.ReadFromFile(ConfigFilename);
-
-			if ((oldStatus.ConnectionState == ConnectionState.Connecting || oldStatus.ConnectionState == ConnectionState.DisconnectedCanConnect
-					|| oldStatus.ConnectionState == ConnectionState.DisconnectedCannotConnect) &&
-				(newStatus.ConnectionState == ConnectionState.ConnectedStarted || newStatus.ConnectionState == ConnectionState.ConnectedStopped))
+			if (oldStatus.ConnectionState != ConnectionState.Connected && newStatus.ConnectionState == ConnectionState.Connected)
 			{
 				AddLog("Connected.");
 			}
 
-			if ((oldStatus.ConnectionState == ConnectionState.Connecting || oldStatus.ConnectionState == ConnectionState.ConnectedStarted
-					|| oldStatus.ConnectionState == ConnectionState.ConnectedStopped) &&
-				(newStatus.ConnectionState == ConnectionState.DisconnectedCanConnect || newStatus.ConnectionState == ConnectionState.DisconnectedCannotConnect))
+			if (oldStatus.ConnectionState == ConnectionState.Connected && newStatus.ConnectionState != ConnectionState.Connected)
 			{
 				AddLog("Disconnected.");
 			}
@@ -236,13 +211,13 @@ namespace GrblController
 
 		private void ResizeTablePanels()
 		{
-			double dTotalLength = Parameters.StartOffset + Parameters.Table1Length + Parameters.MiddleGap + Parameters.Table2Length + Parameters.EndOffset;
+			double dTotalLength = Parameters.Instance.StartOffset + Parameters.Instance.Table1Length + Parameters.Instance.MiddleGap + Parameters.Instance.Table2Length + Parameters.Instance.EndOffset;
 
-			table1Panel.Location = new Point(0, (int)(tablePanel.Height * Parameters.StartOffset / dTotalLength));
-			table1Panel.Size = new Size(tablePanel.Width - 2, (int)(tablePanel.Height * Parameters.Table1Length / dTotalLength));
+			table1Panel.Location = new Point(0, (int)(tablePanel.Height * Parameters.Instance.StartOffset / dTotalLength));
+			table1Panel.Size = new Size(tablePanel.Width - 2, (int)(tablePanel.Height * Parameters.Instance.Table1Length / dTotalLength));
 
-			table2Panel.Location = new Point(0, (int)(tablePanel.Height * (Parameters.StartOffset + Parameters.Table1Length + Parameters.MiddleGap) / dTotalLength));
-			table2Panel.Size = new Size(tablePanel.Width - 2, (int)(tablePanel.Height * Parameters.Table2Length / dTotalLength));
+			table2Panel.Location = new Point(0, (int)(tablePanel.Height * (Parameters.Instance.StartOffset + Parameters.Instance.Table1Length + Parameters.Instance.MiddleGap) / dTotalLength));
+			table2Panel.Size = new Size(tablePanel.Width - 2, (int)(tablePanel.Height * Parameters.Instance.Table2Length / dTotalLength));
 
 			table1PanelPaintedArea.Location = new Point(0, 0);
 			table1PanelPaintedArea.Size = new Size(table1Panel.Width - 2, (int)(table1Panel.Size.Height * Table1PaintedArea / 4.0));
@@ -253,19 +228,22 @@ namespace GrblController
 
 		private void UpdateMachinePositionPanel()
 		{
-			machinePositionPanel.Location = new Point(0, (int)(Math.Abs(Connection.Status.MachineCoordinate) / Parameters.TablesTotalLength * tablePanel.Height - machinePositionPanel.Size.Height / 2) - 1);
-			machinePositionPanel.BackColor = Connection.Status.Painting ? Color.Red : Color.Blue;
+			machinePositionPanel.Location = new Point(0, (int)(Math.Abs(Status.Instance.MachineCoordinate) / Parameters.Instance.TablesTotalLength * tablePanel.Height - machinePositionPanel.Size.Height / 2) - 1);
+			machinePositionPanel.BackColor = Status.Instance.Painting.Value ? Color.Red : Color.Blue;
 		}
 
 		private void startStopButton_Click(object sender, EventArgs e)
 		{
-			if (Connection.Status.ConnectionState == ConnectionState.ConnectedStopped)
+			if (Status.Instance.ConnectionState == ConnectionState.Connected)
 			{
-				Connection.Calibrate(() => GeometryController.Start());
-			}
-			else if (Connection.Status.ConnectionState == ConnectionState.ConnectedStarted)
-			{
-				GeometryController.Stop();
+				if (Status.Instance.RunState == RunState.Stopped)
+				{
+					Connection.Calibrate(() => GeometryController.Start());
+				}
+				else if (Status.Instance.RunState == RunState.Running)
+				{
+					GeometryController.Stop();
+				}
 			}
 		}
 
@@ -303,7 +281,7 @@ namespace GrblController
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			Connection.onStatusChanged -= StatusChanged;
+			Status.onStatusChanged -= StatusChanged;
 			Connection.Disconnect();
 			GeometryController.Stop();
 		}
@@ -315,13 +293,12 @@ namespace GrblController
 			{
 				table1Slider_ValueChanged(null, null);
 				table2Slider_ValueChanged(null, null);
-				Parameters = Parameters.ReadFromFile(ConfigFilename);
-				Connection.Status.MachineCoordinate = settingsForm.MachinePosition;
-				if (Connection.Status.ConnectionState == ConnectionState.ConnectedStopped)
+				Status.Instance.MachineCoordinate = settingsForm.MachinePosition;
+				if (Status.Instance.ConnectionState == ConnectionState.Connected)
 				{
-					GeometryController.GoToCoordinate(Connection.Status.MachineCoordinate);
+					GeometryController.GoToCoordinate(Status.Instance.MachineCoordinate);
 				}
-				machineCoordinate.Text = "Machine " + Parameters.ControlAxis.ToString() + " position.";
+				machineCoordinate.Text = "Machine " + Parameters.Instance.ControlAxis.ToString() + " position.";
 			}
 		}
 

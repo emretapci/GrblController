@@ -321,7 +321,7 @@
 			// homingCycle
 			// 
 			this.homingCycle.AutoSize = true;
-			this.homingCycle.Location = new System.Drawing.Point(136, 344);
+			this.homingCycle.Location = new System.Drawing.Point(164, 344);
 			this.homingCycle.Name = "homingCycle";
 			this.homingCycle.Size = new System.Drawing.Size(15, 14);
 			this.homingCycle.TabIndex = 311;
@@ -330,7 +330,7 @@
 			// label59
 			// 
 			this.label59.AutoSize = true;
-			this.label59.Location = new System.Drawing.Point(299, 423);
+			this.label59.Location = new System.Drawing.Point(327, 423);
 			this.label59.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label59.Name = "label59";
 			this.label59.Size = new System.Drawing.Size(56, 16);
@@ -339,7 +339,7 @@
 			// 
 			// homingSeek
 			// 
-			this.homingSeek.Location = new System.Drawing.Point(137, 420);
+			this.homingSeek.Location = new System.Drawing.Point(165, 420);
 			this.homingSeek.Name = "homingSeek";
 			this.homingSeek.Size = new System.Drawing.Size(155, 23);
 			this.homingSeek.TabIndex = 309;
@@ -347,7 +347,7 @@
 			// label58
 			// 
 			this.label58.AutoSize = true;
-			this.label58.Location = new System.Drawing.Point(677, 18);
+			this.label58.Location = new System.Drawing.Point(705, 18);
 			this.label58.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label58.Name = "label58";
 			this.label58.Size = new System.Drawing.Size(41, 16);
@@ -356,7 +356,7 @@
 			// 
 			// homingDebounce
 			// 
-			this.homingDebounce.Location = new System.Drawing.Point(515, 15);
+			this.homingDebounce.Location = new System.Drawing.Point(543, 15);
 			this.homingDebounce.Name = "homingDebounce";
 			this.homingDebounce.Size = new System.Drawing.Size(155, 23);
 			this.homingDebounce.TabIndex = 304;
@@ -364,7 +364,7 @@
 			// label57
 			// 
 			this.label57.AutoSize = true;
-			this.label57.Location = new System.Drawing.Point(677, 45);
+			this.label57.Location = new System.Drawing.Point(705, 45);
 			this.label57.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label57.Name = "label57";
 			this.label57.Size = new System.Drawing.Size(30, 16);
@@ -373,7 +373,7 @@
 			// 
 			// homingPullOff
 			// 
-			this.homingPullOff.Location = new System.Drawing.Point(515, 42);
+			this.homingPullOff.Location = new System.Drawing.Point(543, 42);
 			this.homingPullOff.Name = "homingPullOff";
 			this.homingPullOff.Size = new System.Drawing.Size(155, 23);
 			this.homingPullOff.TabIndex = 300;
@@ -381,7 +381,7 @@
 			// label56
 			// 
 			this.label56.AutoSize = true;
-			this.label56.Location = new System.Drawing.Point(677, 72);
+			this.label56.Location = new System.Drawing.Point(705, 72);
 			this.label56.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label56.Name = "label56";
 			this.label56.Size = new System.Drawing.Size(38, 16);
@@ -390,7 +390,7 @@
 			// 
 			// maximumSpindleSpeed
 			// 
-			this.maximumSpindleSpeed.Location = new System.Drawing.Point(515, 69);
+			this.maximumSpindleSpeed.Location = new System.Drawing.Point(543, 69);
 			this.maximumSpindleSpeed.Name = "maximumSpindleSpeed";
 			this.maximumSpindleSpeed.Size = new System.Drawing.Size(155, 23);
 			this.maximumSpindleSpeed.TabIndex = 296;
@@ -398,7 +398,7 @@
 			// label55
 			// 
 			this.label55.AutoSize = true;
-			this.label55.Location = new System.Drawing.Point(677, 99);
+			this.label55.Location = new System.Drawing.Point(705, 99);
 			this.label55.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label55.Name = "label55";
 			this.label55.Size = new System.Drawing.Size(38, 16);
@@ -407,7 +407,7 @@
 			// 
 			// minimumSpindleSpeed
 			// 
-			this.minimumSpindleSpeed.Location = new System.Drawing.Point(515, 96);
+			this.minimumSpindleSpeed.Location = new System.Drawing.Point(543, 96);
 			this.minimumSpindleSpeed.Name = "minimumSpindleSpeed";
 			this.minimumSpindleSpeed.Size = new System.Drawing.Size(155, 23);
 			this.minimumSpindleSpeed.TabIndex = 293;
@@ -415,7 +415,7 @@
 			// laserMode
 			// 
 			this.laserMode.AutoSize = true;
-			this.laserMode.Location = new System.Drawing.Point(515, 128);
+			this.laserMode.Location = new System.Drawing.Point(543, 128);
 			this.laserMode.Name = "laserMode";
 			this.laserMode.Size = new System.Drawing.Size(15, 14);
 			this.laserMode.TabIndex = 290;
@@ -424,7 +424,7 @@
 			// label49
 			// 
 			this.label49.AutoSize = true;
-			this.label49.Location = new System.Drawing.Point(677, 396);
+			this.label49.Location = new System.Drawing.Point(705, 396);
 			this.label49.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label49.Name = "label49";
 			this.label49.Size = new System.Drawing.Size(30, 16);
@@ -434,7 +434,7 @@
 			// label50
 			// 
 			this.label50.AutoSize = true;
-			this.label50.Location = new System.Drawing.Point(677, 423);
+			this.label50.Location = new System.Drawing.Point(705, 423);
 			this.label50.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label50.Name = "label50";
 			this.label50.Size = new System.Drawing.Size(30, 16);
@@ -443,7 +443,7 @@
 			// 
 			// zMaximumTravel
 			// 
-			this.zMaximumTravel.Location = new System.Drawing.Point(515, 447);
+			this.zMaximumTravel.Location = new System.Drawing.Point(543, 447);
 			this.zMaximumTravel.Name = "zMaximumTravel";
 			this.zMaximumTravel.Size = new System.Drawing.Size(155, 23);
 			this.zMaximumTravel.TabIndex = 284;
@@ -451,7 +451,7 @@
 			// label51
 			// 
 			this.label51.AutoSize = true;
-			this.label51.Location = new System.Drawing.Point(677, 450);
+			this.label51.Location = new System.Drawing.Point(705, 450);
 			this.label51.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label51.Name = "label51";
 			this.label51.Size = new System.Drawing.Size(30, 16);
@@ -460,14 +460,14 @@
 			// 
 			// yMaximumTravel
 			// 
-			this.yMaximumTravel.Location = new System.Drawing.Point(515, 420);
+			this.yMaximumTravel.Location = new System.Drawing.Point(543, 420);
 			this.yMaximumTravel.Name = "yMaximumTravel";
 			this.yMaximumTravel.Size = new System.Drawing.Size(155, 23);
 			this.yMaximumTravel.TabIndex = 281;
 			// 
 			// xMaximumTravel
 			// 
-			this.xMaximumTravel.Location = new System.Drawing.Point(515, 393);
+			this.xMaximumTravel.Location = new System.Drawing.Point(543, 393);
 			this.xMaximumTravel.Name = "xMaximumTravel";
 			this.xMaximumTravel.Size = new System.Drawing.Size(155, 23);
 			this.xMaximumTravel.TabIndex = 278;
@@ -475,7 +475,7 @@
 			// label52
 			// 
 			this.label52.AutoSize = true;
-			this.label52.Location = new System.Drawing.Point(391, 450);
+			this.label52.Location = new System.Drawing.Point(419, 450);
 			this.label52.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label52.Name = "label52";
 			this.label52.Size = new System.Drawing.Size(117, 16);
@@ -485,7 +485,7 @@
 			// label53
 			// 
 			this.label53.AutoSize = true;
-			this.label53.Location = new System.Drawing.Point(390, 423);
+			this.label53.Location = new System.Drawing.Point(418, 423);
 			this.label53.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label53.Name = "label53";
 			this.label53.Size = new System.Drawing.Size(118, 16);
@@ -496,7 +496,7 @@
 			// 
 			this.label107.AutoSize = true;
 			this.label107.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.label107.Location = new System.Drawing.Point(727, 312);
+			this.label107.Location = new System.Drawing.Point(755, 312);
 			this.label107.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label107.Name = "label107";
 			this.label107.Size = new System.Drawing.Size(13, 14);
@@ -506,7 +506,7 @@
 			// label54
 			// 
 			this.label54.AutoSize = true;
-			this.label54.Location = new System.Drawing.Point(391, 396);
+			this.label54.Location = new System.Drawing.Point(419, 396);
 			this.label54.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label54.Name = "label54";
 			this.label54.Size = new System.Drawing.Size(117, 16);
@@ -517,7 +517,7 @@
 			// 
 			this.label47.AutoSize = true;
 			this.label47.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.label47.Location = new System.Drawing.Point(727, 312);
+			this.label47.Location = new System.Drawing.Point(755, 312);
 			this.label47.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label47.Name = "label47";
 			this.label47.Size = new System.Drawing.Size(13, 14);
@@ -528,7 +528,7 @@
 			// 
 			this.label105.AutoSize = true;
 			this.label105.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.label105.Location = new System.Drawing.Point(727, 339);
+			this.label105.Location = new System.Drawing.Point(755, 339);
 			this.label105.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label105.Name = "label105";
 			this.label105.Size = new System.Drawing.Size(13, 14);
@@ -538,7 +538,7 @@
 			// label48
 			// 
 			this.label48.AutoSize = true;
-			this.label48.Location = new System.Drawing.Point(677, 315);
+			this.label48.Location = new System.Drawing.Point(705, 315);
 			this.label48.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label48.Name = "label48";
 			this.label48.Size = new System.Drawing.Size(56, 16);
@@ -549,7 +549,7 @@
 			// 
 			this.label41.AutoSize = true;
 			this.label41.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.label41.Location = new System.Drawing.Point(727, 339);
+			this.label41.Location = new System.Drawing.Point(755, 339);
 			this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label41.Name = "label41";
 			this.label41.Size = new System.Drawing.Size(13, 14);
@@ -559,7 +559,7 @@
 			// label42
 			// 
 			this.label42.AutoSize = true;
-			this.label42.Location = new System.Drawing.Point(677, 342);
+			this.label42.Location = new System.Drawing.Point(705, 342);
 			this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label42.Name = "label42";
 			this.label42.Size = new System.Drawing.Size(56, 16);
@@ -570,7 +570,7 @@
 			// 
 			this.label46.AutoSize = true;
 			this.label46.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-			this.label46.Location = new System.Drawing.Point(727, 366);
+			this.label46.Location = new System.Drawing.Point(755, 366);
 			this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label46.Name = "label46";
 			this.label46.Size = new System.Drawing.Size(13, 14);
@@ -579,7 +579,7 @@
 			// 
 			// zAcceleration
 			// 
-			this.zAcceleration.Location = new System.Drawing.Point(515, 366);
+			this.zAcceleration.Location = new System.Drawing.Point(543, 366);
 			this.zAcceleration.Name = "zAcceleration";
 			this.zAcceleration.Size = new System.Drawing.Size(155, 23);
 			this.zAcceleration.TabIndex = 260;
@@ -587,7 +587,7 @@
 			// label40
 			// 
 			this.label40.AutoSize = true;
-			this.label40.Location = new System.Drawing.Point(677, 369);
+			this.label40.Location = new System.Drawing.Point(705, 369);
 			this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label40.Name = "label40";
 			this.label40.Size = new System.Drawing.Size(56, 16);
@@ -596,14 +596,14 @@
 			// 
 			// yAcceleration
 			// 
-			this.yAcceleration.Location = new System.Drawing.Point(515, 339);
+			this.yAcceleration.Location = new System.Drawing.Point(543, 339);
 			this.yAcceleration.Name = "yAcceleration";
 			this.yAcceleration.Size = new System.Drawing.Size(155, 23);
 			this.yAcceleration.TabIndex = 256;
 			// 
 			// xAcceleration
 			// 
-			this.xAcceleration.Location = new System.Drawing.Point(515, 312);
+			this.xAcceleration.Location = new System.Drawing.Point(543, 312);
 			this.xAcceleration.Name = "xAcceleration";
 			this.xAcceleration.Size = new System.Drawing.Size(155, 23);
 			this.xAcceleration.TabIndex = 254;
@@ -611,7 +611,7 @@
 			// label43
 			// 
 			this.label43.AutoSize = true;
-			this.label43.Location = new System.Drawing.Point(411, 369);
+			this.label43.Location = new System.Drawing.Point(439, 369);
 			this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label43.Name = "label43";
 			this.label43.Size = new System.Drawing.Size(97, 16);
@@ -621,7 +621,7 @@
 			// label44
 			// 
 			this.label44.AutoSize = true;
-			this.label44.Location = new System.Drawing.Point(410, 342);
+			this.label44.Location = new System.Drawing.Point(438, 342);
 			this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label44.Name = "label44";
 			this.label44.Size = new System.Drawing.Size(98, 16);
@@ -631,7 +631,7 @@
 			// label45
 			// 
 			this.label45.AutoSize = true;
-			this.label45.Location = new System.Drawing.Point(411, 315);
+			this.label45.Location = new System.Drawing.Point(439, 315);
 			this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label45.Name = "label45";
 			this.label45.Size = new System.Drawing.Size(97, 16);
@@ -640,7 +640,7 @@
 			// 
 			// zMaximumRate
 			// 
-			this.zMaximumRate.Location = new System.Drawing.Point(515, 285);
+			this.zMaximumRate.Location = new System.Drawing.Point(543, 285);
 			this.zMaximumRate.Name = "zMaximumRate";
 			this.zMaximumRate.Size = new System.Drawing.Size(155, 23);
 			this.zMaximumRate.TabIndex = 246;
@@ -648,7 +648,7 @@
 			// label18
 			// 
 			this.label18.AutoSize = true;
-			this.label18.Location = new System.Drawing.Point(677, 288);
+			this.label18.Location = new System.Drawing.Point(705, 288);
 			this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label18.Name = "label18";
 			this.label18.Size = new System.Drawing.Size(56, 16);
@@ -657,7 +657,7 @@
 			// 
 			// yMaximumRate
 			// 
-			this.yMaximumRate.Location = new System.Drawing.Point(515, 258);
+			this.yMaximumRate.Location = new System.Drawing.Point(543, 258);
 			this.yMaximumRate.Name = "yMaximumRate";
 			this.yMaximumRate.Size = new System.Drawing.Size(155, 23);
 			this.yMaximumRate.TabIndex = 242;
@@ -665,7 +665,7 @@
 			// label35
 			// 
 			this.label35.AutoSize = true;
-			this.label35.Location = new System.Drawing.Point(677, 261);
+			this.label35.Location = new System.Drawing.Point(705, 261);
 			this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label35.Name = "label35";
 			this.label35.Size = new System.Drawing.Size(56, 16);
@@ -674,7 +674,7 @@
 			// 
 			// xMaximumRate
 			// 
-			this.xMaximumRate.Location = new System.Drawing.Point(515, 231);
+			this.xMaximumRate.Location = new System.Drawing.Point(543, 231);
 			this.xMaximumRate.Name = "xMaximumRate";
 			this.xMaximumRate.Size = new System.Drawing.Size(155, 23);
 			this.xMaximumRate.TabIndex = 239;
@@ -682,7 +682,7 @@
 			// label36
 			// 
 			this.label36.AutoSize = true;
-			this.label36.Location = new System.Drawing.Point(677, 234);
+			this.label36.Location = new System.Drawing.Point(705, 234);
 			this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label36.Name = "label36";
 			this.label36.Size = new System.Drawing.Size(56, 16);
@@ -692,7 +692,7 @@
 			// label37
 			// 
 			this.label37.AutoSize = true;
-			this.label37.Location = new System.Drawing.Point(431, 288);
+			this.label37.Location = new System.Drawing.Point(459, 288);
 			this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label37.Name = "label37";
 			this.label37.Size = new System.Drawing.Size(77, 16);
@@ -702,7 +702,7 @@
 			// label38
 			// 
 			this.label38.AutoSize = true;
-			this.label38.Location = new System.Drawing.Point(430, 261);
+			this.label38.Location = new System.Drawing.Point(458, 261);
 			this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label38.Name = "label38";
 			this.label38.Size = new System.Drawing.Size(78, 16);
@@ -712,7 +712,7 @@
 			// label39
 			// 
 			this.label39.AutoSize = true;
-			this.label39.Location = new System.Drawing.Point(431, 234);
+			this.label39.Location = new System.Drawing.Point(459, 234);
 			this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label39.Name = "label39";
 			this.label39.Size = new System.Drawing.Size(77, 16);
@@ -721,7 +721,7 @@
 			// 
 			// zSteps
 			// 
-			this.zSteps.Location = new System.Drawing.Point(515, 204);
+			this.zSteps.Location = new System.Drawing.Point(543, 204);
 			this.zSteps.Name = "zSteps";
 			this.zSteps.Size = new System.Drawing.Size(155, 23);
 			this.zSteps.TabIndex = 229;
@@ -729,7 +729,7 @@
 			// label34
 			// 
 			this.label34.AutoSize = true;
-			this.label34.Location = new System.Drawing.Point(677, 207);
+			this.label34.Location = new System.Drawing.Point(705, 207);
 			this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label34.Name = "label34";
 			this.label34.Size = new System.Drawing.Size(34, 16);
@@ -738,7 +738,7 @@
 			// 
 			// ySteps
 			// 
-			this.ySteps.Location = new System.Drawing.Point(515, 177);
+			this.ySteps.Location = new System.Drawing.Point(543, 177);
 			this.ySteps.Name = "ySteps";
 			this.ySteps.Size = new System.Drawing.Size(155, 23);
 			this.ySteps.TabIndex = 224;
@@ -746,7 +746,7 @@
 			// label33
 			// 
 			this.label33.AutoSize = true;
-			this.label33.Location = new System.Drawing.Point(677, 180);
+			this.label33.Location = new System.Drawing.Point(705, 180);
 			this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label33.Name = "label33";
 			this.label33.Size = new System.Drawing.Size(34, 16);
@@ -755,7 +755,7 @@
 			// 
 			// xSteps
 			// 
-			this.xSteps.Location = new System.Drawing.Point(515, 150);
+			this.xSteps.Location = new System.Drawing.Point(543, 150);
 			this.xSteps.Name = "xSteps";
 			this.xSteps.Size = new System.Drawing.Size(155, 23);
 			this.xSteps.TabIndex = 220;
@@ -763,7 +763,7 @@
 			// label32
 			// 
 			this.label32.AutoSize = true;
-			this.label32.Location = new System.Drawing.Point(677, 153);
+			this.label32.Location = new System.Drawing.Point(705, 153);
 			this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label32.Name = "label32";
 			this.label32.Size = new System.Drawing.Size(34, 16);
@@ -773,7 +773,7 @@
 			// label31
 			// 
 			this.label31.AutoSize = true;
-			this.label31.Location = new System.Drawing.Point(299, 396);
+			this.label31.Location = new System.Drawing.Point(327, 396);
 			this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label31.Name = "label31";
 			this.label31.Size = new System.Drawing.Size(56, 16);
@@ -782,7 +782,7 @@
 			// 
 			// homingFeed
 			// 
-			this.homingFeed.Location = new System.Drawing.Point(137, 393);
+			this.homingFeed.Location = new System.Drawing.Point(165, 393);
 			this.homingFeed.Name = "homingFeed";
 			this.homingFeed.Size = new System.Drawing.Size(155, 23);
 			this.homingFeed.TabIndex = 214;
@@ -790,7 +790,7 @@
 			// homingDirectionInvertY
 			// 
 			this.homingDirectionInvertY.AutoSize = true;
-			this.homingDirectionInvertY.Location = new System.Drawing.Point(178, 368);
+			this.homingDirectionInvertY.Location = new System.Drawing.Point(206, 368);
 			this.homingDirectionInvertY.Name = "homingDirectionInvertY";
 			this.homingDirectionInvertY.Size = new System.Drawing.Size(36, 20);
 			this.homingDirectionInvertY.TabIndex = 212;
@@ -800,7 +800,7 @@
 			// homingDirectionInvertZ
 			// 
 			this.homingDirectionInvertZ.AutoSize = true;
-			this.homingDirectionInvertZ.Location = new System.Drawing.Point(220, 368);
+			this.homingDirectionInvertZ.Location = new System.Drawing.Point(248, 368);
 			this.homingDirectionInvertZ.Name = "homingDirectionInvertZ";
 			this.homingDirectionInvertZ.Size = new System.Drawing.Size(35, 20);
 			this.homingDirectionInvertZ.TabIndex = 210;
@@ -810,7 +810,7 @@
 			// homingDirectionInvertX
 			// 
 			this.homingDirectionInvertX.AutoSize = true;
-			this.homingDirectionInvertX.Location = new System.Drawing.Point(137, 368);
+			this.homingDirectionInvertX.Location = new System.Drawing.Point(165, 368);
 			this.homingDirectionInvertX.Name = "homingDirectionInvertX";
 			this.homingDirectionInvertX.Size = new System.Drawing.Size(35, 20);
 			this.homingDirectionInvertX.TabIndex = 208;
@@ -820,7 +820,7 @@
 			// hardLimits
 			// 
 			this.hardLimits.AutoSize = true;
-			this.hardLimits.Location = new System.Drawing.Point(137, 317);
+			this.hardLimits.Location = new System.Drawing.Point(165, 317);
 			this.hardLimits.Name = "hardLimits";
 			this.hardLimits.Size = new System.Drawing.Size(15, 14);
 			this.hardLimits.TabIndex = 206;
@@ -829,7 +829,7 @@
 			// softLimits
 			// 
 			this.softLimits.AutoSize = true;
-			this.softLimits.Location = new System.Drawing.Point(137, 290);
+			this.softLimits.Location = new System.Drawing.Point(165, 290);
 			this.softLimits.Name = "softLimits";
 			this.softLimits.Size = new System.Drawing.Size(15, 14);
 			this.softLimits.TabIndex = 204;
@@ -838,7 +838,7 @@
 			// reportInches
 			// 
 			this.reportInches.AutoSize = true;
-			this.reportInches.Location = new System.Drawing.Point(137, 263);
+			this.reportInches.Location = new System.Drawing.Point(165, 263);
 			this.reportInches.Name = "reportInches";
 			this.reportInches.Size = new System.Drawing.Size(15, 14);
 			this.reportInches.TabIndex = 203;
@@ -847,7 +847,7 @@
 			// label19
 			// 
 			this.label19.AutoSize = true;
-			this.label19.Location = new System.Drawing.Point(454, 207);
+			this.label19.Location = new System.Drawing.Point(482, 207);
 			this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label19.Name = "label19";
 			this.label19.Size = new System.Drawing.Size(54, 16);
@@ -857,7 +857,7 @@
 			// label20
 			// 
 			this.label20.AutoSize = true;
-			this.label20.Location = new System.Drawing.Point(453, 180);
+			this.label20.Location = new System.Drawing.Point(481, 180);
 			this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label20.Name = "label20";
 			this.label20.Size = new System.Drawing.Size(55, 16);
@@ -867,7 +867,7 @@
 			// label21
 			// 
 			this.label21.AutoSize = true;
-			this.label21.Location = new System.Drawing.Point(454, 153);
+			this.label21.Location = new System.Drawing.Point(482, 153);
 			this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label21.Name = "label21";
 			this.label21.Size = new System.Drawing.Size(54, 16);
@@ -877,7 +877,7 @@
 			// label22
 			// 
 			this.label22.AutoSize = true;
-			this.label22.Location = new System.Drawing.Point(425, 126);
+			this.label22.Location = new System.Drawing.Point(453, 126);
 			this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label22.Name = "label22";
 			this.label22.Size = new System.Drawing.Size(83, 16);
@@ -887,7 +887,7 @@
 			// label23
 			// 
 			this.label23.AutoSize = true;
-			this.label23.Location = new System.Drawing.Point(353, 99);
+			this.label23.Location = new System.Drawing.Point(381, 99);
 			this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label23.Name = "label23";
 			this.label23.Size = new System.Drawing.Size(155, 16);
@@ -897,7 +897,7 @@
 			// label24
 			// 
 			this.label24.AutoSize = true;
-			this.label24.Location = new System.Drawing.Point(350, 72);
+			this.label24.Location = new System.Drawing.Point(378, 72);
 			this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label24.Name = "label24";
 			this.label24.Size = new System.Drawing.Size(158, 16);
@@ -907,7 +907,7 @@
 			// label25
 			// 
 			this.label25.AutoSize = true;
-			this.label25.Location = new System.Drawing.Point(406, 45);
+			this.label25.Location = new System.Drawing.Point(434, 45);
 			this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label25.Name = "label25";
 			this.label25.Size = new System.Drawing.Size(102, 16);
@@ -917,7 +917,7 @@
 			// label26
 			// 
 			this.label26.AutoSize = true;
-			this.label26.Location = new System.Drawing.Point(386, 18);
+			this.label26.Location = new System.Drawing.Point(414, 18);
 			this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label26.Name = "label26";
 			this.label26.Size = new System.Drawing.Size(122, 16);
@@ -927,7 +927,7 @@
 			// label27
 			// 
 			this.label27.AutoSize = true;
-			this.label27.Location = new System.Drawing.Point(41, 423);
+			this.label27.Location = new System.Drawing.Point(69, 423);
 			this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label27.Name = "label27";
 			this.label27.Size = new System.Drawing.Size(89, 16);
@@ -937,7 +937,7 @@
 			// label28
 			// 
 			this.label28.AutoSize = true;
-			this.label28.Location = new System.Drawing.Point(43, 396);
+			this.label28.Location = new System.Drawing.Point(71, 396);
 			this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label28.Name = "label28";
 			this.label28.Size = new System.Drawing.Size(87, 16);
@@ -947,7 +947,7 @@
 			// label29
 			// 
 			this.label29.AutoSize = true;
-			this.label29.Location = new System.Drawing.Point(-22, 369);
+			this.label29.Location = new System.Drawing.Point(6, 369);
 			this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label29.Name = "label29";
 			this.label29.Size = new System.Drawing.Size(152, 16);
@@ -957,7 +957,7 @@
 			// label30
 			// 
 			this.label30.AutoSize = true;
-			this.label30.Location = new System.Drawing.Point(39, 342);
+			this.label30.Location = new System.Drawing.Point(67, 342);
 			this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label30.Name = "label30";
 			this.label30.Size = new System.Drawing.Size(91, 16);
@@ -967,7 +967,7 @@
 			// label16
 			// 
 			this.label16.AutoSize = true;
-			this.label16.Location = new System.Drawing.Point(57, 315);
+			this.label16.Location = new System.Drawing.Point(85, 315);
 			this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label16.Name = "label16";
 			this.label16.Size = new System.Drawing.Size(73, 16);
@@ -977,7 +977,7 @@
 			// label17
 			// 
 			this.label17.AutoSize = true;
-			this.label17.Location = new System.Drawing.Point(62, 288);
+			this.label17.Location = new System.Drawing.Point(90, 288);
 			this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label17.Name = "label17";
 			this.label17.Size = new System.Drawing.Size(68, 16);
@@ -987,7 +987,7 @@
 			// label15
 			// 
 			this.label15.AutoSize = true;
-			this.label15.Location = new System.Drawing.Point(34, 261);
+			this.label15.Location = new System.Drawing.Point(62, 261);
 			this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label15.Name = "label15";
 			this.label15.Size = new System.Drawing.Size(96, 16);
@@ -996,7 +996,7 @@
 			// 
 			// arcTolerance
 			// 
-			this.arcTolerance.Location = new System.Drawing.Point(137, 232);
+			this.arcTolerance.Location = new System.Drawing.Point(165, 232);
 			this.arcTolerance.Name = "arcTolerance";
 			this.arcTolerance.Size = new System.Drawing.Size(155, 23);
 			this.arcTolerance.TabIndex = 170;
@@ -1004,7 +1004,7 @@
 			// label13
 			// 
 			this.label13.AutoSize = true;
-			this.label13.Location = new System.Drawing.Point(300, 235);
+			this.label13.Location = new System.Drawing.Point(328, 235);
 			this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(30, 16);
@@ -1014,7 +1014,7 @@
 			// label14
 			// 
 			this.label14.AutoSize = true;
-			this.label14.Location = new System.Drawing.Point(38, 234);
+			this.label14.Location = new System.Drawing.Point(66, 234);
 			this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label14.Name = "label14";
 			this.label14.Size = new System.Drawing.Size(92, 16);
@@ -1023,21 +1023,21 @@
 			// 
 			// stepPulseTime
 			// 
-			this.stepPulseTime.Location = new System.Drawing.Point(137, 15);
+			this.stepPulseTime.Location = new System.Drawing.Point(165, 15);
 			this.stepPulseTime.Name = "stepPulseTime";
 			this.stepPulseTime.Size = new System.Drawing.Size(155, 23);
 			this.stepPulseTime.TabIndex = 165;
 			// 
 			// stepIdleDelay
 			// 
-			this.stepIdleDelay.Location = new System.Drawing.Point(137, 42);
+			this.stepIdleDelay.Location = new System.Drawing.Point(165, 42);
 			this.stepIdleDelay.Name = "stepIdleDelay";
 			this.stepIdleDelay.Size = new System.Drawing.Size(155, 23);
 			this.stepIdleDelay.TabIndex = 162;
 			// 
 			// junctionDeviation
 			// 
-			this.junctionDeviation.Location = new System.Drawing.Point(137, 204);
+			this.junctionDeviation.Location = new System.Drawing.Point(165, 204);
 			this.junctionDeviation.Name = "junctionDeviation";
 			this.junctionDeviation.Size = new System.Drawing.Size(155, 23);
 			this.junctionDeviation.TabIndex = 160;
@@ -1045,7 +1045,7 @@
 			// label11
 			// 
 			this.label11.AutoSize = true;
-			this.label11.Location = new System.Drawing.Point(300, 207);
+			this.label11.Location = new System.Drawing.Point(328, 207);
 			this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(30, 16);
@@ -1055,7 +1055,7 @@
 			// label12
 			// 
 			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(9, 207);
+			this.label12.Location = new System.Drawing.Point(37, 207);
 			this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(121, 16);
@@ -1065,7 +1065,7 @@
 			// probePinInvert
 			// 
 			this.probePinInvert.AutoSize = true;
-			this.probePinInvert.Location = new System.Drawing.Point(137, 182);
+			this.probePinInvert.Location = new System.Drawing.Point(165, 182);
 			this.probePinInvert.Name = "probePinInvert";
 			this.probePinInvert.Size = new System.Drawing.Size(15, 14);
 			this.probePinInvert.TabIndex = 150;
@@ -1074,7 +1074,7 @@
 			// label9
 			// 
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(22, 180);
+			this.label9.Location = new System.Drawing.Point(50, 180);
 			this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(108, 16);
@@ -1084,7 +1084,7 @@
 			// limitPinsInvert
 			// 
 			this.limitPinsInvert.AutoSize = true;
-			this.limitPinsInvert.Location = new System.Drawing.Point(137, 152);
+			this.limitPinsInvert.Location = new System.Drawing.Point(165, 152);
 			this.limitPinsInvert.Name = "limitPinsInvert";
 			this.limitPinsInvert.Size = new System.Drawing.Size(42, 20);
 			this.limitPinsInvert.TabIndex = 146;
@@ -1094,7 +1094,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(24, 153);
+			this.label5.Location = new System.Drawing.Point(52, 153);
 			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(106, 16);
@@ -1104,7 +1104,7 @@
 			// stepEnableInvert
 			// 
 			this.stepEnableInvert.AutoSize = true;
-			this.stepEnableInvert.Location = new System.Drawing.Point(137, 125);
+			this.stepEnableInvert.Location = new System.Drawing.Point(165, 125);
 			this.stepEnableInvert.Name = "stepEnableInvert";
 			this.stepEnableInvert.Size = new System.Drawing.Size(42, 20);
 			this.stepEnableInvert.TabIndex = 143;
@@ -1114,7 +1114,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(7, 126);
+			this.label4.Location = new System.Drawing.Point(35, 126);
 			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(123, 16);
@@ -1124,7 +1124,7 @@
 			// directionPortInvertY
 			// 
 			this.directionPortInvertY.AutoSize = true;
-			this.directionPortInvertY.Location = new System.Drawing.Point(178, 98);
+			this.directionPortInvertY.Location = new System.Drawing.Point(206, 98);
 			this.directionPortInvertY.Name = "directionPortInvertY";
 			this.directionPortInvertY.Size = new System.Drawing.Size(36, 20);
 			this.directionPortInvertY.TabIndex = 138;
@@ -1134,7 +1134,7 @@
 			// directionPortInvertZ
 			// 
 			this.directionPortInvertZ.AutoSize = true;
-			this.directionPortInvertZ.Location = new System.Drawing.Point(220, 98);
+			this.directionPortInvertZ.Location = new System.Drawing.Point(248, 98);
 			this.directionPortInvertZ.Name = "directionPortInvertZ";
 			this.directionPortInvertZ.Size = new System.Drawing.Size(35, 20);
 			this.directionPortInvertZ.TabIndex = 136;
@@ -1144,7 +1144,7 @@
 			// directionPortInvertX
 			// 
 			this.directionPortInvertX.AutoSize = true;
-			this.directionPortInvertX.Location = new System.Drawing.Point(137, 98);
+			this.directionPortInvertX.Location = new System.Drawing.Point(165, 98);
 			this.directionPortInvertX.Name = "directionPortInvertX";
 			this.directionPortInvertX.Size = new System.Drawing.Size(35, 20);
 			this.directionPortInvertX.TabIndex = 134;
@@ -1154,7 +1154,7 @@
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(-2, 99);
+			this.label8.Location = new System.Drawing.Point(26, 99);
 			this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(132, 16);
@@ -1164,7 +1164,7 @@
 			// stepPortInvertY
 			// 
 			this.stepPortInvertY.AutoSize = true;
-			this.stepPortInvertY.Location = new System.Drawing.Point(178, 71);
+			this.stepPortInvertY.Location = new System.Drawing.Point(206, 71);
 			this.stepPortInvertY.Name = "stepPortInvertY";
 			this.stepPortInvertY.Size = new System.Drawing.Size(36, 20);
 			this.stepPortInvertY.TabIndex = 131;
@@ -1174,7 +1174,7 @@
 			// stepPortInvertZ
 			// 
 			this.stepPortInvertZ.AutoSize = true;
-			this.stepPortInvertZ.Location = new System.Drawing.Point(220, 71);
+			this.stepPortInvertZ.Location = new System.Drawing.Point(248, 71);
 			this.stepPortInvertZ.Name = "stepPortInvertZ";
 			this.stepPortInvertZ.Size = new System.Drawing.Size(35, 20);
 			this.stepPortInvertZ.TabIndex = 129;
@@ -1184,7 +1184,7 @@
 			// stepPortInvertX
 			// 
 			this.stepPortInvertX.AutoSize = true;
-			this.stepPortInvertX.Location = new System.Drawing.Point(137, 71);
+			this.stepPortInvertX.Location = new System.Drawing.Point(165, 71);
 			this.stepPortInvertX.Name = "stepPortInvertX";
 			this.stepPortInvertX.Size = new System.Drawing.Size(35, 20);
 			this.stepPortInvertX.TabIndex = 126;
@@ -1194,7 +1194,7 @@
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(300, 45);
+			this.label7.Location = new System.Drawing.Point(328, 45);
 			this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(41, 16);
@@ -1204,7 +1204,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(300, 18);
+			this.label6.Location = new System.Drawing.Point(328, 18);
 			this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(38, 16);
@@ -1214,7 +1214,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(25, 72);
+			this.label3.Location = new System.Drawing.Point(53, 72);
 			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(105, 16);
@@ -1224,7 +1224,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(29, 45);
+			this.label2.Location = new System.Drawing.Point(57, 45);
 			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(101, 16);
@@ -1234,7 +1234,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(25, 18);
+			this.label1.Location = new System.Drawing.Point(53, 18);
 			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(105, 16);
@@ -1344,7 +1344,7 @@
 			this.controlAxisLabel.AutoSize = true;
 			this.controlAxisLabel.Location = new System.Drawing.Point(21, 52);
 			this.controlAxisLabel.Name = "controlAxisLabel";
-			this.controlAxisLabel.Size = new System.Drawing.Size(114, 16);
+			this.controlAxisLabel.Size = new System.Drawing.Size(94, 16);
 			this.controlAxisLabel.TabIndex = 22;
 			this.controlAxisLabel.Text = "Work position";
 			// 

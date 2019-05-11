@@ -15,8 +15,7 @@ namespace GrblController
 
 		private void GrblSettings_Load(object sender, EventArgs e)
 		{
-			var parameters = Parameters.ReadFromFile(Main.Instance.ConfigFilename);
-			LoadSettings(parameters);
+			LoadSettings(Parameters.Instance);
 		}
 
 		private void LoadSettings(Parameters parameters)
@@ -77,8 +76,8 @@ namespace GrblController
 
 			#region Load Machine settings to form
 
-			controlAxisLabel.Text = "Machine " + Main.Instance.Parameters.ControlAxis.ToString() + " position";
-			machinePositionTextBox.Text = double.IsNaN(Main.Instance.Connection.Status.MachineCoordinate) ? "Unknown" : Math.Abs(Main.Instance.Connection.Status.MachineCoordinate).ToString("0.0");
+			controlAxisLabel.Text = "Machine " + Parameters.Instance.ControlAxis.ToString() + " position";
+			machinePositionTextBox.Text = double.IsNaN(Status.Instance.MachineCoordinate) ? "Unknown" : Math.Abs(Status.Instance.MachineCoordinate).ToString("0.0");
 			controlAxis.SelectedIndex = (int)parameters.ControlAxis;
 
 			#endregion
@@ -101,44 +100,43 @@ namespace GrblController
 
 		private void buttonOK_Click(object sender, EventArgs e)
 		{
-			var oldParameters = Parameters.ReadFromFile(Main.Instance.ConfigFilename);
-			var newParameters = Parameters.ReadFromFile(Main.Instance.ConfigFilename);
+			var oldParameters = new Parameters();
 
 			#region Get GRBL settings from form
 
-			newParameters.StepPulseTime = double.Parse(stepPulseTime.Text);
-			newParameters.StepIdleDelay = double.Parse(stepIdleDelay.Text);
-			newParameters.StepPortInvert = (stepPortInvertX.Checked ? Mask.X : 0) | (stepPortInvertY.Checked ? Mask.Y : 0) | (stepPortInvertZ.Checked ? Mask.Z : 0);
-			newParameters.DirectionPortInvert = (directionPortInvertX.Checked ? Mask.X : 0) | (directionPortInvertY.Checked ? Mask.Y : 0) | (directionPortInvertZ.Checked ? Mask.Z : 0);
-			newParameters.StepEnableInvert = stepEnableInvert.Checked;
-			newParameters.LimitPinsInvert = limitPinsInvert.Checked;
-			newParameters.ProbePinInvert = probePinInvert.Checked;
-			newParameters.JunctionDeviation = double.Parse(junctionDeviation.Text);
-			newParameters.ArcTolerance = double.Parse(arcTolerance.Text);
-			newParameters.ReportInches = reportInches.Checked;
-			newParameters.SoftLimits = softLimits.Checked;
-			newParameters.HardLimits = hardLimits.Checked;
-			newParameters.HomingCycle = homingCycle.Checked;
-			newParameters.HomingDirectionInvert = (homingDirectionInvertX.Checked ? Mask.X : 0) | (homingDirectionInvertY.Checked ? Mask.Y : 0) | (homingDirectionInvertZ.Checked ? Mask.Z : 0);
-			newParameters.HomingFeed = double.Parse(homingFeed.Text);
-			newParameters.HomingSeek = double.Parse(homingSeek.Text);
-			newParameters.HomingDebounce = double.Parse(homingDebounce.Text);
-			newParameters.HomingPullOff = double.Parse(homingPullOff.Text);
-			newParameters.MaximumSpindleSpeed = double.Parse(maximumSpindleSpeed.Text);
-			newParameters.MinimumSpindleSpeed = double.Parse(minimumSpindleSpeed.Text);
-			newParameters.LaserMode = laserMode.Checked;
-			newParameters.XSteps = double.Parse(xSteps.Text);
-			newParameters.YSteps = double.Parse(ySteps.Text);
-			newParameters.ZSteps = double.Parse(zSteps.Text);
-			newParameters.XFeedRate = double.Parse(xMaximumRate.Text);
-			newParameters.YFeedRate = double.Parse(yMaximumRate.Text);
-			newParameters.ZFeedRate = double.Parse(zMaximumRate.Text);
-			newParameters.XAcceleration = double.Parse(xAcceleration.Text);
-			newParameters.YAcceleration = double.Parse(yAcceleration.Text);
-			newParameters.ZAcceleration = double.Parse(zAcceleration.Text);
-			newParameters.XMaximumTravel = double.Parse(xMaximumTravel.Text);
-			newParameters.YMaximumTravel = double.Parse(yMaximumTravel.Text);
-			newParameters.ZMaximumTravel = double.Parse(zMaximumTravel.Text);
+			Parameters.Instance.StepPulseTime = double.Parse(stepPulseTime.Text);
+			Parameters.Instance.StepIdleDelay = double.Parse(stepIdleDelay.Text);
+			Parameters.Instance.StepPortInvert = (stepPortInvertX.Checked ? Mask.X : 0) | (stepPortInvertY.Checked ? Mask.Y : 0) | (stepPortInvertZ.Checked ? Mask.Z : 0);
+			Parameters.Instance.DirectionPortInvert = (directionPortInvertX.Checked ? Mask.X : 0) | (directionPortInvertY.Checked ? Mask.Y : 0) | (directionPortInvertZ.Checked ? Mask.Z : 0);
+			Parameters.Instance.StepEnableInvert = stepEnableInvert.Checked;
+			Parameters.Instance.LimitPinsInvert = limitPinsInvert.Checked;
+			Parameters.Instance.ProbePinInvert = probePinInvert.Checked;
+			Parameters.Instance.JunctionDeviation = double.Parse(junctionDeviation.Text);
+			Parameters.Instance.ArcTolerance = double.Parse(arcTolerance.Text);
+			Parameters.Instance.ReportInches = reportInches.Checked;
+			Parameters.Instance.SoftLimits = softLimits.Checked;
+			Parameters.Instance.HardLimits = hardLimits.Checked;
+			Parameters.Instance.HomingCycle = homingCycle.Checked;
+			Parameters.Instance.HomingDirectionInvert = (homingDirectionInvertX.Checked ? Mask.X : 0) | (homingDirectionInvertY.Checked ? Mask.Y : 0) | (homingDirectionInvertZ.Checked ? Mask.Z : 0);
+			Parameters.Instance.HomingFeed = double.Parse(homingFeed.Text);
+			Parameters.Instance.HomingSeek = double.Parse(homingSeek.Text);
+			Parameters.Instance.HomingDebounce = double.Parse(homingDebounce.Text);
+			Parameters.Instance.HomingPullOff = double.Parse(homingPullOff.Text);
+			Parameters.Instance.MaximumSpindleSpeed = double.Parse(maximumSpindleSpeed.Text);
+			Parameters.Instance.MinimumSpindleSpeed = double.Parse(minimumSpindleSpeed.Text);
+			Parameters.Instance.LaserMode = laserMode.Checked;
+			Parameters.Instance.XSteps = double.Parse(xSteps.Text);
+			Parameters.Instance.YSteps = double.Parse(ySteps.Text);
+			Parameters.Instance.ZSteps = double.Parse(zSteps.Text);
+			Parameters.Instance.XFeedRate = double.Parse(xMaximumRate.Text);
+			Parameters.Instance.YFeedRate = double.Parse(yMaximumRate.Text);
+			Parameters.Instance.ZFeedRate = double.Parse(zMaximumRate.Text);
+			Parameters.Instance.XAcceleration = double.Parse(xAcceleration.Text);
+			Parameters.Instance.YAcceleration = double.Parse(yAcceleration.Text);
+			Parameters.Instance.ZAcceleration = double.Parse(zAcceleration.Text);
+			Parameters.Instance.XMaximumTravel = double.Parse(xMaximumTravel.Text);
+			Parameters.Instance.YMaximumTravel = double.Parse(yMaximumTravel.Text);
+			Parameters.Instance.ZMaximumTravel = double.Parse(zMaximumTravel.Text);
 
 			#endregion
 
@@ -146,15 +144,15 @@ namespace GrblController
 
 			try
 			{
-				newParameters.StartOffset = double.Parse(startOffset.Text);
-				newParameters.Table1Length = double.Parse(table1Length.Text);
-				newParameters.MiddleGap = double.Parse(middleGapLength.Text);
-				newParameters.Table2Length = double.Parse(table2Length.Text);
-				newParameters.EndOffset = double.Parse(endOffset.Text);
+				Parameters.Instance.StartOffset = double.Parse(startOffset.Text);
+				Parameters.Instance.Table1Length = double.Parse(table1Length.Text);
+				Parameters.Instance.MiddleGap = double.Parse(middleGapLength.Text);
+				Parameters.Instance.Table2Length = double.Parse(table2Length.Text);
+				Parameters.Instance.EndOffset = double.Parse(endOffset.Text);
 			}
 			catch
 			{
-				MessageBox.Show("Error in parameters", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("Error in parameters.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 
@@ -170,9 +168,9 @@ namespace GrblController
 					MessageBox.Show("\"Machine coordinate\" cannot be negative.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return;
 				}
-				else if (d <= Main.Instance.Parameters.TablesTotalLength)
+				else if (d <= Parameters.Instance.TablesTotalLength)
 				{
-					newParameters.ControlAxis = (ControlAxis)controlAxis.SelectedIndex;
+					Parameters.Instance.ControlAxis = (ControlAxis)controlAxis.SelectedIndex;
 					MachinePosition = d;
 				}
 				else
@@ -181,7 +179,7 @@ namespace GrblController
 					return;
 				}
 			}
-			else if(machinePositionTextBox.Text != "Unknown")
+			else if (machinePositionTextBox.Text != "Unknown")
 			{
 				MessageBox.Show("Invalid value for \"Machine coordinate\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
@@ -191,155 +189,152 @@ namespace GrblController
 
 			#region Get Serial port settings from form
 
-			newParameters.SerialPortString = serialPortCombobox.SelectedItem != null ? serialPortCombobox.SelectedItem.ToString() : "";
-			newParameters.Baudrate = int.Parse(baudrateCombobox.SelectedItem.ToString());
+			Parameters.Instance.SerialPortString = serialPortCombobox.SelectedItem != null ? serialPortCombobox.SelectedItem.ToString() : "";
+			Parameters.Instance.Baudrate = int.Parse(baudrateCombobox.SelectedItem.ToString());
 
 			#endregion
 
 			#region Write settings to board
 
-			if (Main.Instance.Connection.Status.ConnectionState == ConnectionState.ConnectedStarted ||
-				Main.Instance.Connection.Status.ConnectionState == ConnectionState.ConnectedStopped)
+			if (Status.Instance.ConnectionState == ConnectionState.Connected)
 			{
-				if (newParameters.StepPulseTime != oldParameters.StepPulseTime)
+				if (Parameters.Instance.StepPulseTime != oldParameters.StepPulseTime)
 				{
-					Main.Instance.Connection.SendSetting(0, newParameters.StepPulseTime.ToString());
+					Main.Instance.Connection.SendSetting(0, Parameters.Instance.StepPulseTime.ToString());
 				}
-				if (newParameters.StepIdleDelay != oldParameters.StepIdleDelay)
+				if (Parameters.Instance.StepIdleDelay != oldParameters.StepIdleDelay)
 				{
-					Main.Instance.Connection.SendSetting(1, newParameters.StepIdleDelay.ToString());
+					Main.Instance.Connection.SendSetting(1, Parameters.Instance.StepIdleDelay.ToString());
 				}
-				if (newParameters.StepPortInvert != oldParameters.StepPortInvert)
+				if (Parameters.Instance.StepPortInvert != oldParameters.StepPortInvert)
 				{
-					Main.Instance.Connection.SendSetting(2, ((int)newParameters.StepPortInvert).ToString());
+					Main.Instance.Connection.SendSetting(2, ((int)Parameters.Instance.StepPortInvert).ToString());
 				}
-				if (newParameters.DirectionPortInvert != oldParameters.DirectionPortInvert)
+				if (Parameters.Instance.DirectionPortInvert != oldParameters.DirectionPortInvert)
 				{
-					Main.Instance.Connection.SendSetting(3, ((int)newParameters.DirectionPortInvert).ToString());
+					Main.Instance.Connection.SendSetting(3, ((int)Parameters.Instance.DirectionPortInvert).ToString());
 				}
-				if (newParameters.StepEnableInvert != oldParameters.StepEnableInvert)
+				if (Parameters.Instance.StepEnableInvert != oldParameters.StepEnableInvert)
 				{
-					Main.Instance.Connection.SendSetting(4, newParameters.StepEnableInvert ? "1" : "0");
+					Main.Instance.Connection.SendSetting(4, Parameters.Instance.StepEnableInvert ? "1" : "0");
 				}
-				if (newParameters.LimitPinsInvert != oldParameters.LimitPinsInvert)
+				if (Parameters.Instance.LimitPinsInvert != oldParameters.LimitPinsInvert)
 				{
-					Main.Instance.Connection.SendSetting(5, newParameters.LimitPinsInvert ? "1" : "0");
+					Main.Instance.Connection.SendSetting(5, Parameters.Instance.LimitPinsInvert ? "1" : "0");
 				}
-				if (newParameters.ProbePinInvert != oldParameters.ProbePinInvert)
+				if (Parameters.Instance.ProbePinInvert != oldParameters.ProbePinInvert)
 				{
-					Main.Instance.Connection.SendSetting(6, newParameters.ProbePinInvert ? "1" : "0");
+					Main.Instance.Connection.SendSetting(6, Parameters.Instance.ProbePinInvert ? "1" : "0");
 				}
-				if (newParameters.JunctionDeviation != oldParameters.JunctionDeviation)
+				if (Parameters.Instance.JunctionDeviation != oldParameters.JunctionDeviation)
 				{
-					Main.Instance.Connection.SendSetting(11, newParameters.JunctionDeviation.ToString());
+					Main.Instance.Connection.SendSetting(11, Parameters.Instance.JunctionDeviation.ToString());
 				}
-				if (newParameters.ArcTolerance != oldParameters.ArcTolerance)
+				if (Parameters.Instance.ArcTolerance != oldParameters.ArcTolerance)
 				{
-					Main.Instance.Connection.SendSetting(12, newParameters.ArcTolerance.ToString());
+					Main.Instance.Connection.SendSetting(12, Parameters.Instance.ArcTolerance.ToString());
 				}
-				if (newParameters.ReportInches != oldParameters.ReportInches)
+				if (Parameters.Instance.ReportInches != oldParameters.ReportInches)
 				{
-					Main.Instance.Connection.SendSetting(13, newParameters.ReportInches ? "1" : "0");
+					Main.Instance.Connection.SendSetting(13, Parameters.Instance.ReportInches ? "1" : "0");
 				}
-				if (newParameters.SoftLimits != oldParameters.SoftLimits)
+				if (Parameters.Instance.SoftLimits != oldParameters.SoftLimits)
 				{
-					Main.Instance.Connection.SendSetting(20, newParameters.SoftLimits ? "1" : "0");
+					Main.Instance.Connection.SendSetting(20, Parameters.Instance.SoftLimits ? "1" : "0");
 				}
-				if (newParameters.HardLimits != oldParameters.HardLimits)
+				if (Parameters.Instance.HardLimits != oldParameters.HardLimits)
 				{
-					Main.Instance.Connection.SendSetting(21, newParameters.HardLimits ? "1" : "0");
+					Main.Instance.Connection.SendSetting(21, Parameters.Instance.HardLimits ? "1" : "0");
 				}
-				if (newParameters.HomingCycle != oldParameters.HomingCycle)
+				if (Parameters.Instance.HomingCycle != oldParameters.HomingCycle)
 				{
-					Main.Instance.Connection.SendSetting(22, newParameters.HomingCycle ? "1" : "0");
+					Main.Instance.Connection.SendSetting(22, Parameters.Instance.HomingCycle ? "1" : "0");
 				}
-				if (newParameters.HomingDirectionInvert != oldParameters.HomingDirectionInvert)
+				if (Parameters.Instance.HomingDirectionInvert != oldParameters.HomingDirectionInvert)
 				{
-					Main.Instance.Connection.SendSetting(23, ((int)newParameters.HomingDirectionInvert).ToString());
+					Main.Instance.Connection.SendSetting(23, ((int)Parameters.Instance.HomingDirectionInvert).ToString());
 				}
-				if (newParameters.HomingFeed != oldParameters.HomingFeed)
+				if (Parameters.Instance.HomingFeed != oldParameters.HomingFeed)
 				{
-					Main.Instance.Connection.SendSetting(24, newParameters.HomingFeed.ToString());
+					Main.Instance.Connection.SendSetting(24, Parameters.Instance.HomingFeed.ToString());
 				}
-				if (newParameters.HomingSeek != oldParameters.HomingSeek)
+				if (Parameters.Instance.HomingSeek != oldParameters.HomingSeek)
 				{
-					Main.Instance.Connection.SendSetting(25, newParameters.HomingSeek.ToString());
+					Main.Instance.Connection.SendSetting(25, Parameters.Instance.HomingSeek.ToString());
 				}
-				if (newParameters.HomingDebounce != oldParameters.HomingDebounce)
+				if (Parameters.Instance.HomingDebounce != oldParameters.HomingDebounce)
 				{
-					Main.Instance.Connection.SendSetting(26, newParameters.HomingDebounce.ToString());
+					Main.Instance.Connection.SendSetting(26, Parameters.Instance.HomingDebounce.ToString());
 				}
-				if (newParameters.HomingPullOff != oldParameters.HomingPullOff)
+				if (Parameters.Instance.HomingPullOff != oldParameters.HomingPullOff)
 				{
-					Main.Instance.Connection.SendSetting(27, newParameters.HomingPullOff.ToString());
+					Main.Instance.Connection.SendSetting(27, Parameters.Instance.HomingPullOff.ToString());
 				}
-				if (newParameters.MaximumSpindleSpeed != oldParameters.MaximumSpindleSpeed)
+				if (Parameters.Instance.MaximumSpindleSpeed != oldParameters.MaximumSpindleSpeed)
 				{
-					Main.Instance.Connection.SendSetting(30, newParameters.MaximumSpindleSpeed.ToString());
+					Main.Instance.Connection.SendSetting(30, Parameters.Instance.MaximumSpindleSpeed.ToString());
 				}
-				if (newParameters.MinimumSpindleSpeed != oldParameters.MinimumSpindleSpeed)
+				if (Parameters.Instance.MinimumSpindleSpeed != oldParameters.MinimumSpindleSpeed)
 				{
-					Main.Instance.Connection.SendSetting(31, newParameters.MinimumSpindleSpeed.ToString());
+					Main.Instance.Connection.SendSetting(31, Parameters.Instance.MinimumSpindleSpeed.ToString());
 				}
-				if (newParameters.LaserMode != oldParameters.LaserMode)
+				if (Parameters.Instance.LaserMode != oldParameters.LaserMode)
 				{
-					Main.Instance.Connection.SendSetting(32, newParameters.LaserMode ? "1" : "0");
+					Main.Instance.Connection.SendSetting(32, Parameters.Instance.LaserMode ? "1" : "0");
 				}
-				if (newParameters.XSteps != oldParameters.XSteps)
+				if (Parameters.Instance.XSteps != oldParameters.XSteps)
 				{
-					Main.Instance.Connection.SendSetting(100, newParameters.XSteps.ToString());
+					Main.Instance.Connection.SendSetting(100, Parameters.Instance.XSteps.ToString());
 				}
-				if (newParameters.YSteps != oldParameters.YSteps)
+				if (Parameters.Instance.YSteps != oldParameters.YSteps)
 				{
-					Main.Instance.Connection.SendSetting(101, newParameters.YSteps.ToString());
+					Main.Instance.Connection.SendSetting(101, Parameters.Instance.YSteps.ToString());
 				}
-				if (newParameters.ZSteps != oldParameters.ZSteps)
+				if (Parameters.Instance.ZSteps != oldParameters.ZSteps)
 				{
-					Main.Instance.Connection.SendSetting(102, newParameters.ZSteps.ToString());
+					Main.Instance.Connection.SendSetting(102, Parameters.Instance.ZSteps.ToString());
 				}
-				if (newParameters.XFeedRate != oldParameters.XFeedRate)
+				if (Parameters.Instance.XFeedRate != oldParameters.XFeedRate)
 				{
-					Main.Instance.Connection.SendSetting(110, newParameters.XFeedRate.ToString());
+					Main.Instance.Connection.SendSetting(110, Parameters.Instance.XFeedRate.ToString());
 				}
-				if (newParameters.YFeedRate != oldParameters.YFeedRate)
+				if (Parameters.Instance.YFeedRate != oldParameters.YFeedRate)
 				{
-					Main.Instance.Connection.SendSetting(111, newParameters.YFeedRate.ToString());
+					Main.Instance.Connection.SendSetting(111, Parameters.Instance.YFeedRate.ToString());
 				}
-				if (newParameters.ZFeedRate != oldParameters.ZFeedRate)
+				if (Parameters.Instance.ZFeedRate != oldParameters.ZFeedRate)
 				{
-					Main.Instance.Connection.SendSetting(112, newParameters.ZFeedRate.ToString());
+					Main.Instance.Connection.SendSetting(112, Parameters.Instance.ZFeedRate.ToString());
 				}
-				if (newParameters.XAcceleration != oldParameters.XAcceleration)
+				if (Parameters.Instance.XAcceleration != oldParameters.XAcceleration)
 				{
-					Main.Instance.Connection.SendSetting(120, newParameters.XAcceleration.ToString());
+					Main.Instance.Connection.SendSetting(120, Parameters.Instance.XAcceleration.ToString());
 				}
-				if (newParameters.YAcceleration != oldParameters.YAcceleration)
+				if (Parameters.Instance.YAcceleration != oldParameters.YAcceleration)
 				{
-					Main.Instance.Connection.SendSetting(121, newParameters.YAcceleration.ToString());
+					Main.Instance.Connection.SendSetting(121, Parameters.Instance.YAcceleration.ToString());
 				}
-				if (newParameters.ZAcceleration != oldParameters.ZAcceleration)
+				if (Parameters.Instance.ZAcceleration != oldParameters.ZAcceleration)
 				{
-					Main.Instance.Connection.SendSetting(122, newParameters.ZAcceleration.ToString());
+					Main.Instance.Connection.SendSetting(122, Parameters.Instance.ZAcceleration.ToString());
 				}
-				if (newParameters.XMaximumTravel != oldParameters.XMaximumTravel)
+				if (Parameters.Instance.XMaximumTravel != oldParameters.XMaximumTravel)
 				{
-					Main.Instance.Connection.SendSetting(130, newParameters.XMaximumTravel.ToString());
+					Main.Instance.Connection.SendSetting(130, Parameters.Instance.XMaximumTravel.ToString());
 				}
-				if (newParameters.YMaximumTravel != oldParameters.YMaximumTravel)
+				if (Parameters.Instance.YMaximumTravel != oldParameters.YMaximumTravel)
 				{
-					Main.Instance.Connection.SendSetting(131, newParameters.YMaximumTravel.ToString());
+					Main.Instance.Connection.SendSetting(131, Parameters.Instance.YMaximumTravel.ToString());
 				}
-				if (newParameters.ZMaximumTravel != oldParameters.ZMaximumTravel)
+				if (Parameters.Instance.ZMaximumTravel != oldParameters.ZMaximumTravel)
 				{
-					Main.Instance.Connection.SendSetting(132, newParameters.ZMaximumTravel.ToString());
+					Main.Instance.Connection.SendSetting(132, Parameters.Instance.ZMaximumTravel.ToString());
 				}
 			}
 
 			#endregion
 
-			Main.Instance.Connection.CheckCanConnect();
-
-			Parameters.WriteToFile("config.xml", newParameters);
+			Parameters.Instance.WriteToFile();
 
 			DialogResult = DialogResult.OK;
 			Close();
@@ -347,8 +342,8 @@ namespace GrblController
 
 		private void defaultButton_Click(object sender, EventArgs e)
 		{
-			var defaultParameters = Parameters.ReadFromFile("default.xml");
-			LoadSettings(defaultParameters);
+			Parameters.Instance.SetDefaults();
+			LoadSettings(Parameters.Instance);
 		}
 	}
 }

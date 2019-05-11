@@ -56,7 +56,6 @@
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.calibrateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusUpdatedAlarmPanel = new System.Windows.Forms.Panel();
 			this.homeButton = new System.Windows.Forms.Button();
@@ -359,7 +358,6 @@
 			// 
 			this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingsToolStripMenuItem,
-            this.connectToolStripMenuItem,
             this.calibrateToolStripMenuItem});
 			this.menuToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F);
 			this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
@@ -369,20 +367,14 @@
 			// settingsToolStripMenuItem
 			// 
 			this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-			this.settingsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+			this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.settingsToolStripMenuItem.Text = "Settings";
 			this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
-			// 
-			// connectToolStripMenuItem
-			// 
-			this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-			this.connectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-			this.connectToolStripMenuItem.Text = "Connect";
 			// 
 			// calibrateToolStripMenuItem
 			// 
 			this.calibrateToolStripMenuItem.Name = "calibrateToolStripMenuItem";
-			this.calibrateToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+			this.calibrateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.calibrateToolStripMenuItem.Text = "Calibrate";
 			this.calibrateToolStripMenuItem.Click += new System.EventHandler(this.calibrateToolStripMenuItem_Click);
 			// 
@@ -491,7 +483,6 @@
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem calibrateToolStripMenuItem;
 		private System.Windows.Forms.Panel statusUpdatedAlarmPanel;
 		private System.Windows.Forms.Button homeButton;

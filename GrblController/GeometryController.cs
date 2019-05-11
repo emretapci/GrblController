@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace GrblController
 {
@@ -21,7 +20,7 @@ namespace GrblController
 
 			exiting = false;
 
-			Main.Instance.Connection.onStatusChanged += Connection_onStatusChanged;
+			Status.onStatusChanged += Connection_onStatusChanged;
 
 			willStop.Reset();
 			thread.Start();
@@ -39,9 +38,9 @@ namespace GrblController
 		{
 			exiting = true;
 
-			Main.Instance.Connection.onStatusChanged -= Connection_onStatusChanged;
+			Status.onStatusChanged -= Connection_onStatusChanged;
 
-			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { ConnectionState = ConnectionState.ConnectedStopped });
+			Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped });
 
 			if (thread != null && thread.IsAlive)
 			{
@@ -72,19 +71,19 @@ namespace GrblController
 			{
 				Main.Instance.AddLog("Job started.");
 				Main.Instance.SetSlidersEnabled(false);
-				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { ConnectionState = ConnectionState.ConnectedStarted });
+				Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Running });
 			}
 
 			if (Main.Instance.Table1PaintedArea > 0)
 			{
 				Main.Instance.AddLog("Go to beginning of Table 1 paint area.");
-				Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + Main.Instance.Parameters.StartOffset.ToString("0.0"));
-				WaitXPosition(Main.Instance.Parameters.StartOffset);
+				Main.Instance.Connection.Send("G0" + Parameters.Instance.ControlAxis + Parameters.Instance.StartOffset.ToString("0.0"));
+				WaitXPosition(Parameters.Instance.StartOffset);
 
 				if (exiting)
 				{
 					Main.Instance.AddLog("Aborted.");
-					Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
+					Status.SetStatus(new Status() { Painting = false });
 					stopped.Set();
 					Main.Instance.SetSlidersEnabled(true);
 					return;
@@ -92,11 +91,11 @@ namespace GrblController
 
 				Main.Instance.AddLog("Start sprayer.");
 				Main.Instance.Connection.Send("M8");
-				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = true });
+				Status.SetStatus(new Status() { Painting = true });
 
 				Main.Instance.AddLog("Go to end of Table 1 paint area.");
-				var target = Main.Instance.Parameters.StartOffset + Main.Instance.Table1PaintedArea / 4.0 * Main.Instance.Parameters.Table1Length;
-				Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
+				var target = Parameters.Instance.StartOffset + Main.Instance.Table1PaintedArea / 4.0 * Parameters.Instance.Table1Length;
+				Main.Instance.Connection.Send("G0" + Parameters.Instance.ControlAxis + target.ToString("0.0"));
 				WaitXPosition(target);
 
 				if (exiting)
@@ -104,7 +103,7 @@ namespace GrblController
 					Main.Instance.AddLog("Stop sprayer.");
 					Main.Instance.AddLog("Aborted.");
 					Main.Instance.Connection.Send("M9");
-					Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
+					Status.SetStatus(new Status() { Painting = false });
 					stopped.Set();
 					Main.Instance.SetSlidersEnabled(true);
 					return;
@@ -112,20 +111,20 @@ namespace GrblController
 
 				Main.Instance.AddLog("Stop sprayer.");
 				Main.Instance.Connection.Send("M9");
-				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
+				Status.SetStatus(new Status() { Painting = false });
 			}
 
 			if (Main.Instance.Table2PaintedArea > 0)
 			{
 				Main.Instance.AddLog("Go to beginning of Table 2 paint area.");
-				var target = Main.Instance.Parameters.StartOffset + Main.Instance.Parameters.Table1Length + Main.Instance.Parameters.MiddleGap;
-				Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
+				var target = Parameters.Instance.StartOffset + Parameters.Instance.Table1Length + Parameters.Instance.MiddleGap;
+				Main.Instance.Connection.Send("G0" + Parameters.Instance.ControlAxis + target.ToString("0.0"));
 				WaitXPosition(target);
 
 				if (exiting)
 				{
 					Main.Instance.AddLog("Aborted.");
-					Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
+					Status.SetStatus(new Status() { Painting = false });
 					stopped.Set();
 					Main.Instance.SetSlidersEnabled(true);
 					return;
@@ -133,11 +132,11 @@ namespace GrblController
 
 				Main.Instance.AddLog("Start sprayer.");
 				Main.Instance.Connection.Send("M8");
-				Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = true });
+				Status.SetStatus(new Status() { Painting = true });
 
 				Main.Instance.AddLog("Go to end of Table 2 paint area.");
-				target = Main.Instance.Parameters.StartOffset + Main.Instance.Parameters.Table1Length + Main.Instance.Parameters.MiddleGap + Main.Instance.Table2PaintedArea / 4.0 * Main.Instance.Parameters.Table2Length;
-				Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + target.ToString("0.0"));
+				target = Parameters.Instance.StartOffset + Parameters.Instance.Table1Length + Parameters.Instance.MiddleGap + Main.Instance.Table2PaintedArea / 4.0 * Parameters.Instance.Table2Length;
+				Main.Instance.Connection.Send("G0" + Parameters.Instance.ControlAxis + target.ToString("0.0"));
 				WaitXPosition(target);
 
 				if (exiting)
@@ -145,7 +144,7 @@ namespace GrblController
 					Main.Instance.AddLog("Stop sprayer.");
 					Main.Instance.AddLog("Aborted.");
 					Main.Instance.Connection.Send("M9");
-					Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
+					Status.SetStatus(new Status() { Painting = false });
 					stopped.Set();
 					Main.Instance.SetSlidersEnabled(true);
 					return;
@@ -157,23 +156,23 @@ namespace GrblController
 			Main.Instance.Connection.Send("M9");
 			Main.Instance.AddLog("Job finished.");
 
-			Main.Instance.Connection.SetStatus(new Status(Main.Instance.Connection.Status) { Painting = false });
+			Status.SetStatus(new Status() { Painting = false });
 			Main.Instance.AddLog("Returning to 5 mm.");
-			Main.Instance.Connection.Send("G0" + Main.Instance.Parameters.ControlAxis + "5");
+			Main.Instance.Connection.Send("G0" + Parameters.Instance.ControlAxis + "5");
 			WaitXPosition(5);
 
 			stopped.Set();
 			Main.Instance.SetSlidersEnabled(true);
-			Main.Instance.Connection.Status.ConnectionState = ConnectionState.ConnectedStopped;
+			Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped });
 		}
 
 		internal void GoToCoordinate(double coordinate)
 		{
 			Main.Instance.Connection.Unlock();
 
-			Main.Instance.AddLog("Going to machine coordinate " + Main.Instance.Parameters.ControlAxis.ToString() + "=" + Math.Abs(Main.Instance.Connection.Status.MachineCoordinate));
-			var target = Main.Instance.Connection.Status.MachineCoordinate;
-			var command = "G0" + Main.Instance.Parameters.ControlAxis.ToString() + target.ToString("0.0");
+			Main.Instance.AddLog("Going to machine coordinate " + Parameters.Instance.ControlAxis.ToString() + "=" + Math.Abs(Status.Instance.MachineCoordinate));
+			var target = Status.Instance.MachineCoordinate;
+			var command = "G0" + Parameters.Instance.ControlAxis.ToString() + target.ToString("0.0");
 			Main.Instance.Connection.Send(command);
 		}
 	}
