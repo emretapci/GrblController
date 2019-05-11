@@ -42,6 +42,8 @@ namespace GrblController
 
 		private void Main_Load(object sender, EventArgs e)
 		{
+			Status.onStatusChanged += StatusChanged;
+
 			Connection.Initialize();
 
 			ResizeSliders();
@@ -49,8 +51,6 @@ namespace GrblController
 			table1Slider_ValueChanged(null, null);
 			table2Slider_ValueChanged(null, null);
 			UpdateMachinePositionPanel();
-
-			Status.onStatusChanged += StatusChanged;
 
 			Status.SetStatus(new Status());
 		}
@@ -72,21 +72,6 @@ namespace GrblController
 			{
 				table2Labels[i].Location = new Point(slider2Panel.Location.X + slider2Panel.Size.Width + 5, (int)(slider2Panel.Size.Height * (1 - ratio) / 2 + slider2Panel.Location.Y + i * ratio * slider2Panel.Height / (table2Labels.Length - 1) - table2Labels[i].Size.Height / 2));
 			}
-		}
-
-		internal void SetSlidersEnabled(bool enabled)
-		{
-			if (InvokeRequired)
-			{
-				BeginInvoke(new Action(() =>
-				{
-					SetSlidersEnabled(enabled);
-				}));
-				return;
-			}
-
-			table1Slider.Enabled = enabled;
-			table2Slider.Enabled = enabled;
 		}
 
 		internal void SetMenuEnabled(bool enabled)
@@ -130,7 +115,6 @@ namespace GrblController
 				startStopButton.Enabled = false;
 				homeButton.Enabled = false;
 				resetButton.Enabled = false;
-				AddLog("Connecting...");
 				calibrateToolStripMenuItem.Enabled = false;
 				Text = "GRBL Controller [Connecting...]";
 			}
@@ -165,16 +149,25 @@ namespace GrblController
 					Text = "GRBL Controller [Calibrating]";
 				}
 			}
+			portStatusLabel.Text = Status.Instance.ConnectingPort;
+			portStatusLabel.Visible = !string.IsNullOrWhiteSpace(Status.Instance.ConnectingPort);
+
+			if (oldStatus.ConnectionState != ConnectionState.Connecting && newStatus.ConnectionState == ConnectionState.Connecting)
+			{
+				AddLog("Connecting...");
+			}
 
 			if (oldStatus.ConnectionState != ConnectionState.Connected && newStatus.ConnectionState == ConnectionState.Connected)
 			{
 				AddLog("Connected.");
 			}
 
-			if (oldStatus.ConnectionState == ConnectionState.Connected && newStatus.ConnectionState != ConnectionState.Connected)
+			if (oldStatus.ConnectionState != ConnectionState.Disconnected && newStatus.ConnectionState == ConnectionState.Disconnected)
 			{
 				AddLog("Disconnected.");
 			}
+
+			table1Slider.Enabled = table2Slider.Enabled = !(Status.Instance.ConnectionState == ConnectionState.Connected && Status.Instance.RunState == RunState.Running);
 
 			machineCoordinate.Text = "Machine position: " + (double.IsNaN(newStatus.MachineCoordinate) ? "Unknown" : Math.Abs(newStatus.MachineCoordinate).ToString("0.0 mm"));
 			machineState.Text = "Machine state: " + newStatus.MachineState.ToString();

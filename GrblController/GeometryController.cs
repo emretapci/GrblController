@@ -70,7 +70,6 @@ namespace GrblController
 			else
 			{
 				Main.Instance.AddLog("Job started.");
-				Main.Instance.SetSlidersEnabled(false);
 				Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Running });
 			}
 
@@ -85,7 +84,6 @@ namespace GrblController
 					Main.Instance.AddLog("Aborted.");
 					Status.SetStatus(new Status() { Painting = false });
 					stopped.Set();
-					Main.Instance.SetSlidersEnabled(true);
 					return;
 				}
 
@@ -105,7 +103,6 @@ namespace GrblController
 					Main.Instance.Connection.Send("M9");
 					Status.SetStatus(new Status() { Painting = false });
 					stopped.Set();
-					Main.Instance.SetSlidersEnabled(true);
 					return;
 				}
 
@@ -126,7 +123,6 @@ namespace GrblController
 					Main.Instance.AddLog("Aborted.");
 					Status.SetStatus(new Status() { Painting = false });
 					stopped.Set();
-					Main.Instance.SetSlidersEnabled(true);
 					return;
 				}
 
@@ -146,7 +142,6 @@ namespace GrblController
 					Main.Instance.Connection.Send("M9");
 					Status.SetStatus(new Status() { Painting = false });
 					stopped.Set();
-					Main.Instance.SetSlidersEnabled(true);
 					return;
 				}
 
@@ -162,7 +157,6 @@ namespace GrblController
 			WaitXPosition(5);
 
 			stopped.Set();
-			Main.Instance.SetSlidersEnabled(true);
 			Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped });
 		}
 

@@ -35,6 +35,7 @@ namespace GrblController
 		private static Status instance;
 
 		internal ConnectionState? ConnectionState { get; set; }
+		internal string ConnectingPort { get; set; }
 		internal RunState? RunState { get; set; }
 		internal MachineState? MachineState { get; set; }
 		internal Vector3D MachinePosition { get; set; } //can be negative.
@@ -51,6 +52,7 @@ namespace GrblController
 					instance = new Status()
 					{
 						ConnectionState = GrblController.ConnectionState.Disconnected,
+						ConnectingPort = "",
 						RunState = GrblController.RunState.Stopped,
 						MachineState = GrblController.MachineState.Unknown,
 						MachinePosition = new Vector3D(),
@@ -96,6 +98,7 @@ namespace GrblController
 		internal Status()
 		{
 			ConnectionState = null;
+			ConnectingPort = null;
 			RunState = null;
 			MachineState = null;
 			MachinePosition = null;
@@ -105,6 +108,7 @@ namespace GrblController
 		internal Status(Status status)
 		{
 			ConnectionState = status.ConnectionState;
+			ConnectingPort = status.ConnectingPort;
 			RunState = status.RunState;
 			MachineState = status.MachineState;
 			MachinePosition = new Vector3D(status.MachinePosition);
@@ -119,6 +123,10 @@ namespace GrblController
 			if (statusDiff.ConnectionState.HasValue)
 			{
 				newStatus.ConnectionState = statusDiff.ConnectionState.Value;
+			}
+			if (statusDiff.ConnectingPort != null)
+			{
+				newStatus.ConnectingPort = statusDiff.ConnectingPort;
 			}
 			if (statusDiff.RunState.HasValue)
 			{

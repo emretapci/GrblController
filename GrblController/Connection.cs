@@ -22,13 +22,13 @@ namespace GrblController
 		private System.Timers.Timer statusTimer;
 		private System.Timers.Timer statusCheckTimer;
 		private DateTime lastStatusReportTime;
+		private List<string> serialPorts = new List<string>();
 
 		internal void Initialize()
 		{
-			Connect();
-
 			statusTimer = new System.Timers.Timer(1000);
 			statusTimer.Interval = 500;
+			statusTimer.Enabled = false;
 			statusTimer.AutoReset = true;
 			statusTimer.Elapsed += (sender, e) =>
 			{
@@ -36,71 +36,76 @@ namespace GrblController
 			};
 
 			statusCheckTimer = new System.Timers.Timer(1000);
-			statusCheckTimer.Interval = 500;
+			statusCheckTimer.Interval = 1000;
+			statusCheckTimer.Enabled = false;
 			statusCheckTimer.AutoReset = true;
 			statusCheckTimer.Elapsed += (sender, e) =>
 			{
-				if (DateTime.Now.Subtract(lastStatusReportTime).TotalSeconds > 2)
+				statusCheckTimer.Enabled = false;
+				if (DateTime.Now.Subtract(lastStatusReportTime).TotalSeconds >= 3)
 				{
-					Connect();
+					Reconnect();
 				}
+				statusCheckTimer.Enabled = true;
 			};
-		}
 
-		private void Connect()
-		{
-			if (Status.Instance.ConnectionState != ConnectionState.Disconnected)
+			serialPorts = SerialPort.GetPortNames().ToList();
+			var index = serialPorts.IndexOf(Parameters.Instance.SerialPortString);
+			if (index >= 0)
 			{
-				return;
+				serialPorts.RemoveAt(index);
+				serialPorts.Insert(0, Parameters.Instance.SerialPortString);
 			}
 
-			Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connecting });
-
-			(new Thread(new ThreadStart(() =>
-			{
-				while (Status.Instance.ConnectionState == ConnectionState.Connecting)
-				{
-					var ports = SerialPort.GetPortNames().ToList();
-					var configPortIndex = ports.IndexOf(Parameters.Instance.SerialPortString.ToString());
-					if (configPortIndex >= 0)
-					{
-						ports.RemoveAt(configPortIndex);
-						ports.Insert(0, Parameters.Instance.SerialPortString.ToString());
-					}
-
-					foreach (var port in ports)
-					{
-						if (TryPort(port))
-						{
-							Parameters.Instance.SerialPortString = port;
-							Parameters.Instance.WriteToFile();
-							Reset();
-							break;
-						}
-						Thread.Sleep(2000);
-					}
-				}
-			}))).Start();
+			statusCheckTimer.Enabled = true;
+			lastStatusReportTime = DateTime.MinValue;
 		}
 
-		private bool TryPort(string port)
+		private void Reconnect()
 		{
-			Main.Instance.AddLog("Trying " + port + ".");
+			statusTimer.Stop();
+			Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connecting });
+
+			if (serialPorts.Count > 0)
+			{
+				TryPort(serialPorts[0]);
+			}
+
+			//Rearrange serial ports and reconnect
+			var serialPorts2 = SerialPort.GetPortNames().ToList();
+			var newSerialPorts = serialPorts2.Where(s => serialPorts.IndexOf(s) < 0).ToList();
+			var intersection = serialPorts.Where(s => serialPorts2.IndexOf(s) >= 0).ToList();
+			if (intersection.Count >= 2)
+			{
+				intersection.Add(intersection[0]);
+				intersection.RemoveAt(0);
+			}
+
+			newSerialPorts.AddRange(intersection);
+			serialPorts = newSerialPorts;
+
+			lastStatusReportTime = DateTime.Now;
+		}
+
+		private void TryPort(string port)
+		{
+			if (serialPort != null && serialPort.IsOpen)
+			{
+				serialPort.Close();
+			}
 
 			serialPort = new SerialPort(port, Parameters.Instance.Baudrate, Parity.None, 8, StopBits.One);
 
 			try
 			{
 				serialPort.Open();
+				Status.SetStatus(new Status() { ConnectingPort = port });
+				serialPort.DataReceived += ProcessData;
+				Reset();
 			}
-			catch
+			catch (Exception e)
 			{
-				return false;
 			}
-
-			serialPort.DataReceived += ProcessData;
-
-			return Status.Instance.ConnectionState == ConnectionState.Connected;
 		}
 
 		internal void Reset()
@@ -180,7 +185,12 @@ namespace GrblController
 										Main.Instance.AddLog("Work coordinates selected.");
 									}
 								}
-								Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected });
+								statusTimer.Start();
+								lastStatusReportTime = DateTime.Now;
+								Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped });
+
+								Parameters.Instance.SerialPortString = Status.Instance.ConnectingPort;
+								Parameters.Instance.WriteToFile();
 							}
 							else
 							{
@@ -335,9 +345,6 @@ namespace GrblController
 				Main.Instance.GeometryController.Stop();
 			}
 
-			statusTimer?.Stop();
-			statusCheckTimer?.Stop();
-
 			if (serialPort != null)
 			{
 				serialPort.DataReceived -= ProcessData;
@@ -355,7 +362,6 @@ namespace GrblController
 			(new Thread(new ThreadStart(() =>
 			{
 				Main.Instance.AddLog("Starting calibration.");
-				Main.Instance.SetSlidersEnabled(false);
 				Main.Instance.SetMenuEnabled(false);
 				Main.Instance.GeometryController.Stop();
 				Status.SetStatus(new Status() { Painting = false, ConnectionState = ConnectionState.Connected, RunState = RunState.Calibrating });
@@ -417,7 +423,6 @@ namespace GrblController
 				stopped.Set();
 				Main.Instance.AddLog("Calibration successful.");
 				Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped });
-				Main.Instance.SetSlidersEnabled(true);
 				Main.Instance.SetMenuEnabled(true);
 
 				callback?.Invoke();
