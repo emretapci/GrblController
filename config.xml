@@ -8,6 +8,7 @@
   <SerialPortString>COM3</SerialPortString>
   <Baudrate>115200</Baudrate>
   <ControlAxis>Y</ControlAxis>
+  <PurgeDuration>4</PurgeDuration>
   <StepPulseTime>10</StepPulseTime>
   <StepIdleDelay>255</StepIdleDelay>
   <StepPortInvert>0</StepPortInvert>

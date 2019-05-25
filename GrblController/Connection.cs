@@ -132,7 +132,6 @@ namespace GrblController
 			(new Thread(new ThreadStart(() =>
 			{
 				Main.Instance.AddLog("Starting purge.");
-				Main.Instance.SetMenuEnabled(false);
 				Main.Instance.GeometryController.Stop();
 				Status.SetStatus(new Status() { Painting = true, ConnectionState = ConnectionState.Connected, RunState = RunState.Purging });
 
@@ -145,7 +144,7 @@ namespace GrblController
 
 				Main.Instance.Connection.Send("M8");
 
-				if (willStop.WaitOne(4000))
+				if (willStop.WaitOne((int)(1000 * Parameters.Instance.PurgeDuration)))
 				{
 					Main.Instance.AddLog("Aborted.");
 					Main.Instance.Connection.Send("M9");
@@ -159,7 +158,7 @@ namespace GrblController
 				stopped.Set();
 				Main.Instance.Connection.Send("M9");
 				Main.Instance.AddLog("Purge completed.");
-				Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped });
+				Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped, Painting = false });
 			}))).Start();
 		}
 
@@ -400,7 +399,6 @@ namespace GrblController
 			(new Thread(new ThreadStart(() =>
 			{
 				Main.Instance.AddLog("Starting calibration.");
-				Main.Instance.SetMenuEnabled(false);
 				Main.Instance.GeometryController.Stop();
 				Status.SetStatus(new Status() { Painting = false, ConnectionState = ConnectionState.Connected, RunState = RunState.Calibrating });
 
@@ -461,7 +459,6 @@ namespace GrblController
 				stopped.Set();
 				Main.Instance.AddLog("Calibration successful.");
 				Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped });
-				Main.Instance.SetMenuEnabled(true);
 
 				callback?.Invoke();
 			}))).Start();

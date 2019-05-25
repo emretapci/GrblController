@@ -8,7 +8,7 @@
   <SerialPortString>COM3</SerialPortString>
   <Baudrate>115200</Baudrate>
   <ControlAxis>Y</ControlAxis>
-  <ReverseFeed>False</ReverseFeed>
+  <PurgeDuration>4</PurgeDuration>
   <StepPulseTime>10</StepPulseTime>
   <StepIdleDelay>255</StepIdleDelay>
   <StepPortInvert>0</StepPortInvert>
@@ -16,7 +16,6 @@
   <StepEnableInvert>True</StepEnableInvert>
   <LimitPinsInvert>False</LimitPinsInvert>
   <ProbePinInvert>False</ProbePinInvert>
-  <StatusReport>1</StatusReport>
   <JunctionDeviation>0.02</JunctionDeviation>
   <ArcTolerance>0.002</ArcTolerance>
   <ReportInches>False</ReportInches>

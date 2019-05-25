@@ -74,20 +74,6 @@ namespace GrblController
 			}
 		}
 
-		internal void SetMenuEnabled(bool enabled)
-		{
-			if (InvokeRequired)
-			{
-				BeginInvoke(new Action(() =>
-				{
-					SetMenuEnabled(enabled);
-				}));
-				return;
-			}
-
-			menuStrip1.Enabled = enabled;
-		}
-
 		private void StatusChanged(Status oldStatus, Status newStatus)
 		{
 			if (InvokeRequired)
@@ -107,6 +93,7 @@ namespace GrblController
 				resetButton.Enabled = false;
 				purgeButton.Enabled = false;
 				calibrateToolStripMenuItem.Enabled = false;
+				menuStrip1.Enabled = true;
 				Text = "GRBL Controller [Disconnected]";
 			}
 
@@ -118,6 +105,7 @@ namespace GrblController
 				resetButton.Enabled = false;
 				purgeButton.Enabled = false;
 				calibrateToolStripMenuItem.Enabled = false;
+				menuStrip1.Enabled = true;
 				Text = "GRBL Controller [Connecting...]";
 			}
 
@@ -131,6 +119,7 @@ namespace GrblController
 					resetButton.Enabled = true;
 					purgeButton.Enabled = false;
 					calibrateToolStripMenuItem.Enabled = true;
+					menuStrip1.Enabled = true;
 					Text = "GRBL Controller [Connected] [Running]";
 				}
 				else if (Status.Instance.RunState == RunState.Stopped)
@@ -141,6 +130,7 @@ namespace GrblController
 					resetButton.Enabled = true;
 					purgeButton.Enabled = true;
 					calibrateToolStripMenuItem.Enabled = true;
+					menuStrip1.Enabled = true;
 					Text = "GRBL Controller [Connected]";
 				}
 				else if (Status.Instance.RunState == RunState.Calibrating)
@@ -151,6 +141,7 @@ namespace GrblController
 					resetButton.Enabled = true;
 					purgeButton.Enabled = false;
 					calibrateToolStripMenuItem.Enabled = false;
+					menuStrip1.Enabled = false;
 					Text = "GRBL Controller [Calibrating]";
 				}
 				else if (Status.Instance.RunState == RunState.Purging)
@@ -161,6 +152,7 @@ namespace GrblController
 					resetButton.Enabled = true;
 					purgeButton.Enabled = false;
 					calibrateToolStripMenuItem.Enabled = false;
+					menuStrip1.Enabled = false;
 					Text = "GRBL Controller [Purging]";
 				}
 			}

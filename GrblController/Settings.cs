@@ -79,6 +79,7 @@ namespace GrblController
 			controlAxisLabel.Text = "Machine " + Parameters.Instance.ControlAxis.ToString() + " position";
 			machinePositionTextBox.Text = double.IsNaN(Status.Instance.MachineCoordinate) ? "Unknown" : Math.Abs(Status.Instance.MachineCoordinate).ToString("0.0");
 			controlAxis.SelectedIndex = (int)parameters.ControlAxis;
+			purgeDurationTextBox.Text = Parameters.Instance.PurgeDuration.ToString("0.0");
 
 			#endregion
 
@@ -182,6 +183,24 @@ namespace GrblController
 			else if (machinePositionTextBox.Text != "Unknown")
 			{
 				MessageBox.Show("Invalid value for \"Machine coordinate\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+
+			if (double.TryParse(purgeDurationTextBox.Text, out d))
+			{
+				if (d <= 0)
+				{
+					MessageBox.Show("\"Purge duration\" must be positive.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					return;
+				}
+				else
+				{
+					Parameters.Instance.PurgeDuration = d;
+				}
+			}
+			else
+			{
+				MessageBox.Show("Invalid value for \"Purge duration\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 

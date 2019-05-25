@@ -46,6 +46,7 @@ namespace GrblController
 		internal string SerialPortString { get; set; }
 		internal int Baudrate { get; set; }
 		internal ControlAxis ControlAxis { get; set; }
+		internal double PurgeDuration { get; set; }
 		internal double StepPulseTime { get; set; }
 		internal double StepIdleDelay { get; set; }
 		internal Mask StepPortInvert { get; set; }
@@ -107,6 +108,7 @@ namespace GrblController
 			SerialPortString = "COM1";
 			Baudrate = 115200;
 			ControlAxis = ControlAxis.Y;
+			PurgeDuration = 4;
 			StepPulseTime = 10;
 			StepIdleDelay = 255;
 			StepPortInvert = 0;
@@ -166,6 +168,7 @@ namespace GrblController
 				SerialPortString = doc["Parameters"]["SerialPortString"].InnerText;
 				Baudrate = int.Parse(doc["Parameters"]["Baudrate"].InnerText);
 				ControlAxis = (ControlAxis)Enum.Parse(typeof(ControlAxis), doc["Parameters"]["ControlAxis"].InnerText);
+				PurgeDuration = double.Parse(doc["Parameters"]["PurgeDuration"].InnerText); //sec
 				StepPulseTime = double.Parse(doc["Parameters"]["StepPulseTime"].InnerText); //usec
 				StepIdleDelay = double.Parse(doc["Parameters"]["StepIdleDelay"].InnerText); //msec
 				StepPortInvert = (Mask)int.Parse(doc["Parameters"]["StepPortInvert"].InnerText);
@@ -201,7 +204,7 @@ namespace GrblController
 				ZMaximumTravel = double.Parse(doc["Parameters"]["ZMaximumTravel"].InnerText); //mm
 				return true;
 			}
-			catch
+			catch (Exception e)
 			{
 				return false;
 			}
@@ -224,6 +227,7 @@ namespace GrblController
 					new XElement("SerialPortString", SerialPortString.ToString()),
 					new XElement("Baudrate", Baudrate.ToString()),
 					new XElement("ControlAxis", ControlAxis.ToString()),
+					new XElement("PurgeDuration", PurgeDuration.ToString()),
 					new XElement("StepPulseTime", StepPulseTime.ToString()),
 					new XElement("StepIdleDelay", StepIdleDelay.ToString()),
 					new XElement("StepPortInvert", ((int)StepPortInvert).ToString()),
