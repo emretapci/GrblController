@@ -61,6 +61,7 @@
 			this.statusUpdatedAlarmPanel = new System.Windows.Forms.Panel();
 			this.homeButton = new System.Windows.Forms.Button();
 			this.resetButton = new System.Windows.Forms.Button();
+			this.purgeButton = new System.Windows.Forms.Button();
 			this.tablePanel.SuspendLayout();
 			this.table2Panel.SuspendLayout();
 			this.table1Panel.SuspendLayout();
@@ -399,7 +400,7 @@
 			// 
 			this.homeButton.Location = new System.Drawing.Point(343, 434);
 			this.homeButton.Name = "homeButton";
-			this.homeButton.Size = new System.Drawing.Size(216, 69);
+			this.homeButton.Size = new System.Drawing.Size(160, 69);
 			this.homeButton.TabIndex = 41;
 			this.homeButton.Text = "Home";
 			this.homeButton.UseVisualStyleBackColor = true;
@@ -407,19 +408,30 @@
 			// 
 			// resetButton
 			// 
-			this.resetButton.Location = new System.Drawing.Point(565, 434);
+			this.resetButton.Location = new System.Drawing.Point(509, 434);
 			this.resetButton.Name = "resetButton";
-			this.resetButton.Size = new System.Drawing.Size(216, 69);
+			this.resetButton.Size = new System.Drawing.Size(160, 69);
 			this.resetButton.TabIndex = 42;
 			this.resetButton.Text = "Reset";
 			this.resetButton.UseVisualStyleBackColor = true;
 			this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+			// 
+			// purgeButton
+			// 
+			this.purgeButton.Location = new System.Drawing.Point(675, 434);
+			this.purgeButton.Name = "purgeButton";
+			this.purgeButton.Size = new System.Drawing.Size(106, 69);
+			this.purgeButton.TabIndex = 43;
+			this.purgeButton.Text = "Purge";
+			this.purgeButton.UseVisualStyleBackColor = true;
+			this.purgeButton.Click += new System.EventHandler(this.purgeButton_Click);
 			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(795, 547);
+			this.Controls.Add(this.purgeButton);
 			this.Controls.Add(this.resetButton);
 			this.Controls.Add(this.homeButton);
 			this.Controls.Add(this.statusUpdatedAlarmPanel);
@@ -498,6 +510,7 @@
 		private System.Windows.Forms.Button homeButton;
 		private System.Windows.Forms.Button resetButton;
 		private System.Windows.Forms.ToolStripStatusLabel portStatusLabel;
+		private System.Windows.Forms.Button purgeButton;
 	}
 }
 

@@ -125,6 +125,44 @@ namespace GrblController
 			}
 		}
 
+		internal void Purge()
+		{
+			willStop.Reset();
+
+			(new Thread(new ThreadStart(() =>
+			{
+				Main.Instance.AddLog("Starting purge.");
+				Main.Instance.SetMenuEnabled(false);
+				Main.Instance.GeometryController.Stop();
+				Status.SetStatus(new Status() { Painting = true, ConnectionState = ConnectionState.Connected, RunState = RunState.Purging });
+
+				if (!Unlock())
+				{
+					return;
+				}
+
+				#region Purging
+
+				Main.Instance.Connection.Send("M8");
+
+				if (willStop.WaitOne(4000))
+				{
+					Main.Instance.AddLog("Aborted.");
+					Main.Instance.Connection.Send("M9");
+					Status.SetStatus(new Status() { Painting = false });
+					stopped.Set();
+					return;
+				}
+
+				#endregion
+
+				stopped.Set();
+				Main.Instance.Connection.Send("M9");
+				Main.Instance.AddLog("Purge completed.");
+				Status.SetStatus(new Status() { ConnectionState = ConnectionState.Connected, RunState = RunState.Stopped });
+			}))).Start();
+		}
+
 		internal void Send(string command)
 		{
 			if (serialPort != null && serialPort.IsOpen)

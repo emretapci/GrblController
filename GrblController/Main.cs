@@ -105,6 +105,7 @@ namespace GrblController
 				startStopButton.Enabled = false;
 				homeButton.Enabled = false;
 				resetButton.Enabled = false;
+				purgeButton.Enabled = false;
 				calibrateToolStripMenuItem.Enabled = false;
 				Text = "GRBL Controller [Disconnected]";
 			}
@@ -115,6 +116,7 @@ namespace GrblController
 				startStopButton.Enabled = false;
 				homeButton.Enabled = false;
 				resetButton.Enabled = false;
+				purgeButton.Enabled = false;
 				calibrateToolStripMenuItem.Enabled = false;
 				Text = "GRBL Controller [Connecting...]";
 			}
@@ -127,6 +129,7 @@ namespace GrblController
 					startStopButton.Enabled = true;
 					homeButton.Enabled = false;
 					resetButton.Enabled = true;
+					purgeButton.Enabled = false;
 					calibrateToolStripMenuItem.Enabled = true;
 					Text = "GRBL Controller [Connected] [Running]";
 				}
@@ -136,6 +139,7 @@ namespace GrblController
 					startStopButton.Enabled = true;
 					homeButton.Enabled = true;
 					resetButton.Enabled = true;
+					purgeButton.Enabled = true;
 					calibrateToolStripMenuItem.Enabled = true;
 					Text = "GRBL Controller [Connected]";
 				}
@@ -145,8 +149,19 @@ namespace GrblController
 					startStopButton.Enabled = false;
 					homeButton.Enabled = false;
 					resetButton.Enabled = true;
+					purgeButton.Enabled = false;
 					calibrateToolStripMenuItem.Enabled = false;
 					Text = "GRBL Controller [Calibrating]";
+				}
+				else if (Status.Instance.RunState == RunState.Purging)
+				{
+					startStopButton.Text = "Start";
+					startStopButton.Enabled = false;
+					homeButton.Enabled = false;
+					resetButton.Enabled = true;
+					purgeButton.Enabled = false;
+					calibrateToolStripMenuItem.Enabled = false;
+					Text = "GRBL Controller [Purging]";
 				}
 			}
 			portStatusLabel.Text = Status.Instance.ConnectingPort;
@@ -249,6 +264,12 @@ namespace GrblController
 		{
 			AddLog("Resetting...");
 			Connection.Reset();
+		}
+
+		private void purgeButton_Click(object sender, EventArgs e)
+		{
+			AddLog("Purging...");
+			Connection.Purge();
 		}
 
 		internal void AddLog(string s)

@@ -13,7 +13,8 @@ namespace GrblController
 	{
 		Running,
 		Stopped,
-		Calibrating
+		Calibrating,
+		Purging
 	}
 
 	internal enum MachineState
