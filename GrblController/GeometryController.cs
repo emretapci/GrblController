@@ -111,7 +111,7 @@ namespace GrblController
 				Status.SetStatus(new Status() { Painting = false });
 			}
 
-			if (Main.Instance.Table2PaintedArea > 0)
+			if (Main.Instance.Table2PaintedArea > 0 && Parameters.Instance.DoubleTable)
 			{
 				Main.Instance.AddLog("Go to beginning of Table 2 paint area.");
 				var target = Parameters.Instance.StartOffset + Parameters.Instance.Table1Length + Parameters.Instance.MiddleGap;
