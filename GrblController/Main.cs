@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace GrblController
 {
@@ -46,22 +47,39 @@ namespace GrblController
 
 			Connection.Initialize();
 
-			ResizeSliders();
+			SetTables();
 
-			table1Slider_ValueChanged(null, null);
-			table2Slider_ValueChanged(null, null);
 			UpdateMachinePositionPanel();
 
 			Status.SetStatus(new Status());
 		}
 
+		private void SetTables()
+		{
+			table2Panel.Visible = Parameters.Instance.DoubleTable;
+			table2PanelPaintedArea.Visible = Parameters.Instance.DoubleTable;
+			table2Slider.Visible = Parameters.Instance.DoubleTable;
+
+			ResizeSliders();
+
+			table1Slider_ValueChanged(null, null);
+			table2Slider_ValueChanged(null, null);
+		}
+
 		private void ResizeSliders()
 		{
-			slider1Panel.Size = new Size(slider1Panel.Size.Width, (tablePanel.Height - 5) / 2);
+			tablePanel.Size = new Size(tablePanel.Size.Width,
+				(homeButton.Location.Y + homeButton.Size.Height - activityLog.Location.Y) / (Parameters.Instance.DoubleTable ? 1 : 2));
+
+			slider1Panel.Size = new Size(slider1Panel.Size.Width, Parameters.Instance.DoubleTable ? (tablePanel.Height - 5) / 2 : tablePanel.Height);
 			slider1Panel.Location = new Point(tablePanel.Location.X + tablePanel.Size.Width + 5, tablePanel.Location.Y);
 
 			slider2Panel.Size = slider1Panel.Size;
 			slider2Panel.Location = new Point(slider1Panel.Location.X, slider1Panel.Location.Y + slider1Panel.Size.Height + 5);
+
+			slider2Panel.Visible = Parameters.Instance.DoubleTable;
+			foreach (var label in table2Labels)
+				label.Visible = Parameters.Instance.DoubleTable;
 
 			double ratio = 0.65;
 			for (int i = 0; i < table1Labels.Length; i++)
@@ -211,7 +229,11 @@ namespace GrblController
 
 		private void ResizeTablePanels()
 		{
-			double dTotalLength = Parameters.Instance.StartOffset + Parameters.Instance.Table1Length + Parameters.Instance.MiddleGap + Parameters.Instance.Table2Length + Parameters.Instance.EndOffset;
+			double dTotalLength;
+			if(Parameters.Instance.DoubleTable)
+				dTotalLength = Parameters.Instance.StartOffset + Parameters.Instance.Table1Length + Parameters.Instance.MiddleGap + Parameters.Instance.Table2Length + Parameters.Instance.EndOffset;
+			else
+				dTotalLength = Parameters.Instance.StartOffset + Parameters.Instance.Table1Length + Parameters.Instance.EndOffset;
 
 			table1Panel.Location = new Point(0, (int)(tablePanel.Height * Parameters.Instance.StartOffset / dTotalLength));
 			table1Panel.Size = new Size(tablePanel.Width - 2, (int)(tablePanel.Height * Parameters.Instance.Table1Length / dTotalLength));
@@ -297,8 +319,7 @@ namespace GrblController
 			var settingsForm = new Settings();
 			if (settingsForm.ShowDialog() == DialogResult.OK)
 			{
-				table1Slider_ValueChanged(null, null);
-				table2Slider_ValueChanged(null, null);
+				SetTables();
 				Status.Instance.MachineCoordinate = settingsForm.MachinePosition;
 				if (Status.Instance.ConnectionState == ConnectionState.Connected)
 				{

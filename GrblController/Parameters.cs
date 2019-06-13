@@ -80,12 +80,13 @@ namespace GrblController
 		internal double XMaximumTravel { get; set; }
 		internal double YMaximumTravel { get; set; }
 		internal double ZMaximumTravel { get; set; }
+		internal bool DoubleTable { get; set; }
 
 		internal double TablesTotalLength
 		{
 			get
 			{
-				return StartOffset + Table1Length + MiddleGap + Table2Length + EndOffset;
+				return StartOffset + Table1Length + EndOffset + (DoubleTable ? (MiddleGap + Table2Length) : 0);
 			}
 		}
 
@@ -142,6 +143,7 @@ namespace GrblController
 			XMaximumTravel = 200;
 			YMaximumTravel = 200;
 			ZMaximumTravel = 200;
+			DoubleTable = true;
 		}
 
 		internal void SetDefaults()
@@ -202,6 +204,7 @@ namespace GrblController
 				XMaximumTravel = double.Parse(doc["Parameters"]["XMaximumTravel"].InnerText); //mm
 				YMaximumTravel = double.Parse(doc["Parameters"]["YMaximumTravel"].InnerText); //mm
 				ZMaximumTravel = double.Parse(doc["Parameters"]["ZMaximumTravel"].InnerText); //mm
+				DoubleTable = bool.Parse(doc["Parameters"]["DoubleTable"].InnerText);
 				return true;
 			}
 			catch (Exception e)
@@ -260,7 +263,8 @@ namespace GrblController
 					new XElement("ZAcceleration", ZAcceleration.ToString()),
 					new XElement("XMaximumTravel", XMaximumTravel.ToString()),
 					new XElement("YMaximumTravel", YMaximumTravel.ToString()),
-					new XElement("ZMaximumTravel", ZMaximumTravel.ToString())
+					new XElement("ZMaximumTravel", ZMaximumTravel.ToString()),
+					new XElement("DoubleTable", DoubleTable.ToString())
 				)).Save(filename);
 		}
 	}

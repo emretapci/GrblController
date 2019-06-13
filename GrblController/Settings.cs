@@ -71,6 +71,9 @@ namespace GrblController
 			middleGapLength.Text = parameters.MiddleGap.ToString();
 			table2Length.Text = parameters.Table2Length.ToString();
 			endOffset.Text = parameters.EndOffset.ToString();
+			doubleTable.Checked = parameters.DoubleTable;
+
+			doubleTable_CheckedChanged(null, null);
 
 			#endregion
 
@@ -105,39 +108,47 @@ namespace GrblController
 
 			#region Get GRBL settings from form
 
-			Parameters.Instance.StepPulseTime = double.Parse(stepPulseTime.Text);
-			Parameters.Instance.StepIdleDelay = double.Parse(stepIdleDelay.Text);
-			Parameters.Instance.StepPortInvert = (stepPortInvertX.Checked ? Mask.X : 0) | (stepPortInvertY.Checked ? Mask.Y : 0) | (stepPortInvertZ.Checked ? Mask.Z : 0);
-			Parameters.Instance.DirectionPortInvert = (directionPortInvertX.Checked ? Mask.X : 0) | (directionPortInvertY.Checked ? Mask.Y : 0) | (directionPortInvertZ.Checked ? Mask.Z : 0);
-			Parameters.Instance.StepEnableInvert = stepEnableInvert.Checked;
-			Parameters.Instance.LimitPinsInvert = limitPinsInvert.Checked;
-			Parameters.Instance.ProbePinInvert = probePinInvert.Checked;
-			Parameters.Instance.JunctionDeviation = double.Parse(junctionDeviation.Text);
-			Parameters.Instance.ArcTolerance = double.Parse(arcTolerance.Text);
-			Parameters.Instance.ReportInches = reportInches.Checked;
-			Parameters.Instance.SoftLimits = softLimits.Checked;
-			Parameters.Instance.HardLimits = hardLimits.Checked;
-			Parameters.Instance.HomingCycle = homingCycle.Checked;
-			Parameters.Instance.HomingDirectionInvert = (homingDirectionInvertX.Checked ? Mask.X : 0) | (homingDirectionInvertY.Checked ? Mask.Y : 0) | (homingDirectionInvertZ.Checked ? Mask.Z : 0);
-			Parameters.Instance.HomingFeed = double.Parse(homingFeed.Text);
-			Parameters.Instance.HomingSeek = double.Parse(homingSeek.Text);
-			Parameters.Instance.HomingDebounce = double.Parse(homingDebounce.Text);
-			Parameters.Instance.HomingPullOff = double.Parse(homingPullOff.Text);
-			Parameters.Instance.MaximumSpindleSpeed = double.Parse(maximumSpindleSpeed.Text);
-			Parameters.Instance.MinimumSpindleSpeed = double.Parse(minimumSpindleSpeed.Text);
-			Parameters.Instance.LaserMode = laserMode.Checked;
-			Parameters.Instance.XSteps = double.Parse(xSteps.Text);
-			Parameters.Instance.YSteps = double.Parse(ySteps.Text);
-			Parameters.Instance.ZSteps = double.Parse(zSteps.Text);
-			Parameters.Instance.XFeedRate = double.Parse(xMaximumRate.Text);
-			Parameters.Instance.YFeedRate = double.Parse(yMaximumRate.Text);
-			Parameters.Instance.ZFeedRate = double.Parse(zMaximumRate.Text);
-			Parameters.Instance.XAcceleration = double.Parse(xAcceleration.Text);
-			Parameters.Instance.YAcceleration = double.Parse(yAcceleration.Text);
-			Parameters.Instance.ZAcceleration = double.Parse(zAcceleration.Text);
-			Parameters.Instance.XMaximumTravel = double.Parse(xMaximumTravel.Text);
-			Parameters.Instance.YMaximumTravel = double.Parse(yMaximumTravel.Text);
-			Parameters.Instance.ZMaximumTravel = double.Parse(zMaximumTravel.Text);
+			try
+			{
+				Parameters.Instance.StepPulseTime = double.Parse(stepPulseTime.Text);
+				Parameters.Instance.StepIdleDelay = double.Parse(stepIdleDelay.Text);
+				Parameters.Instance.StepPortInvert = (stepPortInvertX.Checked ? Mask.X : 0) | (stepPortInvertY.Checked ? Mask.Y : 0) | (stepPortInvertZ.Checked ? Mask.Z : 0);
+				Parameters.Instance.DirectionPortInvert = (directionPortInvertX.Checked ? Mask.X : 0) | (directionPortInvertY.Checked ? Mask.Y : 0) | (directionPortInvertZ.Checked ? Mask.Z : 0);
+				Parameters.Instance.StepEnableInvert = stepEnableInvert.Checked;
+				Parameters.Instance.LimitPinsInvert = limitPinsInvert.Checked;
+				Parameters.Instance.ProbePinInvert = probePinInvert.Checked;
+				Parameters.Instance.JunctionDeviation = double.Parse(junctionDeviation.Text);
+				Parameters.Instance.ArcTolerance = double.Parse(arcTolerance.Text);
+				Parameters.Instance.ReportInches = reportInches.Checked;
+				Parameters.Instance.SoftLimits = softLimits.Checked;
+				Parameters.Instance.HardLimits = hardLimits.Checked;
+				Parameters.Instance.HomingCycle = homingCycle.Checked;
+				Parameters.Instance.HomingDirectionInvert = (homingDirectionInvertX.Checked ? Mask.X : 0) | (homingDirectionInvertY.Checked ? Mask.Y : 0) | (homingDirectionInvertZ.Checked ? Mask.Z : 0);
+				Parameters.Instance.HomingFeed = double.Parse(homingFeed.Text);
+				Parameters.Instance.HomingSeek = double.Parse(homingSeek.Text);
+				Parameters.Instance.HomingDebounce = double.Parse(homingDebounce.Text);
+				Parameters.Instance.HomingPullOff = double.Parse(homingPullOff.Text);
+				Parameters.Instance.MaximumSpindleSpeed = double.Parse(maximumSpindleSpeed.Text);
+				Parameters.Instance.MinimumSpindleSpeed = double.Parse(minimumSpindleSpeed.Text);
+				Parameters.Instance.LaserMode = laserMode.Checked;
+				Parameters.Instance.XSteps = double.Parse(xSteps.Text);
+				Parameters.Instance.YSteps = double.Parse(ySteps.Text);
+				Parameters.Instance.ZSteps = double.Parse(zSteps.Text);
+				Parameters.Instance.XFeedRate = double.Parse(xMaximumRate.Text);
+				Parameters.Instance.YFeedRate = double.Parse(yMaximumRate.Text);
+				Parameters.Instance.ZFeedRate = double.Parse(zMaximumRate.Text);
+				Parameters.Instance.XAcceleration = double.Parse(xAcceleration.Text);
+				Parameters.Instance.YAcceleration = double.Parse(yAcceleration.Text);
+				Parameters.Instance.ZAcceleration = double.Parse(zAcceleration.Text);
+				Parameters.Instance.XMaximumTravel = double.Parse(xMaximumTravel.Text);
+				Parameters.Instance.YMaximumTravel = double.Parse(yMaximumTravel.Text);
+				Parameters.Instance.ZMaximumTravel = double.Parse(zMaximumTravel.Text);
+			}
+			catch
+			{
+				MessageBox.Show("Error in GRBL settings.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
 
 			#endregion
 
@@ -150,10 +161,11 @@ namespace GrblController
 				Parameters.Instance.MiddleGap = double.Parse(middleGapLength.Text);
 				Parameters.Instance.Table2Length = double.Parse(table2Length.Text);
 				Parameters.Instance.EndOffset = double.Parse(endOffset.Text);
+				Parameters.Instance.DoubleTable = doubleTable.Checked;
 			}
 			catch
 			{
-				MessageBox.Show("Error in parameters.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("Error in table settings.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 
@@ -363,6 +375,16 @@ namespace GrblController
 		{
 			Parameters.Instance.SetDefaults();
 			LoadSettings(Parameters.Instance);
+		}
+
+		private void doubleTable_CheckedChanged(object sender, EventArgs e)
+		{
+			label122.Visible = doubleTable.Checked;
+			label123.Visible = doubleTable.Checked;
+			label127.Visible = doubleTable.Checked;
+			label128.Visible = doubleTable.Checked;
+			middleGapLength.Visible = doubleTable.Checked;
+			table2Length.Visible = doubleTable.Checked;
 		}
 	}
 }

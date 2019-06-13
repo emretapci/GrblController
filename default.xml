@@ -5,7 +5,7 @@
   <MiddleGap>100</MiddleGap>
   <Table2Length>500</Table2Length>
   <EndOffset>100</EndOffset>
-  <SerialPortString>COM3</SerialPortString>
+  <SerialPortString>COM1</SerialPortString>
   <Baudrate>115200</Baudrate>
   <ControlAxis>Y</ControlAxis>
   <PurgeDuration>4</PurgeDuration>
@@ -42,7 +42,5 @@
   <XMaximumTravel>200</XMaximumTravel>
   <YMaximumTravel>200</YMaximumTravel>
   <ZMaximumTravel>200</ZMaximumTravel>
-  <CalibrateBeforeHit>G38.2 Y-1000 F500</CalibrateBeforeHit>
-  <Zeroize>G10 P1 L20 Y0</Zeroize>
-  <CalibrateAfterHit>$J=G91 Y5 F100</CalibrateAfterHit>
+  <DoubleTable>True</DoubleTable>
 </Parameters>
