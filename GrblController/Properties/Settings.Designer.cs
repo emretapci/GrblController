@@ -22,5 +22,521 @@ namespace GrblController.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public double StartOffset {
+            get {
+                return ((double)(this["StartOffset"]));
+            }
+            set {
+                this["StartOffset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public double Table1Length {
+            get {
+                return ((double)(this["Table1Length"]));
+            }
+            set {
+                this["Table1Length"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public double MiddleGap {
+            get {
+                return ((double)(this["MiddleGap"]));
+            }
+            set {
+                this["MiddleGap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public double Table2Length {
+            get {
+                return ((double)(this["Table2Length"]));
+            }
+            set {
+                this["Table2Length"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public double EndOffset {
+            get {
+                return ((double)(this["EndOffset"]));
+            }
+            set {
+                this["EndOffset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM1")]
+        public string SerialPortString {
+            get {
+                return ((string)(this["SerialPortString"]));
+            }
+            set {
+                this["SerialPortString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("115200")]
+        public int Baudrate {
+            get {
+                return ((int)(this["Baudrate"]));
+            }
+            set {
+                this["Baudrate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Y")]
+        public string ControlAxis {
+            get {
+                return ((string)(this["ControlAxis"]));
+            }
+            set {
+                this["ControlAxis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public double PurgeDuration {
+            get {
+                return ((double)(this["PurgeDuration"]));
+            }
+            set {
+                this["PurgeDuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public double StepPulseTime {
+            get {
+                return ((double)(this["StepPulseTime"]));
+            }
+            set {
+                this["StepPulseTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("255")]
+        public double StepIdleDelay {
+            get {
+                return ((double)(this["StepIdleDelay"]));
+            }
+            set {
+                this["StepIdleDelay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int StepPortInvert {
+            get {
+                return ((int)(this["StepPortInvert"]));
+            }
+            set {
+                this["StepPortInvert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int DirectionPortInvert {
+            get {
+                return ((int)(this["DirectionPortInvert"]));
+            }
+            set {
+                this["DirectionPortInvert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StepEnableInvert {
+            get {
+                return ((bool)(this["StepEnableInvert"]));
+            }
+            set {
+                this["StepEnableInvert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LimitPinsInvert {
+            get {
+                return ((bool)(this["LimitPinsInvert"]));
+            }
+            set {
+                this["LimitPinsInvert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ProbePinInvert {
+            get {
+                return ((bool)(this["ProbePinInvert"]));
+            }
+            set {
+                this["ProbePinInvert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.02")]
+        public double JunctionDeviation {
+            get {
+                return ((double)(this["JunctionDeviation"]));
+            }
+            set {
+                this["JunctionDeviation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.002")]
+        public double ArcTolerance {
+            get {
+                return ((double)(this["ArcTolerance"]));
+            }
+            set {
+                this["ArcTolerance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ReportInches {
+            get {
+                return ((bool)(this["ReportInches"]));
+            }
+            set {
+                this["ReportInches"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SoftLimits {
+            get {
+                return ((bool)(this["SoftLimits"]));
+            }
+            set {
+                this["SoftLimits"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HardLimits {
+            get {
+                return ((bool)(this["HardLimits"]));
+            }
+            set {
+                this["HardLimits"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HomingCycle {
+            get {
+                return ((bool)(this["HomingCycle"]));
+            }
+            set {
+                this["HomingCycle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int HomingDirectionInvert {
+            get {
+                return ((int)(this["HomingDirectionInvert"]));
+            }
+            set {
+                this["HomingDirectionInvert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public double HomingFeed {
+            get {
+                return ((double)(this["HomingFeed"]));
+            }
+            set {
+                this["HomingFeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public double HomingSeek {
+            get {
+                return ((double)(this["HomingSeek"]));
+            }
+            set {
+                this["HomingSeek"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public double HomingDebounce {
+            get {
+                return ((double)(this["HomingDebounce"]));
+            }
+            set {
+                this["HomingDebounce"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double HomingPullOff {
+            get {
+                return ((double)(this["HomingPullOff"]));
+            }
+            set {
+                this["HomingPullOff"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12000")]
+        public double MaximumSpindleSpeed {
+            get {
+                return ((double)(this["MaximumSpindleSpeed"]));
+            }
+            set {
+                this["MaximumSpindleSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MinimumSpindleSpeed {
+            get {
+                return ((double)(this["MinimumSpindleSpeed"]));
+            }
+            set {
+                this["MinimumSpindleSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LaserMode {
+            get {
+                return ((bool)(this["LaserMode"]));
+            }
+            set {
+                this["LaserMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double XSteps {
+            get {
+                return ((double)(this["XSteps"]));
+            }
+            set {
+                this["XSteps"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double YSteps {
+            get {
+                return ((double)(this["YSteps"]));
+            }
+            set {
+                this["YSteps"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double ZSteps {
+            get {
+                return ((double)(this["ZSteps"]));
+            }
+            set {
+                this["ZSteps"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
+        public double XFeedRate {
+            get {
+                return ((double)(this["XFeedRate"]));
+            }
+            set {
+                this["XFeedRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
+        public double YFeedRate {
+            get {
+                return ((double)(this["YFeedRate"]));
+            }
+            set {
+                this["YFeedRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        public double ZFeedRate {
+            get {
+                return ((double)(this["ZFeedRate"]));
+            }
+            set {
+                this["ZFeedRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public double XAcceleration {
+            get {
+                return ((double)(this["XAcceleration"]));
+            }
+            set {
+                this["XAcceleration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public double YAcceleration {
+            get {
+                return ((double)(this["YAcceleration"]));
+            }
+            set {
+                this["YAcceleration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public double ZAcceleration {
+            get {
+                return ((double)(this["ZAcceleration"]));
+            }
+            set {
+                this["ZAcceleration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double XMaximumTravel {
+            get {
+                return ((double)(this["XMaximumTravel"]));
+            }
+            set {
+                this["XMaximumTravel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double YMaximumTravel {
+            get {
+                return ((double)(this["YMaximumTravel"]));
+            }
+            set {
+                this["YMaximumTravel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double ZMaximumTravel {
+            get {
+                return ((double)(this["ZMaximumTravel"]));
+            }
+            set {
+                this["ZMaximumTravel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DoubleTable {
+            get {
+                return ((bool)(this["DoubleTable"]));
+            }
+            set {
+                this["DoubleTable"] = value;
+            }
+        }
     }
 }

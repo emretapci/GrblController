@@ -42,5 +42,5 @@
   <XMaximumTravel>200</XMaximumTravel>
   <YMaximumTravel>200</YMaximumTravel>
   <ZMaximumTravel>200</ZMaximumTravel>
-  <DoubleTable>True</DoubleTable>
+  <DoubleTable>False</DoubleTable>
 </Parameters>

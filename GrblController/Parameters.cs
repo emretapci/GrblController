@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace GrblController
 {
@@ -22,8 +19,6 @@ namespace GrblController
 
 	internal class Parameters
 	{
-		private string configFilename = "config.xml";
-		private string defaultFilename = "default.xml";
 		private static Parameters instance;
 
 		internal static Parameters Instance
@@ -92,10 +87,9 @@ namespace GrblController
 
 		internal Parameters()
 		{
-			if (!ReadFromFile(configFilename))
+			if (!ReadFromFile())
 			{
-				Create();
-				WriteToFile();
+				SetDefaults();
 			}
 		}
 
@@ -148,63 +142,59 @@ namespace GrblController
 
 		internal void SetDefaults()
 		{
-			if (!ReadFromFile(defaultFilename))
-			{
-				Create();
-				WriteToFile(defaultFilename);
-			}
+			Create();
+			WriteToFile();
 		}
 
-		private bool ReadFromFile(string filename)
+		private bool ReadFromFile()
 		{
 			try
 			{
-				var doc = new XmlDocument();
-				doc.Load(filename);
+				Properties.Settings.Default.Reload();
 
-				StartOffset = double.Parse(doc["Parameters"]["StartOffset"].InnerText); //mm
-				Table1Length = double.Parse(doc["Parameters"]["Table1Length"].InnerText); //mm
-				MiddleGap = double.Parse(doc["Parameters"]["MiddleGap"].InnerText); //mm
-				Table2Length = double.Parse(doc["Parameters"]["Table2Length"].InnerText); //mm
-				EndOffset = double.Parse(doc["Parameters"]["EndOffset"].InnerText); //mm
-				SerialPortString = doc["Parameters"]["SerialPortString"].InnerText;
-				Baudrate = int.Parse(doc["Parameters"]["Baudrate"].InnerText);
-				ControlAxis = (ControlAxis)Enum.Parse(typeof(ControlAxis), doc["Parameters"]["ControlAxis"].InnerText);
-				PurgeDuration = double.Parse(doc["Parameters"]["PurgeDuration"].InnerText); //sec
-				StepPulseTime = double.Parse(doc["Parameters"]["StepPulseTime"].InnerText); //usec
-				StepIdleDelay = double.Parse(doc["Parameters"]["StepIdleDelay"].InnerText); //msec
-				StepPortInvert = (Mask)int.Parse(doc["Parameters"]["StepPortInvert"].InnerText);
-				DirectionPortInvert = (Mask)int.Parse(doc["Parameters"]["DirectionPortInvert"].InnerText);
-				StepEnableInvert = bool.Parse(doc["Parameters"]["StepEnableInvert"].InnerText);
-				LimitPinsInvert = bool.Parse(doc["Parameters"]["LimitPinsInvert"].InnerText);
-				ProbePinInvert = bool.Parse(doc["Parameters"]["ProbePinInvert"].InnerText);
-				JunctionDeviation = double.Parse(doc["Parameters"]["JunctionDeviation"].InnerText); //mm
-				ArcTolerance = double.Parse(doc["Parameters"]["ArcTolerance"].InnerText); //mm
-				ReportInches = bool.Parse(doc["Parameters"]["ReportInches"].InnerText);
-				SoftLimits = bool.Parse(doc["Parameters"]["SoftLimits"].InnerText);
-				HardLimits = bool.Parse(doc["Parameters"]["HardLimits"].InnerText);
-				HomingCycle = bool.Parse(doc["Parameters"]["HomingCycle"].InnerText);
-				HomingDirectionInvert = (Mask)int.Parse(doc["Parameters"]["HomingDirectionInvert"].InnerText);
-				HomingFeed = double.Parse(doc["Parameters"]["HomingFeed"].InnerText); //mm/min
-				HomingSeek = double.Parse(doc["Parameters"]["HomingSeek"].InnerText); //mm/min
-				HomingDebounce = double.Parse(doc["Parameters"]["HomingDebounce"].InnerText); //msec //msec
-				HomingPullOff = double.Parse(doc["Parameters"]["HomingPullOff"].InnerText); //mm
-				MaximumSpindleSpeed = double.Parse(doc["Parameters"]["MaximumSpindleSpeed"].InnerText); //RPM
-				MinimumSpindleSpeed = double.Parse(doc["Parameters"]["MinimumSpindleSpeed"].InnerText); //RPM
-				LaserMode = bool.Parse(doc["Parameters"]["LaserMode"].InnerText);
-				XSteps = double.Parse(doc["Parameters"]["XSteps"].InnerText); // /mm
-				YSteps = double.Parse(doc["Parameters"]["YSteps"].InnerText); // /mm
-				ZSteps = double.Parse(doc["Parameters"]["ZSteps"].InnerText); // /mm
-				XFeedRate = double.Parse(doc["Parameters"]["XFeedRate"].InnerText); //mm/min
-				YFeedRate = double.Parse(doc["Parameters"]["YFeedRate"].InnerText); //mm/min
-				ZFeedRate = double.Parse(doc["Parameters"]["ZFeedRate"].InnerText); //mm/min
-				XAcceleration = double.Parse(doc["Parameters"]["XAcceleration"].InnerText); //mm/sec^2
-				YAcceleration = double.Parse(doc["Parameters"]["YAcceleration"].InnerText); //mm/sec^2
-				ZAcceleration = double.Parse(doc["Parameters"]["ZAcceleration"].InnerText); //mm/sec^2
-				XMaximumTravel = double.Parse(doc["Parameters"]["XMaximumTravel"].InnerText); //mm
-				YMaximumTravel = double.Parse(doc["Parameters"]["YMaximumTravel"].InnerText); //mm
-				ZMaximumTravel = double.Parse(doc["Parameters"]["ZMaximumTravel"].InnerText); //mm
-				DoubleTable = bool.Parse(doc["Parameters"]["DoubleTable"].InnerText);
+				StartOffset = Properties.Settings.Default.StartOffset; //mm
+				Table1Length = Properties.Settings.Default.Table1Length; //mm
+				MiddleGap = Properties.Settings.Default.MiddleGap; //mm
+				Table2Length = Properties.Settings.Default.Table2Length; //mm
+				EndOffset = Properties.Settings.Default.EndOffset; //mm
+				SerialPortString = Properties.Settings.Default.SerialPortString;
+				Baudrate = Properties.Settings.Default.Baudrate;
+				ControlAxis = (ControlAxis)Enum.Parse(typeof(ControlAxis), Properties.Settings.Default.ControlAxis);
+				PurgeDuration = Properties.Settings.Default.PurgeDuration; //sec
+				StepPulseTime = Properties.Settings.Default.StepPulseTime; //usec
+				StepIdleDelay = Properties.Settings.Default.StepIdleDelay; //msec
+				StepPortInvert = (Mask)Properties.Settings.Default.StepPortInvert;
+				DirectionPortInvert = (Mask)Properties.Settings.Default.DirectionPortInvert;
+				StepEnableInvert = Properties.Settings.Default.StepEnableInvert;
+				LimitPinsInvert = Properties.Settings.Default.LimitPinsInvert;
+				ProbePinInvert = Properties.Settings.Default.ProbePinInvert;
+				JunctionDeviation = Properties.Settings.Default.JunctionDeviation; //mm
+				ArcTolerance = Properties.Settings.Default.ArcTolerance; //mm
+				ReportInches = Properties.Settings.Default.ReportInches;
+				SoftLimits = Properties.Settings.Default.SoftLimits;
+				HardLimits = Properties.Settings.Default.HardLimits;
+				HomingCycle = Properties.Settings.Default.HomingCycle;
+				HomingDirectionInvert = (Mask)Properties.Settings.Default.HomingDirectionInvert;
+				HomingFeed = Properties.Settings.Default.HomingFeed; //mm/min
+				HomingSeek = Properties.Settings.Default.HomingSeek; //mm/min
+				HomingDebounce = Properties.Settings.Default.HomingDebounce; //msec //msec
+				HomingPullOff = Properties.Settings.Default.HomingPullOff; //mm
+				MaximumSpindleSpeed = Properties.Settings.Default.MaximumSpindleSpeed; //RPM
+				MinimumSpindleSpeed = Properties.Settings.Default.MinimumSpindleSpeed; //RPM
+				LaserMode = Properties.Settings.Default.LaserMode;
+				XSteps = Properties.Settings.Default.XSteps; // /mm
+				YSteps = Properties.Settings.Default.YSteps; // /mm
+				ZSteps = Properties.Settings.Default.ZSteps; // /mm
+				XFeedRate = Properties.Settings.Default.XFeedRate; //mm/min
+				YFeedRate = Properties.Settings.Default.YFeedRate; //mm/min
+				ZFeedRate = Properties.Settings.Default.ZFeedRate; //mm/min
+				XAcceleration = Properties.Settings.Default.XAcceleration; //mm/sec^2
+				YAcceleration = Properties.Settings.Default.YAcceleration; //mm/sec^2
+				ZAcceleration = Properties.Settings.Default.ZAcceleration; //mm/sec^2
+				XMaximumTravel = Properties.Settings.Default.XMaximumTravel; //mm
+				YMaximumTravel = Properties.Settings.Default.YMaximumTravel; //mm
+				ZMaximumTravel = Properties.Settings.Default.ZMaximumTravel; //mm
+				DoubleTable = Properties.Settings.Default.DoubleTable;
 				return true;
 			}
 			catch (Exception e)
@@ -215,57 +205,51 @@ namespace GrblController
 
 		internal void WriteToFile()
 		{
-			WriteToFile(configFilename);
-		}
+			Properties.Settings.Default.StartOffset = StartOffset; //mm
+			Properties.Settings.Default.Table1Length = Table1Length; //mm
+			Properties.Settings.Default.MiddleGap = MiddleGap; //mm
+			Properties.Settings.Default.Table2Length = Table2Length; //mm
+			Properties.Settings.Default.EndOffset = EndOffset; //mm
+			Properties.Settings.Default.SerialPortString = SerialPortString;
+			Properties.Settings.Default.Baudrate = Baudrate;
+			Properties.Settings.Default.ControlAxis = ControlAxis.ToString();
+			Properties.Settings.Default.PurgeDuration = PurgeDuration; //sec
+			Properties.Settings.Default.StepPulseTime = StepPulseTime; //usec
+			Properties.Settings.Default.StepIdleDelay = StepIdleDelay; //msec
+			Properties.Settings.Default.StepPortInvert = (int)StepPortInvert;
+			Properties.Settings.Default.DirectionPortInvert = (int)DirectionPortInvert;
+			Properties.Settings.Default.StepEnableInvert = StepEnableInvert;
+			Properties.Settings.Default.LimitPinsInvert = LimitPinsInvert;
+			Properties.Settings.Default.ProbePinInvert = ProbePinInvert;
+			Properties.Settings.Default.JunctionDeviation = JunctionDeviation; //mm
+			Properties.Settings.Default.ArcTolerance = ArcTolerance; //mm
+			Properties.Settings.Default.ReportInches = ReportInches;
+			Properties.Settings.Default.SoftLimits = SoftLimits;
+			Properties.Settings.Default.HardLimits = HardLimits;
+			Properties.Settings.Default.HomingCycle = HomingCycle;
+			Properties.Settings.Default.HomingDirectionInvert = (int)HomingDirectionInvert;
+			Properties.Settings.Default.HomingFeed = HomingFeed; //mm/min
+			Properties.Settings.Default.HomingSeek = HomingSeek; //mm/min
+			Properties.Settings.Default.HomingDebounce = HomingDebounce; //msec //msec
+			Properties.Settings.Default.HomingPullOff = HomingPullOff; //mm
+			Properties.Settings.Default.MaximumSpindleSpeed = MaximumSpindleSpeed; //RPM
+			Properties.Settings.Default.MinimumSpindleSpeed = MinimumSpindleSpeed; //RPM
+			Properties.Settings.Default.LaserMode = LaserMode;
+			Properties.Settings.Default.XSteps = XSteps; // /mm
+			Properties.Settings.Default.YSteps = YSteps; // /mm
+			Properties.Settings.Default.ZSteps = ZSteps; // /mm
+			Properties.Settings.Default.XFeedRate = XFeedRate; //mm/min
+			Properties.Settings.Default.YFeedRate = YFeedRate; //mm/min
+			Properties.Settings.Default.ZFeedRate = ZFeedRate; //mm/min
+			Properties.Settings.Default.XAcceleration = XAcceleration; //mm/sec^2
+			Properties.Settings.Default.YAcceleration = YAcceleration; //mm/sec^2
+			Properties.Settings.Default.ZAcceleration = ZAcceleration; //mm/sec^2
+			Properties.Settings.Default.XMaximumTravel = XMaximumTravel; //mm
+			Properties.Settings.Default.YMaximumTravel = YMaximumTravel; //mm
+			Properties.Settings.Default.ZMaximumTravel = ZMaximumTravel; //mm
+			Properties.Settings.Default.DoubleTable = DoubleTable;
 
-		private void WriteToFile(string filename)
-		{
-			new XDocument(
-				new XElement("Parameters",
-					new XElement("StartOffset", StartOffset.ToString()),
-					new XElement("Table1Length", Table1Length.ToString()),
-					new XElement("MiddleGap", MiddleGap.ToString()),
-					new XElement("Table2Length", Table2Length.ToString()),
-					new XElement("EndOffset", EndOffset.ToString()),
-					new XElement("SerialPortString", SerialPortString.ToString()),
-					new XElement("Baudrate", Baudrate.ToString()),
-					new XElement("ControlAxis", ControlAxis.ToString()),
-					new XElement("PurgeDuration", PurgeDuration.ToString()),
-					new XElement("StepPulseTime", StepPulseTime.ToString()),
-					new XElement("StepIdleDelay", StepIdleDelay.ToString()),
-					new XElement("StepPortInvert", ((int)StepPortInvert).ToString()),
-					new XElement("DirectionPortInvert", ((int)DirectionPortInvert).ToString()),
-					new XElement("StepEnableInvert", StepEnableInvert.ToString()),
-					new XElement("LimitPinsInvert", LimitPinsInvert.ToString()),
-					new XElement("ProbePinInvert", ProbePinInvert.ToString()),
-					new XElement("JunctionDeviation", JunctionDeviation.ToString()),
-					new XElement("ArcTolerance", ArcTolerance.ToString()),
-					new XElement("ReportInches", ReportInches.ToString()),
-					new XElement("SoftLimits", SoftLimits.ToString()),
-					new XElement("HardLimits", HardLimits.ToString()),
-					new XElement("HomingCycle", HomingCycle.ToString()),
-					new XElement("HomingDirectionInvert", ((int)HomingDirectionInvert).ToString()),
-					new XElement("HomingFeed", HomingFeed.ToString()),
-					new XElement("HomingSeek", HomingSeek.ToString()),
-					new XElement("HomingDebounce", HomingDebounce.ToString()),
-					new XElement("HomingPullOff", HomingPullOff.ToString()),
-					new XElement("MaximumSpindleSpeed", MaximumSpindleSpeed.ToString()),
-					new XElement("MinimumSpindleSpeed", MinimumSpindleSpeed.ToString()),
-					new XElement("LaserMode", LaserMode.ToString()),
-					new XElement("XSteps", XSteps.ToString()),
-					new XElement("YSteps", YSteps.ToString()),
-					new XElement("ZSteps", ZSteps.ToString()),
-					new XElement("XFeedRate", XFeedRate.ToString()),
-					new XElement("YFeedRate", YFeedRate.ToString()),
-					new XElement("ZFeedRate", ZFeedRate.ToString()),
-					new XElement("XAcceleration", XAcceleration.ToString()),
-					new XElement("YAcceleration", YAcceleration.ToString()),
-					new XElement("ZAcceleration", ZAcceleration.ToString()),
-					new XElement("XMaximumTravel", XMaximumTravel.ToString()),
-					new XElement("YMaximumTravel", YMaximumTravel.ToString()),
-					new XElement("ZMaximumTravel", ZMaximumTravel.ToString()),
-					new XElement("DoubleTable", DoubleTable.ToString())
-				)).Save(filename);
+			Properties.Settings.Default.Save();
 		}
 	}
 }

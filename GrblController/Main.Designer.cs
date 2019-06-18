@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			this.tablePanel = new System.Windows.Forms.Panel();
 			this.machinePositionPanel = new System.Windows.Forms.Panel();
 			this.table2Panel = new System.Windows.Forms.Panel();
@@ -172,10 +173,10 @@
 			// activityLog
 			// 
 			this.activityLog.FormattingEnabled = true;
-			this.activityLog.ItemHeight = 16;
+			this.activityLog.ItemHeight = 19;
 			this.activityLog.Location = new System.Drawing.Point(343, 38);
 			this.activityLog.Name = "activityLog";
-			this.activityLog.Size = new System.Drawing.Size(438, 148);
+			this.activityLog.Size = new System.Drawing.Size(438, 137);
 			this.activityLog.TabIndex = 19;
 			// 
 			// slider2Panel
@@ -206,7 +207,7 @@
 			this.table1Label0.Location = new System.Drawing.Point(303, 73);
 			this.table1Label0.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table1Label0.Name = "table1Label0";
-			this.table1Label0.Size = new System.Drawing.Size(16, 16);
+			this.table1Label0.Size = new System.Drawing.Size(18, 19);
 			this.table1Label0.TabIndex = 20;
 			this.table1Label0.Text = "0";
 			// 
@@ -218,7 +219,7 @@
 			this.table1LabelFull.Location = new System.Drawing.Point(303, 256);
 			this.table1LabelFull.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table1LabelFull.Name = "table1LabelFull";
-			this.table1LabelFull.Size = new System.Drawing.Size(30, 16);
+			this.table1LabelFull.Size = new System.Drawing.Size(32, 19);
 			this.table1LabelFull.TabIndex = 24;
 			this.table1LabelFull.Text = "full";
 			// 
@@ -230,7 +231,7 @@
 			this.table2LabelFull.Location = new System.Drawing.Point(303, 466);
 			this.table2LabelFull.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table2LabelFull.Name = "table2LabelFull";
-			this.table2LabelFull.Size = new System.Drawing.Size(30, 16);
+			this.table2LabelFull.Size = new System.Drawing.Size(32, 19);
 			this.table2LabelFull.TabIndex = 29;
 			this.table2LabelFull.Text = "full";
 			// 
@@ -242,7 +243,7 @@
 			this.table1Label3d4.Location = new System.Drawing.Point(303, 210);
 			this.table1Label3d4.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table1Label3d4.Name = "table1Label3d4";
-			this.table1Label3d4.Size = new System.Drawing.Size(28, 16);
+			this.table1Label3d4.Size = new System.Drawing.Size(32, 19);
 			this.table1Label3d4.TabIndex = 23;
 			this.table1Label3d4.Text = "3/4";
 			// 
@@ -254,7 +255,7 @@
 			this.table2Label3d4.Location = new System.Drawing.Point(303, 420);
 			this.table2Label3d4.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table2Label3d4.Name = "table2Label3d4";
-			this.table2Label3d4.Size = new System.Drawing.Size(28, 16);
+			this.table2Label3d4.Size = new System.Drawing.Size(32, 19);
 			this.table2Label3d4.TabIndex = 28;
 			this.table2Label3d4.Text = "3/4";
 			// 
@@ -266,7 +267,7 @@
 			this.table1Label1d4.Location = new System.Drawing.Point(303, 118);
 			this.table1Label1d4.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table1Label1d4.Name = "table1Label1d4";
-			this.table1Label1d4.Size = new System.Drawing.Size(28, 16);
+			this.table1Label1d4.Size = new System.Drawing.Size(32, 19);
 			this.table1Label1d4.TabIndex = 21;
 			this.table1Label1d4.Text = "1/4";
 			// 
@@ -278,7 +279,7 @@
 			this.table2Label1d2.Location = new System.Drawing.Point(303, 374);
 			this.table2Label1d2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table2Label1d2.Name = "table2Label1d2";
-			this.table2Label1d2.Size = new System.Drawing.Size(28, 16);
+			this.table2Label1d2.Size = new System.Drawing.Size(32, 19);
 			this.table2Label1d2.TabIndex = 27;
 			this.table2Label1d2.Text = "1/2";
 			// 
@@ -290,7 +291,7 @@
 			this.table1Label1d2.Location = new System.Drawing.Point(303, 164);
 			this.table1Label1d2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table1Label1d2.Name = "table1Label1d2";
-			this.table1Label1d2.Size = new System.Drawing.Size(28, 16);
+			this.table1Label1d2.Size = new System.Drawing.Size(32, 19);
 			this.table1Label1d2.TabIndex = 22;
 			this.table1Label1d2.Text = "1/2";
 			// 
@@ -302,7 +303,7 @@
 			this.table2Label1d4.Location = new System.Drawing.Point(303, 329);
 			this.table2Label1d4.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table2Label1d4.Name = "table2Label1d4";
-			this.table2Label1d4.Size = new System.Drawing.Size(28, 16);
+			this.table2Label1d4.Size = new System.Drawing.Size(32, 19);
 			this.table2Label1d4.TabIndex = 26;
 			this.table2Label1d4.Text = "1/4";
 			// 
@@ -314,7 +315,7 @@
 			this.table2Label0.Location = new System.Drawing.Point(303, 283);
 			this.table2Label0.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.table2Label0.Name = "table2Label0";
-			this.table2Label0.Size = new System.Drawing.Size(16, 16);
+			this.table2Label0.Size = new System.Drawing.Size(18, 19);
 			this.table2Label0.TabIndex = 25;
 			this.table2Label0.Text = "0";
 			// 
@@ -325,24 +326,24 @@
             this.machineState,
             this.machineCoordinate,
             this.portStatusLabel});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 523);
+			this.statusStrip1.Location = new System.Drawing.Point(0, 518);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-			this.statusStrip1.Size = new System.Drawing.Size(795, 24);
+			this.statusStrip1.Size = new System.Drawing.Size(795, 29);
 			this.statusStrip1.TabIndex = 38;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
 			// machineState
 			// 
 			this.machineState.Name = "machineState";
-			this.machineState.Size = new System.Drawing.Size(79, 19);
+			this.machineState.Size = new System.Drawing.Size(99, 24);
 			this.machineState.Text = "machineState";
 			// 
 			// machineCoordinate
 			// 
 			this.machineCoordinate.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
 			this.machineCoordinate.Name = "machineCoordinate";
-			this.machineCoordinate.Size = new System.Drawing.Size(193, 19);
+			this.machineCoordinate.Size = new System.Drawing.Size(235, 24);
 			this.machineCoordinate.Text = "Machine/Work position: Unknown";
 			// 
 			// portStatusLabel
@@ -351,7 +352,7 @@
 			this.portStatusLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
 			this.portStatusLabel.ForeColor = System.Drawing.Color.Red;
 			this.portStatusLabel.Name = "portStatusLabel";
-			this.portStatusLabel.Size = new System.Drawing.Size(4, 19);
+			this.portStatusLabel.Size = new System.Drawing.Size(4, 24);
 			// 
 			// menuStrip1
 			// 
@@ -361,7 +362,7 @@
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(795, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(795, 27);
 			this.menuStrip1.TabIndex = 39;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -372,20 +373,20 @@
             this.calibrateToolStripMenuItem});
 			this.menuToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F);
 			this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
-			this.menuToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
+			this.menuToolStripMenuItem.Size = new System.Drawing.Size(61, 23);
 			this.menuToolStripMenuItem.Text = "Menu";
 			// 
 			// settingsToolStripMenuItem
 			// 
 			this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-			this.settingsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+			this.settingsToolStripMenuItem.Size = new System.Drawing.Size(149, 26);
 			this.settingsToolStripMenuItem.Text = "Settings";
 			this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
 			// 
 			// calibrateToolStripMenuItem
 			// 
 			this.calibrateToolStripMenuItem.Name = "calibrateToolStripMenuItem";
-			this.calibrateToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+			this.calibrateToolStripMenuItem.Size = new System.Drawing.Size(149, 26);
 			this.calibrateToolStripMenuItem.Text = "Calibrate";
 			this.calibrateToolStripMenuItem.Click += new System.EventHandler(this.calibrateToolStripMenuItem_Click);
 			// 
@@ -428,7 +429,7 @@
 			// 
 			// Main
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(795, 547);
 			this.Controls.Add(this.purgeButton);
@@ -454,6 +455,7 @@
 			this.Controls.Add(this.slider2Panel);
 			this.Font = new System.Drawing.Font("Arial", 10.2F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MaximizeBox = false;
